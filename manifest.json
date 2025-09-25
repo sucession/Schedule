@@ -1,6 +1,6 @@
 {
     "name": "Schedule",
-    "short_name": "Sched",
+    "short_name": "Schedule",
     "description": "A privacy-focused scheduler for financial operations.",
     "start_url": ".",
     "display": "standalone",
@@ -16,3 +16,4 @@
     ]
 
 }
+
