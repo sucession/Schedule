@@ -3,15 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#2b2b2b">
-
-    <title>OPSEC Time Calculator</title>
+    <title>Schedule</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* ... Todo el CSS de la versión anterior va aquí sin cambios ... */
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: #1a1a1a;
@@ -121,10 +117,17 @@
             width: 1.5em;
             height: 1.5em;
         }
+        .txid-reminder {
+            color: #ffc107;
+            font-weight: bold;
+            cursor: help;
+            font-size: 0.8em;
+            line-height: 1;
+        }
 
         /* Color Coding for Steps */
         .step-receive { border-left-color: #20c997; }
-        .step-shield  { border-left-color: #6f42c1; }
+        .step-shield  { border-left-color: #6f4c1; }
         .step-unshield{ border-left-color: #0dcaf0; }
         .step-swap    { border-left-color: #ffc107; }
         
@@ -132,6 +135,7 @@
             border-left-color: #198754;
             background-color: #1c3c30;
         }
+
     </style>
 </head>
 <body>
@@ -144,11 +148,11 @@
                 </svg>
             </button>
         </div>
+
         <div id="scheduleOutput"></div>
     </div>
-    
+
     <script>
-        // ... Todo el script de calculateTimes() de la versión anterior va aquí sin cambios ...
         function calculateTimes() {
             const startTimeInput = document.getElementById('startTime');
             const startTimeValue = startTimeInput.value;
@@ -161,24 +165,31 @@
             const startDate = new Date(startTimeValue);
 
             const arrowSvg = `<svg class="flow-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"/></svg>`;
-            
             const barcelonaLogo = `<img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/47/FC_Barcelona_%28crest%29.svg/1200px-FC_Barcelona_%28crest%29.svg.png" class="club-logo club-logo-barcelona" alt="FCB">`;
             const milanLogo = `<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Logo_of_AC_Milan.svg/1200px-Logo_of_AC_Milan.svg.png" class="club-logo club-logo-milan" alt="ACM">`;
-            
             const reminderIcon = `<span class="txid-reminder" title="Record the TXID for this step!">❗</span>`;
 
             const steps = [
-                { delay: 0,       action: `💵 ${arrowSvg} 1️⃣ ${reminderIcon}`,                                     className: "step-receive" },
-                { delay: 19,      action: `1️⃣ ${arrowSvg} 🛡️ ${reminderIcon}`,                                     className: "step-shield"  },
-                { delay: 46,      action: `🛡️ ${arrowSvg} 2️⃣`,                                                     className: "step-unshield"},
-                { delay: 56,      action: `2️⃣ ${arrowSvg} 🎩 ${reminderIcon} ${arrowSvg} ${barcelonaLogo}`,          className: "step-swap"    },
-                { delay: 56.75,   action: `2️⃣ ${arrowSvg} 🎩 ${reminderIcon} ${arrowSvg} ${milanLogo}`,              className: "step-swap"    },
-                { delay: 58,      action: `${barcelonaLogo} ${arrowSvg} ❄️`,                                       className: "step-final-success" },
-                { delay: 58.5,    action: `${milanLogo} ${arrowSvg} 💳`,                                         className: "step-final-success" }
+                { delay: 0,       action: `💵 ${arrowSvg} 1️⃣`,                                     record: true },
+                { delay: 19,      action: `1️⃣ ${arrowSvg} 🛡️`,                                     record: true },
+                { delay: 46,      action: `🛡️ ${arrowSvg} 2️⃣`,                                     record: false },
+                { delay: 56,      action: `2️⃣ ${arrowSvg} 🎩 ${arrowSvg} ${barcelonaLogo}`,          record: true },
+                { delay: 56.75,   action: `2️⃣ ${arrowSvg} 🎩 ${arrowSvg} ${milanLogo}`,              record: true },
+                { delay: 58,      action: `${barcelonaLogo} ${arrowSvg} ❄️`,                       record: false },
+                { delay: 58.5,    action: `${milanLogo} ${arrowSvg} 💳`,                         record: false }
             ];
 
+            const classMap = {
+                0: "step-receive",
+                1: "step-shield",
+                2: "step-unshield",
+                3: "step-swap",
+                4: "step-swap",
+                5: "step-final-success",
+                6: "step-final-success"
+            };
+
             const outputDiv = document.getElementById('scheduleOutput');
-            
             const formatter = new Intl.DateTimeFormat('en-US', {
                 weekday: 'short',
                 month: 'short',
@@ -190,7 +201,7 @@
 
             let outputHtml = '<ul>';
 
-            steps.forEach(step => {
+            steps.forEach((step, index) => {
                 let stepTime = new Date(startDate.getTime() + step.delay * 60 * 60 * 1000);
                 
                 if (step.delay > 0) {
@@ -199,9 +210,19 @@
                 }
 
                 const formattedDate = formatter.format(stepTime);
+                
+                let actionHtml = step.action;
+                if (step.record) {
+                    // This is the corrected logic to place the reminder icon
+                    if (step.action.includes('🎩')) {
+                         actionHtml = step.action.replace('🎩', `🎩 ${reminderIcon}`);
+                    } else {
+                        actionHtml = `${step.action} ${reminderIcon}`;
+                    }
+                }
 
                 outputHtml += `
-                    <li class="${step.className}">
+                    <li class="${classMap[index]}">
                         <span class="action-info">${actionHtml}</span>
                         <span class="time-info">${formattedDate}</span>
                     </li>`;
@@ -209,19 +230,6 @@
 
             outputHtml += '</ul>';
             outputDiv.innerHTML = outputHtml;
-        }
-    </script>
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(registration => {
-                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                    })
-                    .catch(error => {
-                        console.log('ServiceWorker registration failed: ', error);
-                    });
-            });
         }
     </script>
 </body>
