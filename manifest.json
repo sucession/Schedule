@@ -1,6 +1,6 @@
 {
-    "name": "OPSEC Time Calculator",
-    "short_name": "OPSEC Calc",
+    "name": "Schedule",
+    "short_name": "Sched",
     "description": "A privacy-focused scheduler for financial operations.",
     "start_url": ".",
     "display": "standalone",
@@ -14,4 +14,5 @@
             "purpose": "any maskable"
         }
     ]
+
 }
