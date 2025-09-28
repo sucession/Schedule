@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Schedule</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Privacy Scheduler</title>
+    <meta name="theme-color" content="#1a1a1a">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
@@ -16,17 +17,15 @@
             --border-color: #444;
             --row-alt-color: #222222;
             
-            /* Colores de Fase Vivos */
-            --phase1-color: #6f42c1; /* Púrpura */
-            --phase2-color: #fd7e14; /* Naranja Vivo */
-            --phase3-color: #d63384; /* Rosa */
-            --phase4-color: #198754; /* Verde */
+            --phase1-color: #6f42c1;
+            --phase2-color: #fd7e14;
+            --phase3-color: #d63384;
+            --phase4-color: #198754;
 
-            --phase2-darker: #b05000; /* Naranja Oscuro */
+            --phase2-darker: #b05000;
             --phase3-darker: #8b1d55;
             --phase4-darker: #0f5132;
 
-            /* Color de Botón */
             --button-primary-bg: #0d6efd;
             --button-primary-bg-hover: #0b5ed7;
             --button-calendar-bg: #ffc107;
@@ -41,6 +40,8 @@
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
+            /* MODIFICADO: Añadido padding inferior de seguridad para la barra de navegación transparente */
+            padding-bottom: calc(20px + env(safe-area-inset-bottom));
         }
         .container { max-width: 800px; margin: 20px auto; }
         .input-section { display: flex; justify-content: center; gap: 10px; margin-bottom: 40px; }
@@ -102,17 +103,9 @@
             font-weight: bold; color: white; padding: 2px 8px; min-width: 40px; text-align: center; line-height: 1.4;
         }
 
-        /* Color Coding */
-        .p2 .slider-bubble { background-color: var(--phase2-color); }
-        .p3 .slider-bubble { background-color: var(--phase3-color); }
-        .p4 .slider-bubble { background-color: var(--phase4-color); }
-        
-        .p2 input[type="range"]::-webkit-slider-thumb { background-color: var(--phase2-color); }
-        .p2 input[type="range"]::-moz-range-thumb    { background-color: var(--phase2-color); }
-        .p3 input[type="range"]::-webkit-slider-thumb { background-color: var(--phase3-color); }
-        .p3 input[type="range"]::-moz-range-thumb    { background-color: var(--phase3-color); }
-        .p4 input[type="range"]::-webkit-slider-thumb { background-color: var(--phase4-color); }
-        .p4 input[type="range"]::-moz-range-thumb    { background-color: var(--phase4-color); }
+        .p2 .slider-bubble, .p2 input[type="range"]::-webkit-slider-thumb, .p2 input[type="range"]::-moz-range-thumb { background-color: var(--phase2-color); }
+        .p3 .slider-bubble, .p3 input[type="range"]::-webkit-slider-thumb, .p3 input[type="range"]::-moz-range-thumb { background-color: var(--phase3-color); }
+        .p4 .slider-bubble, .p4 input[type="range"]::-webkit-slider-thumb, .p4 input[type="range"]::-moz-range-thumb { background-color: var(--phase4-color); }
         
         .cv-p2 { background-color: var(--phase2-darker); }
         .cv-p3 { background-color: var(--phase3-darker); }
@@ -120,7 +113,7 @@
 
 
         @media (max-width: 600px) {
-            body { padding: 10px; }
+            body { padding: 10px; padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
             .phase-table td { display: block; width: 100%; box-sizing: border-box; text-align: left !important; padding: 10px 15px; border-bottom: none; }
             .phase-table tr:nth-child(even) td { background-color: var(--row-alt-color); }
             .phase-table tr:nth-child(odd) td { background-color: var(--surface-color); }
@@ -302,27 +295,38 @@
 
         function exportToICS() {
             const inputElement = document.getElementById('receiptDate');
-            if (!inputElement.value) {
-                alert("Please select a start date and time first.");
-                return;
-            }
+            if (!inputElement.value) { alert("Please select a start date and time first."); return; }
+            
             const baseDate = new Date(inputElement.value);
             const timestamps = getScheduleTimestamps(baseDate);
 
+            const unshield1 = document.getElementById('unshield_slider').value;
+            const unshield2 = 100 - unshield1;
+            const intent1 = document.getElementById('intent_slider').value;
+            const intent2 = 100 - intent1;
+            const savings1 = document.getElementById('savings_slider').value;
+            const savingsRemainder = 100 - savings1;
+            const savings2 = Math.round(savingsRemainder * 0.55);
+            const savings3 = savingsRemainder - savings2;
+            const consolidation1 = document.getElementById('consolidation_slider').value;
+            const consolidation2 = 100 - consolidation1;
+            const cold1 = document.getElementById('cold_slider').value;
+            const cold2 = 100 - cold1;
+
             const events = [
-                { date: timestamps.p1_shield, summary: "Phase 1: B1 -> Railgun (Shield)", description: "Move funds to the privacy pool." },
-                { date: timestamps.p2_unshield1, summary: "Phase 2: Railgun -> B2 (Unshield 1/2)", description: "First withdrawal from pool." },
-                { date: timestamps.p2_unshield2, summary: "Phase 2: Railgun -> B2 (Unshield 2/2)", description: "Second withdrawal." },
-                { date: timestamps.p2_intent1, summary: "Phase 2: B2 -> ZEC (Intent 1/2)", description: "First USDC->ZEC conversion." },
-                { date: timestamps.p2_intent2, summary: "Phase 2: B2 -> ZEC (Intent 2/2)", description: "Second USDC->ZEC conversion." },
-                { date: timestamps.p3_payy, summary: "Phase 3: Zashi -> Payy", description: "Priority exit for Spending." },
-                { date: timestamps.p3_crosspay1, summary: "Phase 3: Zashi -> B3 (Batch 1/3)", description: "First exit for Savings." },
-                { date: timestamps.p3_crosspay2, summary: "Phase 3: Zashi -> B3 (Batch 2/3)", description: "Second exit for Savings." },
-                { date: timestamps.p3_crosspay3, summary: "Phase 3: Zashi -> B3 (Batch 3/3)", description: "Third exit for Savings." },
-                { date: timestamps.p4_consol1, summary: "Phase 4: B3 -> Savings (Consolidation 1/2)", description: "First consolidation to savings wallet." },
-                { date: timestamps.p4_consol2, summary: "Phase 4: B3 -> Savings (Consolidation 2/2)", description: "Second consolidation to savings wallet." },
-                { date: timestamps.p4_cold1, summary: "Phase 4: Savings -> Cold Wallet (Batch 1/2)", description: "First movement to cold storage." },
-                { date: timestamps.p4_cold2, summary: "Phase 4: Savings -> Cold Wallet (Batch 2/2)", description: "Final movement to cold storage." }
+                { date: timestamps.p1_shield, summary: "Phase 1: B1 -> Railgun (Shield)" },
+                { date: timestamps.p2_unshield1, summary: `Phase 2: Railgun -> B2 (Unshield 1/2) [${unshield1}%]` },
+                { date: timestamps.p2_unshield2, summary: `Phase 2: Railgun -> B2 (Unshield 2/2) [${unshield2}%]` },
+                { date: timestamps.p2_intent1, summary: `Phase 2: B2 -> ZEC (Intent 1/2) [${intent1}%]` },
+                { date: timestamps.p2_intent2, summary: `Phase 2: B2 -> ZEC (Intent 2/2) [${intent2}%]` },
+                { date: timestamps.p3_payy, summary: "Phase 3: Zashi -> Payy" },
+                { date: timestamps.p3_crosspay1, summary: `Phase 3: Zashi -> B3 (Batch 1/3) [${savings1}%]` },
+                { date: timestamps.p3_crosspay2, summary: `Phase 3: Zashi -> B3 (Batch 2/3) [~${savings2}% of remainder]` },
+                { date: timestamps.p3_crosspay3, summary: `Phase 3: Zashi -> B3 (Batch 3/3) [~${savings3}% of remainder]` },
+                { date: timestamps.p4_consol1, summary: `Phase 4: B3 -> Savings (Consolidation 1/2) [${consolidation1}%]` },
+                { date: timestamps.p4_consol2, summary: `Phase 4: B3 -> Savings (Consolidation 2/2) [${consolidation2}%]` },
+                { date: timestamps.p4_cold1, summary: `Phase 4: Savings -> Cold Wallet (Batch 1/2) [${cold1}%]` },
+                { date: timestamps.p4_cold2, summary: `Phase 4: Savings -> Cold Wallet (Batch 2/2) [${cold2}%]` }
             ];
 
             let icsString = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//PrivacyScheduler//EN'].join('\n') + '\n';
@@ -333,7 +337,7 @@
                     'BEGIN:VEVENT', `UID:${Date.now()}${i}@privacyscheduler.com`,
                     `DTSTAMP:${formatICSDate(new Date())}`, `DTSTART:${formatICSDate(eventStart)}`,
                     `DTEND:${formatICSDate(eventEnd)}`, `SUMMARY:${event.summary}`,
-                    `DESCRIPTION:${event.description.replace(/\n/g, '\\n')}`, 'END:VEVENT'
+                    'END:VEVENT'
                 ].join('\n') + '\n';
             });
             icsString += 'END:VCALENDAR';
