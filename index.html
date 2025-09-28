@@ -4,237 +4,349 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Schedule</title>
-    <link rel="icon" type="image/svg+xml" href="icon.svg">
-    <link rel="manifest" href="manifest.json">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-color: #1a1a1a;
+            --surface-color: #2c2c2c;
+            --primary-text: #e0e0e0;
+            --secondary-text: #a0a0a0;
+            --border-color: #444;
+            --row-alt-color: #222222;
+            
+            /* Colores de Fase Vivos */
+            --phase1-color: #6f42c1; /* Púrpura */
+            --phase2-color: #fd7e14; /* Naranja Vivo */
+            --phase3-color: #d63384; /* Rosa */
+            --phase4-color: #198754; /* Verde */
+
+            --phase2-darker: #b05000; /* Naranja Oscuro */
+            --phase3-darker: #8b1d55;
+            --phase4-darker: #0f5132;
+
+            /* Color de Botón */
+            --button-primary-bg: #0d6efd;
+            --button-primary-bg-hover: #0b5ed7;
+            --button-calendar-bg: #ffc107;
+            --button-calendar-bg-hover: #e0a800;
+        }
+
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #1a1a1a;
-            color: #e0e0e0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-text);
+            line-height: 1.6;
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
         }
-        .container {
-            width: 100%;
-            max-width: 500px;
-            background-color: #2b2b2b;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-        }
-        .input-group {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 10px;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-        input[type="datetime-local"], button {
-            padding: 12px;
-            font-size: 16px;
-            border-radius: 8px;
-            border: 1px solid #555;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-            height: 50px;
-        }
+        .container { max-width: 800px; margin: 20px auto; }
+        .input-section { display: flex; justify-content: center; gap: 10px; margin-bottom: 40px; }
         input[type="datetime-local"] {
-            background-color: #333;
-            color: #e0e0e0;
-            color-scheme: dark;
+            padding: 12px; border: 1px solid var(--border-color); background-color: var(--surface-color);
+            color: var(--primary-text); color-scheme: dark; border-radius: 8px; font-size: 1em;
+            width: 280px; box-sizing: border-box; height: 50px; font-family: 'Inter', sans-serif;
         }
         button {
-            background-color: #0d6efd;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 50px;
+            background-color: var(--button-primary-bg); color: white; border: none;
+            border-radius: 8px; cursor: pointer; transition: background-color 0.3s ease;
+            height: 50px; padding: 0 15px; display: flex; justify-content: center; align-items: center; font-weight: 500;
         }
-        button:hover {
-            background-color: #0b5ed7;
-        }
-        .button-icon {
-            width: 22px;
-            height: 22px;
-            fill: white;
-        }
-        #scheduleOutput {
-            margin-top: 30px;
-        }
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-        li {
-            background-color: #333;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 0 8px 8px 0;
-            border-left-width: 5px;
-            border-left-style: solid;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-        }
-        .time-info {
-            font-size: 14px;
-            color: #a0a0a0;
-            white-space: nowrap;
-        }
-        .action-info {
-            font-size: 20px;
-            font-weight: 500;
-            color: #e0e0e0; 
-            display: flex;
-            align-items: center;
-            gap: 0.4em;
-        }
-        .flow-arrow {
-            width: 1.1em;
-            height: 1.1em;
-            fill: #a0a0a0;
-            vertical-align: middle;
-        }
-        .club-logo {
-            height: 1.5em;
-            vertical-align: middle;
-        }
-        .club-logo-milan {
-            width: auto;
-            height: 1.5em;
-        }
-        .club-logo-barcelona {
-            width: 1.5em;
-            height: 1.5em;
-        }
-        .txid-reminder {
-            color: #ffc107;
-            font-weight: bold;
-            cursor: help;
-            font-size: 0.8em;
-            line-height: 1;
-        }
-
-        /* Color Coding for Steps */
-        .step-receive { border-left-color: #20c997; }
-        .step-shield  { border-left-color: #6f4c1; }
-        .step-unshield{ border-left-color: #0dcaf0; }
-        .step-swap    { border-left-color: #ffc107; }
+        button:hover { background-color: var(--button-primary-bg-hover); }
+        .button-icon { width: 24px; height: 24px; fill: white; }
         
-        .step-final-success {
-            border-left-color: #198754;
-            background-color: #1c3c30;
+        .btn-icon-only { width: 55px; }
+        .btn-calendar { background-color: var(--button-calendar-bg); }
+        .btn-calendar:hover { background-color: var(--button-calendar-bg-hover); }
+        
+        #exportButton { display: none; }
+
+        .phase-card {
+            background-color: var(--surface-color); border-radius: 12px; margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); overflow: hidden;
+        }
+        
+        .phase-table { width: 100%; border-collapse: collapse; }
+        .phase-table td { padding: 14px 18px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+        .phase-table tr:last-child td { border-bottom: none; }
+        .phase-table tr:nth-child(even) { background-color: var(--row-alt-color); }
+
+        .phase-header th {
+            color: white; text-align: center; font-size: 1.2em; font-weight: 700;
+            letter-spacing: 1px; padding: 12px 15px; background-color: var(--surface-color) !important;
+        }
+        .phase-1 th { background-color: var(--phase1-color) !important; }
+        .phase-2 th { background-color: var(--phase2-color) !important; }
+        .phase-3 th { background-color: var(--phase3-color) !important; }
+        .phase-4 th { background-color: var(--phase4-color) !important; }
+
+        .col-description { width: 65%; }
+        .col-time { width: 35%; text-align: right; white-space: nowrap; }
+        .notes { font-size: 0.9em; color: var(--secondary-text); display: block; margin-top: 4px; }
+        
+        .flex-container { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+        .slider-container { position: relative; padding-top: 25px; flex-shrink: 0; }
+        .slider-bubble {
+            position: absolute; top: -10px; color: white; padding: 4px 8px;
+            border-radius: 5px; font-size: 0.9em; font-weight: bold;
+            transform: translateX(-50%); pointer-events: none; z-index: 10;
+        }
+        input[type="range"] { -webkit-appearance: none; appearance: none; width: 120px; height: 8px; background: #444; border-radius: 5px; outline: none; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 24px; height: 24px; cursor: pointer; border-radius: 50%; border: 4px solid var(--surface-color); }
+        input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; cursor: pointer; border-radius: 50%; border: 4px solid var(--surface-color); }
+        
+        .calculated-value {
+            display: inline-block; border: 1px dashed var(--border-color); border-radius: 6px; font-size: 0.9em;
+            font-weight: bold; color: white; padding: 2px 8px; min-width: 40px; text-align: center; line-height: 1.4;
         }
 
+        /* Color Coding */
+        .p2 .slider-bubble { background-color: var(--phase2-color); }
+        .p3 .slider-bubble { background-color: var(--phase3-color); }
+        .p4 .slider-bubble { background-color: var(--phase4-color); }
+        
+        .p2 input[type="range"]::-webkit-slider-thumb { background-color: var(--phase2-color); }
+        .p2 input[type="range"]::-moz-range-thumb    { background-color: var(--phase2-color); }
+        .p3 input[type="range"]::-webkit-slider-thumb { background-color: var(--phase3-color); }
+        .p3 input[type="range"]::-moz-range-thumb    { background-color: var(--phase3-color); }
+        .p4 input[type="range"]::-webkit-slider-thumb { background-color: var(--phase4-color); }
+        .p4 input[type="range"]::-moz-range-thumb    { background-color: var(--phase4-color); }
+        
+        .cv-p2 { background-color: var(--phase2-darker); }
+        .cv-p3 { background-color: var(--phase3-darker); }
+        .cv-p4 { background-color: var(--phase4-darker); }
+
+
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .phase-table td { display: block; width: 100%; box-sizing: border-box; text-align: left !important; padding: 10px 15px; border-bottom: none; }
+            .phase-table tr:nth-child(even) td { background-color: var(--row-alt-color); }
+            .phase-table tr:nth-child(odd) td { background-color: var(--surface-color); }
+            .phase-table tr td:first-child { padding-bottom: 5px; }
+            .col-time { padding-top: 0; padding-left: 15px; padding-bottom: 12px; font-weight: 500; color: var(--secondary-text); }
+            .phase-table tr:last-child .col-time { padding-bottom: 10px; }
+            .flex-container { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .slider-container { padding-top: 25px; padding-bottom: 10px; }
+        }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <div class="input-group">
-            <input type="datetime-local" id="startTime" aria-label="Receipt Time">
-            <button onclick="calculateTimes()" aria-label="Calculate Schedule">
-                <svg class="button-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path><path d="M13 7h-2v5.414l3.293 3.293 1.414-1.414L13 11.586z"></path>
-                </svg>
+        <div class="input-section">
+            <input type="datetime-local" id="receiptDate" aria-label="Receipt date and time">
+            <button class="btn-icon-only" onclick="generateSchedule()" aria-label="Generate Schedule">
+                <svg class="button-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path><path d="M13 7h-2v5.414l3.293 3.293 1.414-1.414L13 11.586z"></path></svg>
+            </button>
+            <button class="btn-icon-only btn-calendar" id="exportButton" onclick="exportToICS()" aria-label="Export to Calendar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="button-icon" viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/></svg>
             </button>
         </div>
-
-        <div id="scheduleOutput"></div>
+        <div id="schedule-container"></div>
     </div>
 
     <script>
-        function calculateTimes() {
-            const startTimeInput = document.getElementById('startTime');
-            const startTimeValue = startTimeInput.value;
+        function addRandomTime(baseDate, minHours = 0, maxHours = 0, minMinutes = 0, maxMinutes = 0) {
+            const randomHours = minHours + Math.random() * (maxHours - minHours);
+            const randomMinutes = minMinutes + Math.random() * (maxMinutes - minMinutes);
+            const delayInMs = (randomHours * 3600 + randomMinutes * 60) * 1000;
+            return new Date(baseDate.getTime() + delayInMs);
+        }
 
-            if (!startTimeValue) {
-                alert("Please select a start date and time.");
+        function formatDateTime(date) {
+            const options = { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true };
+            return new Intl.DateTimeFormat('en-US', options).format(date);
+        }
+        
+        function updateSliderBubble(slider) {
+            const bubble = slider.previousElementSibling;
+            if (!bubble) return;
+            const currentValue = slider.value;
+            const min = slider.min;
+            const max = slider.max;
+            const thumbWidth = 24;
+            const sliderWidth = slider.offsetWidth;
+            bubble.innerHTML = currentValue + '%';
+            const progress = (currentValue - min) / (max - min);
+            const trackWidth = sliderWidth - thumbWidth;
+            const newPosition = progress * trackWidth + (thumbWidth / 2);
+            bubble.style.left = `calc(${newPosition}px)`;
+        }
+
+        function getScheduleTimestamps(baseDate) {
+            const p1_shield = addRandomTime(baseDate, 8, 12);
+            const p2_start = addRandomTime(baseDate, 22, 26);
+            const p2_unshield1 = p2_start;
+            const p2_unshield2 = addRandomTime(p2_unshield1, 0, 0, 3, 15);
+            const p2_intent1 = addRandomTime(p2_unshield2, 0, 0, 3, 8);
+            const p2_intent2 = addRandomTime(p2_intent1, 0, 0, 5, 12);
+            const p3_payy = addRandomTime(p2_intent2, 0, 0, 3, 7);
+            const p3_crosspay1 = addRandomTime(p3_payy, 0, 0, 5, 20);
+            const p3_crosspay2 = addRandomTime(p3_crosspay1, 0, 0, 5, 20);
+            const p3_crosspay3 = addRandomTime(p3_crosspay2, 0, 0, 5, 20);
+            const p4_consol1 = addRandomTime(p3_crosspay3, 8, 12);
+            const p4_consol2 = addRandomTime(p4_consol1, 1, 3);
+            const p4_cold1 = addRandomTime(p4_consol2, 18, 30);
+            const p4_cold2 = addRandomTime(p4_cold1, 8, 16);
+            return { baseDate, p1_shield, p2_unshield1, p2_unshield2, p2_intent1, p2_intent2, p3_payy, p3_crosspay1, p3_crosspay2, p3_crosspay3, p4_consol1, p4_consol2, p4_cold1, p4_cold2 };
+        }
+
+        function generateSchedule() {
+            const inputElement = document.getElementById('receiptDate');
+            const container = document.getElementById('schedule-container');
+            if (!inputElement.value) {
+                container.innerHTML = `<p style="color: #d63384; text-align: center;">Please select a valid date and time.</p>`;
                 return;
             }
+            document.getElementById('exportButton').style.display = 'flex';
+            const baseDate = new Date(inputElement.value);
+            const timestamps = getScheduleTimestamps(baseDate);
 
-            const startDate = new Date(startTimeValue);
+            let html = `
+                <div class="phase-card">
+                    <table class="phase-table"><tbody>
+                        <tr class="phase-header phase-1"><th colspan="2">Phase 1 – Secure Accumulation</th></tr>
+                        <tr><td class="col-description"><strong>Funds received in B1</strong><br><span class="notes">Starting point of the schedule.</span></td><td class="col-time">${formatDateTime(timestamps.baseDate)}</td></tr>
+                        <tr><td class="col-description"><strong>B1 → Railgun (Shield)</strong><br><span class="notes">Move funds to the privacy pool.</span></td><td class="col-time">${formatDateTime(timestamps.p1_shield)}</td></tr>
+                    </tbody></table>
+                </div>
+                <div class="phase-card">
+                    <table class="phase-table"><tbody>
+                        <tr class="phase-header phase-2"><th colspan="2">Phase 2 – "Flash Pass"</th></tr>
+                        <tr>
+                            <td><div class="flex-container"><div class="text-content"><strong>Railgun → B2 (Unshield 1/2)</strong><span class="notes">First withdrawal from pool.</span></div><div class="slider-container p2"><div class="slider-bubble"></div><input type="range" min="50" max="65" value="65" id="unshield_slider"></div></div></td>
+                            <td class="col-time">${formatDateTime(timestamps.p2_unshield1)}</td>
+                        </tr>
+                        <tr>
+                            <td class="col-description"><strong>Railgun → B2 (Unshield 2/2) <span class="calculated-value cv-p2"><span id="unshield2_percent">35</span>%</span></strong><br><span class="notes">Second withdrawal.</span></td>
+                            <td class="col-time">${formatDateTime(timestamps.p2_unshield2)}</td>
+                        </tr>
+                        <tr>
+                             <td><div class="flex-container"><div class="text-content"><strong>B2 → ZEC (Intent 1/2)</strong><span class="notes">First USDC→ZEC conversion.</span></div><div class="slider-container p2"><div class="slider-bubble"></div><input type="range" min="60" max="80" value="70" id="intent_slider"></div></div></td>
+                            <td class="col-time">${formatDateTime(timestamps.p2_intent1)}</td>
+                        </tr>
+                        <tr>
+                            <td class="col-description"><strong>B2 → ZEC (Intent 2/2) <span class="calculated-value cv-p2"><span id="intent2_percent">30</span>%</span></strong><br><span class="notes">Second USDC→ZEC conversion.</span></td>
+                            <td class="col-time">${formatDateTime(timestamps.p2_intent2)}</td>
+                        </tr>
+                    </tbody></table>
+                </div>
+                <div class="phase-card">
+                     <table class="phase-table"><tbody>
+                        <tr class="phase-header phase-3"><th colspan="2">Phase 3 – Private Exits</th></tr>
+                        <tr><td class="col-description"><strong>Zashi CrossPay → Payy (Single Batch)</strong><br><span class="notes">Priority exit for Spending to minimize volatility.</span></td><td class="col-time">${formatDateTime(timestamps.p3_payy)}</td></tr>
+                        <tr>
+                            <td><div class="flex-container"><div class="text-content"><strong>Zashi CrossPay → B3 (Batch 1/3)</strong><span class="notes">Exit ZEC→USDC Arbitrum for Savings.</span></div><div class="slider-container p3"><div class="slider-bubble"></div><input type="range" min="30" max="50" value="40" id="savings_slider"></div></div></td>
+                            <td class="col-time">${formatDateTime(timestamps.p3_crosspay1)}</td>
+                        </tr>
+                        <tr><td class="col-description"><strong>Zashi CrossPay → B3 (Batch 2/3) <span class="calculated-value cv-p3"><span id="savings2_percent">33</span>%</span></strong><br><span class="notes">Second exit for Savings.</span></td><td class="col-time">${formatDateTime(timestamps.p3_crosspay2)}</td></tr>
+                        <tr><td class="col-description"><strong>Zashi CrossPay → B3 (Batch 3/3) <span class="calculated-value cv-p3"><span id="savings3_percent">27</span>%</span></strong><br><span class="notes">Third exit for Savings.</span></td><td class="col-time">${formatDateTime(timestamps.p3_crosspay3)}</td></tr>
+                    </tbody></table>
+                </div>
+                <div class="phase-card">
+                    <table class="phase-table"><tbody>
+                        <tr class="phase-header phase-4"><th colspan="2">Phase 4 – Consolidation & Cold Storage</th></tr>
+                        <tr>
+                            <td><div class="flex-container"><div class="text-content"><strong>B3 → Savings Wallet (Consolidation 1/2)</strong><span class="notes">Move funds from B3 to savings wallet.</span></div><div class="slider-container p4"><div class="slider-bubble"></div><input type="range" min="40" max="60" value="50" id="consolidation_slider"></div></div></td>
+                            <td class="col-time">${formatDateTime(timestamps.p4_consol1)}</td>
+                        </tr>
+                         <tr><td class="col-description"><strong>B3 → Savings Wallet (Consolidation 2/2) <span class="calculated-value cv-p4"><span id="consolidation2_percent">50</span>%</span></strong><br><span class="notes">Second batch to savings.</span></td><td class="col-time">${formatDateTime(timestamps.p4_consol2)}</td></tr>
+                        <tr>
+                           <td><div class="flex-container"><div class="text-content"><strong>Savings → Cold Wallet (Batch 1/2)</strong><span class="notes">Movement to cold storage.</span></div><div class="slider-container p4"><div class="slider-bubble"></div><input type="range" min="40" max="60" value="50" id="cold_slider"></div></div></td>
+                            <td class="col-time">${formatDateTime(timestamps.p4_cold1)}</td>
+                        </tr>
+                         <tr><td class="col-description"><strong>Savings → Cold Wallet (Batch 2/2) <span class="calculated-value cv-p4"><span id="cold2_percent">50</span>%</span></strong><br><span class="notes">Final movement to cold storage.</span></td><td class="col-time">${formatDateTime(timestamps.p4_cold2)}</td></tr>
+                    </tbody></table>
+                </div>`;
 
-            const arrowSvg = `<svg class="flow-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"/></svg>`;
-            const barcelonaLogo = `<img src="https://upload.wikimedia.org/wikipedia/en/thumb/4/47/FC_Barcelona_%28crest%29.svg/1200px-FC_Barcelona_%28crest%29.svg.png" class="club-logo club-logo-barcelona" alt="FCB">`;
-            const milanLogo = `<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Logo_of_AC_Milan.svg/1200px-Logo_of_AC_Milan.svg.png" class="club-logo club-logo-milan" alt="ACM">`;
-            const reminderIcon = `<span class="txid-reminder" title="Record the TXID for this step!">❗</span>`;
+            container.innerHTML = html;
+            attachAllListeners();
+        }
 
-            const steps = [
-                { delay: 0,       action: `💵 ${arrowSvg} 1️⃣`,                                     record: true },
-                { delay: 19,      action: `1️⃣ ${arrowSvg} 🛡️`,                                     record: true },
-                { delay: 46,      action: `🛡️ ${arrowSvg} 2️⃣`,                                     record: false },
-                { delay: 56,      action: `2️⃣ ${arrowSvg} 🎩 ${arrowSvg} ${barcelonaLogo}`,          record: true },
-                { delay: 56.75,   action: `2️⃣ ${arrowSvg} 🎩 ${arrowSvg} ${milanLogo}`,              record: true },
-                { delay: 58,      action: `${barcelonaLogo} ${arrowSvg} ❄️`,                       record: false },
-                { delay: 58.5,    action: `${milanLogo} ${arrowSvg} 💳`,                         record: false }
+        function attachAllListeners() {
+             const sliders = [
+                { id: 'unshield_slider', outputs: ['unshield2_percent'] },
+                { id: 'intent_slider', outputs: ['intent2_percent'] },
+                { id: 'consolidation_slider', outputs: ['consolidation2_percent'] },
+                { id: 'cold_slider', outputs: ['cold2_percent'] },
+                { id: 'savings_slider', outputs: ['savings2_percent', 'savings3_percent'] }
+            ];
+            sliders.forEach(s => {
+                const sliderEl = document.getElementById(s.id);
+                if (sliderEl) {
+                    const update = () => {
+                        updateSliderBubble(sliderEl);
+                        if (s.id === 'savings_slider') {
+                            const sliderValue = parseInt(sliderEl.value);
+                            const remainder = 100 - sliderValue;
+                            const batch2 = Math.round(remainder * 0.55);
+                            const batch3 = remainder - batch2;
+                            document.getElementById(s.outputs[0]).textContent = batch2;
+                            document.getElementById(s.outputs[1]).textContent = batch3;
+                        } else {
+                            document.getElementById(s.outputs[0]).textContent = 100 - sliderEl.value;
+                        }
+                    };
+                    sliderEl.addEventListener('input', update);
+                    window.addEventListener('resize', update);
+                    update();
+                }
+            });
+        }
+
+        function formatICSDate(date) {
+            return date.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+        }
+
+        function exportToICS() {
+            const inputElement = document.getElementById('receiptDate');
+            if (!inputElement.value) {
+                alert("Please select a start date and time first.");
+                return;
+            }
+            const baseDate = new Date(inputElement.value);
+            const timestamps = getScheduleTimestamps(baseDate);
+
+            const events = [
+                { date: timestamps.p1_shield, summary: "Phase 1: B1 -> Railgun (Shield)", description: "Move funds to the privacy pool." },
+                { date: timestamps.p2_unshield1, summary: "Phase 2: Railgun -> B2 (Unshield 1/2)", description: "First withdrawal from pool." },
+                { date: timestamps.p2_unshield2, summary: "Phase 2: Railgun -> B2 (Unshield 2/2)", description: "Second withdrawal." },
+                { date: timestamps.p2_intent1, summary: "Phase 2: B2 -> ZEC (Intent 1/2)", description: "First USDC->ZEC conversion." },
+                { date: timestamps.p2_intent2, summary: "Phase 2: B2 -> ZEC (Intent 2/2)", description: "Second USDC->ZEC conversion." },
+                { date: timestamps.p3_payy, summary: "Phase 3: Zashi -> Payy", description: "Priority exit for Spending." },
+                { date: timestamps.p3_crosspay1, summary: "Phase 3: Zashi -> B3 (Batch 1/3)", description: "First exit for Savings." },
+                { date: timestamps.p3_crosspay2, summary: "Phase 3: Zashi -> B3 (Batch 2/3)", description: "Second exit for Savings." },
+                { date: timestamps.p3_crosspay3, summary: "Phase 3: Zashi -> B3 (Batch 3/3)", description: "Third exit for Savings." },
+                { date: timestamps.p4_consol1, summary: "Phase 4: B3 -> Savings (Consolidation 1/2)", description: "First consolidation to savings wallet." },
+                { date: timestamps.p4_consol2, summary: "Phase 4: B3 -> Savings (Consolidation 2/2)", description: "Second consolidation to savings wallet." },
+                { date: timestamps.p4_cold1, summary: "Phase 4: Savings -> Cold Wallet (Batch 1/2)", description: "First movement to cold storage." },
+                { date: timestamps.p4_cold2, summary: "Phase 4: Savings -> Cold Wallet (Batch 2/2)", description: "Final movement to cold storage." }
             ];
 
-            const classMap = {
-                0: "step-receive",
-                1: "step-shield",
-                2: "step-unshield",
-                3: "step-swap",
-                4: "step-swap",
-                5: "step-final-success",
-                6: "step-final-success"
-            };
-
-            const outputDiv = document.getElementById('scheduleOutput');
-            const formatter = new Intl.DateTimeFormat('en-US', {
-                weekday: 'short',
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: true
+            let icsString = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//PrivacyScheduler//EN'].join('\n') + '\n';
+            events.forEach((event, i) => {
+                const eventStart = event.date;
+                const eventEnd = new Date(eventStart.getTime() + 15 * 60 * 1000);
+                icsString += [
+                    'BEGIN:VEVENT', `UID:${Date.now()}${i}@privacyscheduler.com`,
+                    `DTSTAMP:${formatICSDate(new Date())}`, `DTSTART:${formatICSDate(eventStart)}`,
+                    `DTEND:${formatICSDate(eventEnd)}`, `SUMMARY:${event.summary}`,
+                    `DESCRIPTION:${event.description.replace(/\n/g, '\\n')}`, 'END:VEVENT'
+                ].join('\n') + '\n';
             });
+            icsString += 'END:VCALENDAR';
 
-            let outputHtml = '<ul>';
-
-            steps.forEach((step, index) => {
-                let stepTime = new Date(startDate.getTime() + step.delay * 60 * 60 * 1000);
-                
-                if (step.delay > 0) {
-                    const randomVariance = Math.floor(Math.random() * 31) - 15;
-                    stepTime.setMinutes(stepTime.getMinutes() + randomVariance);
-                }
-
-                const formattedDate = formatter.format(stepTime);
-                
-                let actionHtml = step.action;
-                if (step.record) {
-                    // This is the corrected logic to place the reminder icon
-                    if (step.action.includes('🎩')) {
-                         actionHtml = step.action.replace('🎩', `🎩 ${reminderIcon}`);
-                    } else {
-                        actionHtml = `${step.action} ${reminderIcon}`;
-                    }
-                }
-
-                outputHtml += `
-                    <li class="${classMap[index]}">
-                        <span class="action-info">${actionHtml}</span>
-                        <span class="time-info">${formattedDate}</span>
-                    </li>`;
-            });
-
-            outputHtml += '</ul>';
-            outputDiv.innerHTML = outputHtml;
+            const blob = new Blob([icsString], { type: 'text/calendar;charset=utf-8' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.setAttribute("download", "privacy_schedule.ics");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
     </script>
+
 </body>
 </html>
-
-
