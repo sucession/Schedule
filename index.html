@@ -40,7 +40,6 @@
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
-            /* MODIFICADO: Añadido padding inferior de seguridad para la barra de navegación transparente */
             padding-bottom: calc(20px + env(safe-area-inset-bottom));
         }
         .container { max-width: 800px; margin: 20px auto; }
@@ -103,9 +102,20 @@
             font-weight: bold; color: white; padding: 2px 8px; min-width: 40px; text-align: center; line-height: 1.4;
         }
 
-        .p2 .slider-bubble, .p2 input[type="range"]::-webkit-slider-thumb, .p2 input[type="range"]::-moz-range-thumb { background-color: var(--phase2-color); }
-        .p3 .slider-bubble, .p3 input[type="range"]::-webkit-slider-thumb, .p3 input[type="range"]::-moz-range-thumb { background-color: var(--phase3-color); }
-        .p4 .slider-bubble, .p4 input[type="range"]::-webkit-slider-thumb, .p4 input[type="range"]::-moz-range-thumb { background-color: var(--phase4-color); }
+        /* --- Color Coding --- */
+        .p2 .slider-bubble { background-color: var(--phase2-color); }
+        .p3 .slider-bubble { background-color: var(--phase3-color); }
+        .p4 .slider-bubble { background-color: var(--phase4-color); }
+        
+        /* **CORRECCIÓN DEFINITIVA**: Reglas de thumb separadas por clase Y navegador */
+        .p2 input[type="range"]::-webkit-slider-thumb { background-color: var(--phase2-color); }
+        .p2 input[type="range"]::-moz-range-thumb    { background-color: var(--phase2-color); }
+
+        .p3 input[type="range"]::-webkit-slider-thumb { background-color: var(--phase3-color); }
+        .p3 input[type="range"]::-moz-range-thumb    { background-color: var(--phase3-color); }
+        
+        .p4 input[type="range"]::-webkit-slider-thumb { background-color: var(--phase4-color); }
+        .p4 input[type="range"]::-moz-range-thumb    { background-color: var(--phase4-color); }
         
         .cv-p2 { background-color: var(--phase2-darker); }
         .cv-p3 { background-color: var(--phase3-darker); }
