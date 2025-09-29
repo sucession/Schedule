@@ -6,7 +6,6 @@
     <title>Schedule</title>
 
     <link rel="manifest" href="manifest.json">
-
     <meta name="theme-color" content="#1a1a1a">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,16 +18,14 @@
             --secondary-text: #a0a0a0;
             --border-color: #444;
             --row-alt-color: #222222;
-            
             --phase1-color: #6f42c1;
             --phase2-color: #fd7e14;
             --phase3-color: #d63384;
             --phase4-color: #198754;
-
+            --phase1-darker: #4c2c87;
             --phase2-darker: #b05000;
             --phase3-darker: #8b1d55;
             --phase4-darker: #0f5132;
-
             --button-primary-bg: #0d6efd;
             --button-primary-bg-hover: #0b5ed7;
             --button-calendar-bg: #ffc107;
@@ -46,83 +43,268 @@
             padding-bottom: calc(20px + env(safe-area-inset-bottom));
         }
         .container { max-width: 800px; margin: 20px auto; }
-        .input-section { display: flex; justify-content: center; gap: 10px; margin-bottom: 40px; }
-        input[type="datetime-local"] {
-            padding: 12px; border: 1px solid var(--border-color); background-color: var(--surface-color);
-            color: var(--primary-text); color-scheme: dark; border-radius: 8px; font-size: 1em;
-            width: 280px; box-sizing: border-box; height: 50px; font-family: 'Inter', sans-serif;
+        .input-section { 
+            display: flex; 
+            flex-direction: row;
+            gap: 10px; 
+            justify-content: center; 
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .input-wrapper { position: relative; width: 200px; }
+        .input-wrapper.date { 
+            width: 330px; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+        }
+        input[type="datetime-local"], input[type="text"] {
+            padding: 12px; 
+            border: 1px solid var(--border-color); 
+            background-color: var(--surface-color);
+            color: var(--primary-text); 
+            color-scheme: dark; 
+            border-radius: 8px; 
+            font-size: 1em;
+            box-sizing: border-box; 
+            height: 50px; 
+            font-family: 'Inter', sans-serif;
+            transition: box-shadow 0.3s ease;
+        }
+        input[type="datetime-local"] { width: 280px; }
+        input[type="text"]#totalAmount { width: 200px; padding-right: 30px; }
+        input[type="datetime-local"]:focus, input[type="text"]:focus {
+            box-shadow: 0 0 8px var(--button-primary-bg);
+            outline: none;
+        }
+        .reset-button {
+            display: none;
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--primary-text);
+            font-size: 1.2em;
+            cursor: pointer;
+            padding: 0 5px;
+            transition: text-shadow 0.3s ease;
+        }
+        .reset-button.visible { display: block; }
+        .reset-button:hover { text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); }
+        .alarm-section {
+            display: none;
+            flex-direction: row;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            border: 1px dashed var(--button-calendar-bg);
+            padding: 5px;
+            border-radius: 8px;
+            transition: box-shadow 0.3s ease;
+            margin-bottom: 40px;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .alarm-section:hover {
+            box-shadow: 0 0 8px var(--button-calendar-bg);
         }
         button {
-            background-color: var(--button-primary-bg); color: white; border: none;
-            border-radius: 8px; cursor: pointer; transition: background-color 0.3s ease;
-            height: 50px; padding: 0 15px; display: flex; justify-content: center; align-items: center; font-weight: 500;
+            background-color: var(--button-primary-bg); 
+            color: white; 
+            border: none;
+            border-radius: 8px; 
+            cursor: pointer; 
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            height: 50px; 
+            padding: 0 15px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            font-weight: 500;
         }
-        button:hover { background-color: var(--button-primary-bg-hover); }
+        button:not(:disabled):hover { 
+            background-color: var(--button-primary-bg-hover); 
+            box-shadow: 0 0 8px var(--button-primary-bg);
+        }
+        button:disabled {
+            background-color: var(--surface-color);
+            cursor: not-allowed;
+        }
+        button:disabled .button-icon { fill: var(--button-primary-bg); }
         .button-icon { width: 24px; height: 24px; fill: white; }
-        
-        .btn-icon-only { width: 55px; }
-        .btn-calendar { background-color: var(--button-calendar-bg); }
-        .btn-calendar:hover { background-color: var(--button-calendar-bg-hover); }
-        
-        #exportButton { display: none; }
-
-        .phase-card {
-            background-color: var(--surface-color); border-radius: 12px; margin-bottom: 25px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); overflow: hidden;
+        .btn-icon-only { width: 50px; height: 50px; }
+        .btn-calendar { 
+            background-color: var(--button-calendar-bg); 
+            font-size: 16px; 
+            color: white; 
+            font-weight: bold;
+            transition: box-shadow 0.3s ease, text-shadow 0.3s ease;
         }
-        
+        .btn-calendar:not(:disabled):hover, .btn-calendar.active { 
+            box-shadow: 0 0 8px var(--button-calendar-bg);
+        }
+        .btn-calendar:not(:disabled):hover > span, .btn-calendar.active > span { 
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+        }
+        .slider-container.alarm { padding: 0; }
+        .phase-card {
+            background-color: var(--surface-color); 
+            border-radius: 12px; 
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); 
+            overflow: hidden;
+        }
         .phase-table { width: 100%; border-collapse: collapse; }
         .phase-table td { padding: 14px 18px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
         .phase-table tr:last-child td { border-bottom: none; }
         .phase-table tr:nth-child(even) { background-color: var(--row-alt-color); }
-
         .phase-header th {
-            color: white; text-align: center; font-size: 1.2em; font-weight: 700;
-            letter-spacing: 1px; padding: 12px 15px; background-color: var(--surface-color) !important;
+            color: white; 
+            text-align: center; 
+            font-size: 1.2em; 
+            font-weight: 700;
+            letter-spacing: 1px; 
+            padding: 12px 15px; 
+            background-color: var(--surface-color) !important;
         }
         .phase-1 th { background-color: var(--phase1-color) !important; }
         .phase-2 th { background-color: var(--phase2-color) !important; }
         .phase-3 th { background-color: var(--phase3-color) !important; }
         .phase-4 th { background-color: var(--phase4-color) !important; }
-
         .col-description { width: 65%; }
         .col-time { width: 35%; text-align: right; white-space: nowrap; }
         .notes { font-size: 0.9em; color: var(--secondary-text); display: block; margin-top: 4px; }
-        
+        .parenthesis { font-size: 0.85em; }
         .flex-container { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
-        .slider-container { position: relative; padding-top: 25px; flex-shrink: 0; }
+        .text-content { display: block; margin-top: 5px; width: auto; }
+        .slider-container { position: relative; flex-shrink: 0; }
         .slider-bubble {
-            position: absolute; top: -10px; color: white; padding: 4px 8px;
-            border-radius: 5px; font-size: 0.9em; font-weight: bold;
-            transform: translateX(-50%); pointer-events: none; z-index: 10;
+            position: absolute; 
+            top: 50%; 
+            width: auto;
+            height: auto;
+            padding: 2px 6px;
+            border-radius: 4px; 
+            color: white; 
+            font-size: 0.85em; 
+            font-weight: bold;
+            text-align: center;
+            transform: translate(-50%, -50%); 
+            pointer-events: auto; 
+            cursor: pointer;
+            z-index: 10;
+            box-sizing: content-box;
+            border: none;
         }
-        input[type="range"] { -webkit-appearance: none; appearance: none; width: 120px; height: 8px; background: #444; border-radius: 5px; outline: none; }
-        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 24px; height: 24px; cursor: pointer; border-radius: 50%; border: 4px solid var(--surface-color); }
-        input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; cursor: pointer; border-radius: 50%; border: 4px solid var(--surface-color); }
-        
-        .calculated-value {
-            display: inline-block; border: 1px dashed var(--border-color); border-radius: 6px; font-size: 0.9em;
-            font-weight: bold; color: white; padding: 2px 8px; min-width: 40px; text-align: center; line-height: 1.4;
-        }
-
-        /* --- Color Coding --- */
         .p2 .slider-bubble { background-color: var(--phase2-color); }
         .p3 .slider-bubble { background-color: var(--phase3-color); }
         .p4 .slider-bubble { background-color: var(--phase4-color); }
-        
-        .p2 input[type="range"]::-webkit-slider-thumb { background-color: var(--phase2-color); }
-        .p2 input[type="range"]::-moz-range-thumb    { background-color: var(--phase2-color); }
-
-        .p3 input[type="range"]::-webkit-slider-thumb { background-color: var(--phase3-color); }
-        .p3 input[type="range"]::-moz-range-thumb    { background-color: var(--phase3-color); }
-        
-        .p4 input[type="range"]::-webkit-slider-thumb { background-color: var(--phase4-color); }
-        .p4 input[type="range"]::-moz-range-thumb    { background-color: var(--phase4-color); }
-        
-        .cv-p2 { background-color: var(--phase2-darker); }
-        .cv-p3 { background-color: var(--phase3-darker); }
-        .cv-p4 { background-color: var(--phase4-darker); }
-
+        input[type="range"] { 
+            -webkit-appearance: none; 
+            appearance: none; 
+            width: 150px; 
+            height: 8px; 
+            background: #444; 
+            border-radius: 5px; 
+            outline: none; 
+            position: relative;
+            z-index: 5;
+        }
+        input[type="range"]::-webkit-slider-thumb { 
+            -webkit-appearance: none; 
+            appearance: none; 
+            width: 0; 
+            height: 0; 
+        }
+        input[type="range"]::-moz-range-thumb { 
+            width: 0; 
+            height: 0; 
+            border: none;
+        }
+        input[type="range"]#alarm_slider { width: 100px; }
+        input[type="range"]#alarm_slider::-webkit-slider-thumb { 
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px; 
+            height: 20px; 
+            cursor: pointer; 
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 16 16"><path fill="%23ffc107" d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/></svg>') no-repeat center;
+            background-size: 20px 20px;
+            border: none;
+        }
+        input[type="range"]#alarm_slider::-moz-range-thumb { 
+            width: 20px; 
+            height: 20px; 
+            cursor: pointer; 
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 16 16"><path fill="%23ffc107" d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/></svg>') no-repeat center;
+            background-size: 20px 20px;
+            border: none;
+        }
+        .calculated-value {
+            display: inline-block; 
+            border-radius: 6px; 
+            font-size: 0.9em;
+            font-weight: bold; 
+            color: white; 
+            padding: 2px 8px; 
+            min-width: 40px; 
+            width: auto;
+            text-align: center; 
+            line-height: 1.4;
+            box-sizing: content-box;
+            transition: box-shadow 0.3s ease, text-shadow 0.3s ease;
+        }
+        .calculated-value.p1 { background-color: var(--phase1-darker); }
+        .calculated-value.p2 { background-color: var(--phase2-darker); }
+        .calculated-value.p2.active { 
+            box-shadow: 0 0 5px var(--phase2-color); 
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); 
+        }
+        .calculated-value.p3 { background-color: var(--phase3-darker); }
+        .calculated-value.p3.active { 
+            box-shadow: 0 0 5px var(--phase3-color); 
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); 
+        }
+        .calculated-value.p4 { background-color: var(--phase4-darker); }
+        .calculated-value.p4.active { 
+            box-shadow: 0 0 5px var(--phase4-color); 
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); 
+        }
+        .percent-border {
+            position: relative;
+            display: inline-block;
+            padding: 2px 6px; 
+            border-radius: 4px; 
+            color: white; 
+            font-weight: bold;
+            font-size: 0.85em;
+            margin-right: 10px;
+            width: auto;
+            box-sizing: content-box;
+            background: none;
+            transition: text-shadow 0.3s ease, border 0.3s ease, box-shadow 0.3s ease;
+        }
+        .percent-border.p2 { border: 1px dashed var(--phase2-color); }
+        .percent-border.p2.active { 
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); 
+            border: 1px solid var(--phase2-color); 
+            box-shadow: 0 0 5px var(--phase2-color); 
+        }
+        .percent-border.p3 { border: 1px dashed var(--phase3-color); }
+        .percent-border.p3.active { 
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); 
+            border: 1px solid var(--phase3-color); 
+            box-shadow: 0 0 5px var(--phase3-color); 
+        }
+        .percent-border.p4 { border: 1px dashed var(--phase4-color); }
+        .percent-border.p4.active { 
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); 
+            border: 1px solid var(--phase4-color); 
+            box-shadow: 0 0 5px var(--phase4-color); 
+        }
 
         @media (max-width: 600px) {
             body { padding: 10px; padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
@@ -133,26 +315,121 @@
             .col-time { padding-top: 0; padding-left: 15px; padding-bottom: 12px; font-weight: 500; color: var(--secondary-text); }
             .phase-table tr:last-child .col-time { padding-bottom: 10px; }
             .flex-container { flex-direction: column; align-items: flex-start; gap: 10px; }
-            .slider-container { padding-top: 25px; padding-bottom: 10px; }
+            .slider-container { padding-top: 10px; padding-bottom: 10px; }
+            .input-section { 
+                display: flex; 
+                flex-direction: column; 
+                gap: 10px; 
+                justify-content: center; 
+                align-items: center; 
+                margin-bottom: 10px; 
+            }
+            .alarm-section {
+                display: none;
+                flex-direction: row;
+                gap: 5px;
+                justify-content: center;
+                align-items: center;
+                border: 1px dashed var(--button-calendar-bg);
+                padding: 5px;
+                border-radius: 8px;
+                transition: box-shadow 0.3s ease;
+                margin-bottom: 40px;
+                width: fit-content;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .alarm-section:hover {
+                box-shadow: 0 0 8px var(--button-calendar-bg);
+            }
+            input[type="text"]#totalAmount { width: 160px; }
+            input[type="datetime-local"] { width: 240px; }
+            .input-wrapper { width: 160px; }
+            .input-wrapper.date { width: 295px; display: flex; align-items: center; gap: 5px; }
+            .btn-icon-only { width: 50px; height: 50px; }
+            input[type="range"]#alarm_slider { width: 100px; }
+            .text-content { display: block; width: auto; margin-top: 5px; }
+            .percent-border, .calculated-value { 
+                display: inline-block; 
+                width: auto; 
+                box-sizing: content-box;
+                margin-top: 5px;
+            }
+            @media (max-width: 360px) {
+                .alarm-section { gap: 3px; padding: 3px; }
+            }
         }
     </style>
 </head>
 <body>
-
     <div class="container">
         <div class="input-section">
-            <input type="datetime-local" id="receiptDate" aria-label="Receipt date and time">
-            <button class="btn-icon-only" onclick="generateSchedule()" aria-label="Generate Schedule">
-                <svg class="button-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path><path d="M13 7h-2v5.414l3.293 3.293 1.414-1.414L13 11.586z"></path></svg>
-            </button>
-            <button class="btn-icon-only btn-calendar" id="exportButton" onclick="exportToICS()" aria-label="Export to Calendar">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="button-icon" viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/></svg>
-            </button>
+            <div class="input-wrapper">
+                <input type="text" id="totalAmount" placeholder="Amount ($)" aria-label="Total amount">
+                <button class="reset-button" id="resetAmount" aria-label="Reset amount">×</button>
+            </div>
+            <div class="input-wrapper date">
+                <input type="datetime-local" id="receiptDate" aria-label="Receipt date and time">
+                <button class="btn-icon-only" id="generateButton" onclick="generateSchedule()" aria-label="Generate Schedule" disabled>
+                    <svg class="button-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path><path d="M13 7h-2v5.414l3.293 3.293 1.414-1.414L13 11.586z"></path></svg>
+                </button>
+            </div>
+        </div>
+        <div class="alarm-section">
+            <div class="slider-container alarm">
+                <input type="range" min="1" max="60" value="30" id="alarm_slider" aria-label="Alarm time in minutes">
+            </div>
+            <button class="btn-icon-only btn-calendar" id="exportButton" onclick="exportToOrg()" aria-label="Export to Orgzly"><span>30'</span></button>
         </div>
         <div id="schedule-container"></div>
     </div>
 
     <script>
+        let totalAmount = 0;
+        const amountInput = document.getElementById('totalAmount');
+        const dateInput = document.getElementById('receiptDate');
+        const generateButton = document.getElementById('generateButton');
+        const resetButton = document.getElementById('resetAmount');
+        const scheduleContainer = document.getElementById('schedule-container');
+        const alarmSection = document.querySelector('.alarm-section');
+
+        function validateInputs() {
+            const amountValid = amountInput.value && parseFloat(amountInput.value.replace(/,/g, '')) > 0;
+            const dateValid = dateInput.value;
+            generateButton.disabled = !(amountValid && dateValid);
+            resetButton.classList.toggle('visible', amountInput.value.length > 0);
+        }
+
+        amountInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/[^0-9.]/g, '');
+            e.target.value = value;
+            validateInputs();
+        });
+
+        amountInput.addEventListener('blur', function(e) {
+            let value = e.target.value.replace(/[^0-9.]/g, '');
+            let num = parseFloat(value);
+            if (!isNaN(num) && num >= 0) {
+                e.target.value = num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                totalAmount = num;
+            } else {
+                e.target.value = '';
+                totalAmount = 0;
+            }
+            validateInputs();
+        });
+
+        dateInput.addEventListener('input', validateInputs);
+
+        resetButton.addEventListener('click', () => {
+            amountInput.value = '';
+            totalAmount = 0;
+            resetButton.classList.remove('visible');
+            generateButton.disabled = true;
+            scheduleContainer.innerHTML = '';
+            alarmSection.style.display = 'none';
+        });
+
         function addRandomTime(baseDate, minHours = 0, maxHours = 0, minMinutes = 0, maxMinutes = 0) {
             const randomHours = minHours + Math.random() * (maxHours - minHours);
             const randomMinutes = minMinutes + Math.random() * (maxMinutes - minMinutes);
@@ -164,20 +441,26 @@
             const options = { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true };
             return new Intl.DateTimeFormat('en-US', options).format(date);
         }
-        
-        function updateSliderBubble(slider) {
-            const bubble = slider.previousElementSibling;
-            if (!bubble) return;
-            const currentValue = slider.value;
-            const min = slider.min;
-            const max = slider.max;
-            const thumbWidth = 24;
-            const sliderWidth = slider.offsetWidth;
-            bubble.innerHTML = currentValue + '%';
-            const progress = (currentValue - min) / (max - min);
-            const trackWidth = sliderWidth - thumbWidth;
-            const newPosition = progress * trackWidth + (thumbWidth / 2);
-            bubble.style.left = `calc(${newPosition}px)`;
+
+        function formatAmount(amount) {
+            return amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function formatOrgDate(date, alarmMinutes) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const dayName = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][date.getDay()];
+            return `<${year}-${month}-${day} ${dayName} ${hours}:${minutes} -${alarmMinutes}'>`;
+        }
+
+        function updateAlarmText(slider) {
+            const exportButton = document.getElementById('exportButton');
+            if (exportButton) {
+                exportButton.querySelector('span').textContent = `${Math.round(slider.value)}'`;
+            }
         }
 
         function getScheduleTimestamps(baseDate) {
@@ -198,100 +481,323 @@
             return { baseDate, p1_shield, p2_unshield1, p2_unshield2, p2_intent1, p2_intent2, p3_payy, p3_crosspay1, p3_crosspay2, p3_crosspay3, p4_consol1, p4_consol2, p4_cold1, p4_cold2 };
         }
 
+        function generateRandomPercentages(remainderPercent) {
+            const minPercent = 10;
+            if (remainderPercent < minPercent * 3) {
+                const equalPercent = Math.round(remainderPercent / 3);
+                const savings1 = equalPercent;
+                const savings2 = equalPercent;
+                const savings3 = remainderPercent - savings1 - savings2;
+                return [savings1, savings2, savings3];
+            }
+            const maxSavings1 = remainderPercent - 2 * minPercent;
+            const savings1 = Math.round(minPercent + Math.random() * (maxSavings1 - minPercent));
+            const maxSavings2 = remainderPercent - savings1 - minPercent;
+            const savings2 = Math.round(minPercent + Math.random() * (maxSavings2 - minPercent));
+            const savings3 = remainderPercent - savings1 - savings2;
+            if (savings3 < minPercent) {
+                const excess = minPercent - savings3;
+                if (savings1 > minPercent + excess) {
+                    return [savings1 - excess, savings2, savings3 + excess];
+                } else if (savings2 > minPercent + excess) {
+                    return [savings1, savings2 - excess, savings3 + excess];
+                }
+            }
+            return [savings1, savings2, savings3];
+        }
+
         function generateSchedule() {
+            const amountElement = document.getElementById('totalAmount');
             const inputElement = document.getElementById('receiptDate');
             const container = document.getElementById('schedule-container');
-            if (!inputElement.value) {
-                container.innerHTML = `<p style="color: #d63384; text-align: center;">Please select a valid date and time.</p>`;
+            if (!inputElement.value || !amountElement.value || parseFloat(amountElement.value.replace(/,/g, '')) <= 0) {
+                container.innerHTML = `<p style="color: #d63384; text-align: center;">Please select a valid date, time, and positive amount.</p>`;
                 return;
             }
-            document.getElementById('exportButton').style.display = 'flex';
+            totalAmount = parseFloat(amountElement.value.replace(/,/g, ''));
+            alarmSection.style.display = 'flex';
             const baseDate = new Date(inputElement.value);
             const timestamps = getScheduleTimestamps(baseDate);
+            const [initialSavings1, initialSavings2, initialSavings3] = generateRandomPercentages(100);
 
             let html = `
                 <div class="phase-card">
                     <table class="phase-table"><tbody>
                         <tr class="phase-header phase-1"><th colspan="2">Phase 1 – Secure Accumulation</th></tr>
-                        <tr><td class="col-description"><strong>Funds received in B1</strong><br><span class="notes">Starting point of the schedule.</span></td><td class="col-time">${formatDateTime(timestamps.baseDate)}</td></tr>
-                        <tr><td class="col-description"><strong>B1 → Railgun (Shield)</strong><br><span class="notes">Move funds to the privacy pool.</span></td><td class="col-time">${formatDateTime(timestamps.p1_shield)}</td></tr>
+                        <tr><td class="col-description"><strong>Funds received in B1</strong><br><div class="text-content"><span class="calculated-value p1">$<span id="base_amount">${formatAmount(totalAmount)}</span></span></div><span class="notes">Starting point of the schedule.</span></td><td class="col-time">${formatDateTime(timestamps.baseDate)}</td></tr>
+                        <tr><td class="col-description"><strong>B1 → Railgun <span class="parenthesis">(Shield)</span></strong><br><div class="text-content"><span class="calculated-value p1">$<span id="shield_amount">${formatAmount(totalAmount)}</span></span></div><span class="notes">Move funds to the privacy pool.</span></td><td class="col-time">${formatDateTime(timestamps.p1_shield)}</td></tr>
                     </tbody></table>
                 </div>
                 <div class="phase-card">
                     <table class="phase-table"><tbody>
                         <tr class="phase-header phase-2"><th colspan="2">Phase 2 – "Flash Pass"</th></tr>
                         <tr>
-                            <td><div class="flex-container"><div class="text-content"><strong>Railgun → B2 (Unshield 1/2)</strong><span class="notes">First withdrawal from pool.</span></div><div class="slider-container p2"><div class="slider-bubble"></div><input type="range" min="50" max="65" value="65" id="unshield_slider"></div></div></td>
+                            <td><div class="flex-container"><div class="text-content"><strong>Railgun → B2 <span class="parenthesis">(Unshield 1/2)</span></strong><br><span class="calculated-value p2">$<span id="unshield1_amount">${formatAmount(totalAmount * 0.65)}</span></span><span class="notes">First withdrawal from pool.</span></div><div class="slider-container p2"><div class="slider-bubble"></div><input type="range" min="50" max="65" value="65" id="unshield_slider" class="p2"></div></div></td>
                             <td class="col-time">${formatDateTime(timestamps.p2_unshield1)}</td>
                         </tr>
                         <tr>
-                            <td class="col-description"><strong>Railgun → B2 (Unshield 2/2) <span class="calculated-value cv-p2"><span id="unshield2_percent">35</span>%</span></strong><br><span class="notes">Second withdrawal.</span></td>
+                            <td class="col-description"><strong>Railgun → B2 <span class="parenthesis">(Unshield 2/2)</span></strong><br><div class="text-content"><span class="percent-border p2"><span id="unshield2_percent">35</span>%</span> <span class="calculated-value p2">$<span id="unshield2_amount">${formatAmount(totalAmount * 0.35)}</span></span></div><span class="notes">Second withdrawal.</span></td>
                             <td class="col-time">${formatDateTime(timestamps.p2_unshield2)}</td>
                         </tr>
                         <tr>
-                             <td><div class="flex-container"><div class="text-content"><strong>B2 → ZEC (Intent 1/2)</strong><span class="notes">First USDC→ZEC conversion.</span></div><div class="slider-container p2"><div class="slider-bubble"></div><input type="range" min="60" max="80" value="70" id="intent_slider"></div></div></td>
+                            <td><div class="flex-container"><div class="text-content"><strong>B2 → ZEC <span class="parenthesis">(Intent 1/2)</span></strong><br><span class="calculated-value p2">$<span id="intent1_amount">${formatAmount(totalAmount * 0.70)}</span></span><span class="notes">First USDC→ZEC conversion.</span></div><div class="slider-container p2"><div class="slider-bubble"></div><input type="range" min="60" max="80" value="70" id="intent_slider" class="p2"></div></div></td>
                             <td class="col-time">${formatDateTime(timestamps.p2_intent1)}</td>
                         </tr>
                         <tr>
-                            <td class="col-description"><strong>B2 → ZEC (Intent 2/2) <span class="calculated-value cv-p2"><span id="intent2_percent">30</span>%</span></strong><br><span class="notes">Second USDC→ZEC conversion.</span></td>
+                            <td class="col-description"><strong>B2 → ZEC <span class="parenthesis">(Intent 2/2)</span></strong><br><div class="text-content"><span class="percent-border p2"><span id="intent2_percent">30</span>%</span> <span class="calculated-value p2">$<span id="intent2_amount">${formatAmount(totalAmount * 0.30)}</span></span></div><span class="notes">Second USDC→ZEC conversion.</span></td>
                             <td class="col-time">${formatDateTime(timestamps.p2_intent2)}</td>
                         </tr>
                     </tbody></table>
                 </div>
                 <div class="phase-card">
-                     <table class="phase-table"><tbody>
+                    <table class="phase-table"><tbody>
                         <tr class="phase-header phase-3"><th colspan="2">Phase 3 – Private Exits</th></tr>
-                        <tr><td class="col-description"><strong>Zashi CrossPay → Payy (Single Batch)</strong><br><span class="notes">Priority exit for Spending to minimize volatility.</span></td><td class="col-time">${formatDateTime(timestamps.p3_payy)}</td></tr>
                         <tr>
-                            <td><div class="flex-container"><div class="text-content"><strong>Zashi CrossPay → B3 (Batch 1/3)</strong><span class="notes">Exit ZEC→USDC Arbitrum for Savings.</span></div><div class="slider-container p3"><div class="slider-bubble"></div><input type="range" min="30" max="50" value="40" id="savings_slider"></div></div></td>
+                            <td><div class="flex-container"><div class="text-content"><strong>Zashi CrossPay → Payy <span class="parenthesis">(Single Batch)</span></strong><br><span class="calculated-value p3">$<span id="payy_amount">${formatAmount(0)}</span></span><span class="notes">Priority exit for Spending to minimize volatility.</span></div><div class="slider-container p3"><div class="slider-bubble"></div><input type="range" min="0" max="30" value="0" id="payy_slider" class="p3"></div></div></td>
+                            <td class="col-time">${formatDateTime(timestamps.p3_payy)}</td>
+                        </tr>
+                        <tr>
+                            <td class="col-description"><strong>Zashi CrossPay → B3 <span class="parenthesis">(Batch 1/3)</span></strong><br><div class="text-content"><span class="percent-border p3"><span id="savings1_percent">${initialSavings1}</span>%</span> <span class="calculated-value p3">$<span id="savings1_amount">${formatAmount(totalAmount * (initialSavings1 / 100))}</span></span></div><span class="notes">Exit ZEC→USDC Arbitrum for Savings.</span></td>
                             <td class="col-time">${formatDateTime(timestamps.p3_crosspay1)}</td>
                         </tr>
-                        <tr><td class="col-description"><strong>Zashi CrossPay → B3 (Batch 2/3) <span class="calculated-value cv-p3"><span id="savings2_percent">33</span>%</span></strong><br><span class="notes">Second exit for Savings.</span></td><td class="col-time">${formatDateTime(timestamps.p3_crosspay2)}</td></tr>
-                        <tr><td class="col-description"><strong>Zashi CrossPay → B3 (Batch 3/3) <span class="calculated-value cv-p3"><span id="savings3_percent">27</span>%</span></strong><br><span class="notes">Third exit for Savings.</span></td><td class="col-time">${formatDateTime(timestamps.p3_crosspay3)}</td></tr>
+                        <tr>
+                            <td class="col-description"><strong>Zashi CrossPay → B3 <span class="parenthesis">(Batch 2/3)</span></strong><br><div class="text-content"><span class="percent-border p3"><span id="savings2_percent">${initialSavings2}</span>%</span> <span class="calculated-value p3">$<span id="savings2_amount">${formatAmount(totalAmount * (initialSavings2 / 100))}</span></span></div><span class="notes">Second exit for Savings.</span></td>
+                            <td class="col-time">${formatDateTime(timestamps.p3_crosspay2)}</td>
+                        </tr>
+                        <tr>
+                            <td class="col-description"><strong>Zashi CrossPay → B3 <span class="parenthesis">(Batch 3/3)</span></strong><br><div class="text-content"><span class="percent-border p3"><span id="savings3_percent">${initialSavings3}</span>%</span> <span class="calculated-value p3">$<span id="savings3_amount">${formatAmount(totalAmount * (initialSavings3 / 100))}</span></span></div><span class="notes">Third exit for Savings.</span></td>
+                            <td class="col-time">${formatDateTime(timestamps.p3_crosspay3)}</td>
+                        </tr>
                     </tbody></table>
                 </div>
                 <div class="phase-card">
                     <table class="phase-table"><tbody>
                         <tr class="phase-header phase-4"><th colspan="2">Phase 4 – Consolidation & Cold Storage</th></tr>
                         <tr>
-                            <td><div class="flex-container"><div class="text-content"><strong>B3 → Savings Wallet (Consolidation 1/2)</strong><span class="notes">Move funds from B3 to savings wallet.</span></div><div class="slider-container p4"><div class="slider-bubble"></div><input type="range" min="40" max="60" value="50" id="consolidation_slider"></div></div></td>
+                            <td><div class="flex-container"><div class="text-content"><strong>B3 → Savings Wallet <span class="parenthesis">(Consolidation 1/2)</span></strong><br><span class="calculated-value p4">$<span id="consol1_amount">${formatAmount(totalAmount * 0.50)}</span></span><span class="notes">Move funds from B3 to savings wallet.</span></div><div class="slider-container p4"><div class="slider-bubble"></div><input type="range" min="40" max="60" value="50" id="consolidation_slider" class="p4"></div></div></td>
                             <td class="col-time">${formatDateTime(timestamps.p4_consol1)}</td>
                         </tr>
-                         <tr><td class="col-description"><strong>B3 → Savings Wallet (Consolidation 2/2) <span class="calculated-value cv-p4"><span id="consolidation2_percent">50</span>%</span></strong><br><span class="notes">Second batch to savings.</span></td><td class="col-time">${formatDateTime(timestamps.p4_consol2)}</td></tr>
                         <tr>
-                           <td><div class="flex-container"><div class="text-content"><strong>Savings → Cold Wallet (Batch 1/2)</strong><span class="notes">Movement to cold storage.</span></div><div class="slider-container p4"><div class="slider-bubble"></div><input type="range" min="40" max="60" value="50" id="cold_slider"></div></div></td>
+                            <td class="col-description"><strong>B3 → Savings Wallet <span class="parenthesis">(Consolidation 2/2)</span></strong><br><div class="text-content"><span class="percent-border p4"><span id="consolidation2_percent">50</span>%</span> <span class="calculated-value p4">$<span id="consol2_amount">${formatAmount(totalAmount * 0.50)}</span></span></div><span class="notes">Second batch to savings.</span></td>
+                            <td class="col-time">${formatDateTime(timestamps.p4_consol2)}</td>
+                        </tr>
+                        <tr>
+                            <td><div class="flex-container"><div class="text-content"><strong>Savings → Cold Wallet <span class="parenthesis">(Batch 1/2)</span></strong><br><span class="calculated-value p4">$<span id="cold1_amount">${formatAmount(totalAmount * 0.50)}</span></span><span class="notes">Movement to cold storage.</span></div><div class="slider-container p4"><div class="slider-bubble"></div><input type="range" min="40" max="60" value="50" id="cold_slider" class="p4"></div></div></td>
                             <td class="col-time">${formatDateTime(timestamps.p4_cold1)}</td>
                         </tr>
-                         <tr><td class="col-description"><strong>Savings → Cold Wallet (Batch 2/2) <span class="calculated-value cv-p4"><span id="cold2_percent">50</span>%</span></strong><br><span class="notes">Final movement to cold storage.</span></td><td class="col-time">${formatDateTime(timestamps.p4_cold2)}</td></tr>
+                        <tr>
+                            <td class="col-description"><strong>Savings → Cold Wallet <span class="parenthesis">(Batch 2/2)</span></strong><br><div class="text-content"><span class="percent-border p4"><span id="cold2_percent">50</span>%</span> <span class="calculated-value p4">$<span id="cold2_amount">${formatAmount(totalAmount * 0.50)}</span></span></div><span class="notes">Final movement to cold storage.</span></td>
+                            <td class="col-time">${formatDateTime(timestamps.p4_cold2)}</td>
+                        </tr>
                     </tbody></table>
                 </div>`;
 
             container.innerHTML = html;
             attachAllListeners();
+            updateAllAmounts();
+        }
+
+        function updateSliderBubble(slider) {
+            const bubble = slider.previousElementSibling;
+            if (!bubble || slider.id === 'alarm_slider') return;
+            const currentValue = Math.round(slider.value);
+            const min = parseFloat(slider.min);
+            const max = parseFloat(slider.max);
+            const sliderWidth = slider.offsetWidth;
+            bubble.innerHTML = `${currentValue}%`;
+            const progress = (currentValue - min) / (max - min);
+            const trackWidth = sliderWidth - bubble.offsetWidth;
+            const newPosition = progress * trackWidth + (bubble.offsetWidth / 2);
+            bubble.style.left = `calc(${newPosition}px)`;
+        }
+
+        function attachBubbleListeners() {
+            const sliders = [
+                { id: 'unshield_slider', outputs: ['unshield2_percent'], amountOutputs: ['unshield1_amount', 'unshield2_amount'] },
+                { id: 'intent_slider', outputs: ['intent2_percent'], amountOutputs: ['intent1_amount', 'intent2_amount'] },
+                { id: 'consolidation_slider', outputs: ['consolidation2_percent'], amountOutputs: ['consol1_amount', 'consol2_amount'] },
+                { id: 'cold_slider', outputs: ['cold2_percent'], amountOutputs: ['cold1_amount', 'cold2_amount'] },
+                { id: 'payy_slider', outputs: ['savings1_percent', 'savings2_percent', 'savings3_percent'], amountOutputs: ['payy_amount', 'savings1_amount', 'savings2_amount', 'savings3_amount'] },
+                { id: 'alarm_slider', outputs: [], amountOutputs: [] }
+            ];
+
+            sliders.forEach(s => {
+                const slider = document.getElementById(s.id);
+                if (!slider) return;
+                const bubble = slider.previousElementSibling;
+                const exportButton = document.getElementById('exportButton');
+
+                let isDragging = false;
+
+                const activateGlow = () => {
+                    if (s.id === 'alarm_slider' && exportButton) {
+                        exportButton.classList.add('active');
+                    } else {
+                        if (bubble) {
+                            bubble.classList.add('active');
+                        }
+                        s.outputs.forEach(outputId => {
+                            const percentEl = document.getElementById(outputId);
+                            if (percentEl) {
+                                percentEl.parentElement.classList.add('active');
+                            }
+                        });
+                        s.amountOutputs.forEach(amountId => {
+                            const amountEl = document.getElementById(amountId);
+                            if (amountEl) {
+                                amountEl.parentElement.classList.add('active');
+                            }
+                        });
+                    }
+                };
+
+                const deactivateGlow = () => {
+                    if (s.id === 'alarm_slider' && exportButton) {
+                        exportButton.classList.remove('active');
+                    } else {
+                        if (bubble) {
+                            bubble.classList.remove('active');
+                        }
+                        s.outputs.forEach(outputId => {
+                            const percentEl = document.getElementById(outputId);
+                            if (percentEl) {
+                                percentEl.parentElement.classList.remove('active');
+                            }
+                        });
+                        s.amountOutputs.forEach(amountId => {
+                            const amountEl = document.getElementById(amountId);
+                            if (amountEl) {
+                                amountEl.parentElement.classList.remove('active');
+                            }
+                        });
+                    }
+                };
+
+                if (bubble) {
+                    bubble.addEventListener('mousedown', (e) => {
+                        isDragging = true;
+                        document.body.style.userSelect = 'none';
+                        activateGlow();
+                    });
+
+                    bubble.addEventListener('mouseover', () => {
+                        if (s.id === 'alarm_slider' && exportButton) {
+                            exportButton.classList.add('active');
+                        }
+                    });
+
+                    bubble.addEventListener('mouseout', () => {
+                        if (s.id === 'alarm_slider' && !isDragging && exportButton) {
+                            exportButton.classList.remove('active');
+                        }
+                    });
+                }
+
+                slider.addEventListener('mousedown', () => {
+                    isDragging = true;
+                    document.body.style.userSelect = 'none';
+                    activateGlow();
+                });
+
+                slider.addEventListener('touchstart', (e) => {
+                    isDragging = true;
+                    document.body.style.userSelect = 'none';
+                    activateGlow();
+                    e.preventDefault();
+                });
+
+                document.addEventListener('mousemove', (e) => {
+                    if (!isDragging) return;
+                    const rect = slider.getBoundingClientRect();
+                    const min = parseFloat(slider.min);
+                    const max = parseFloat(slider.max);
+                    let newValue = ((e.clientX - rect.left) / rect.width) * (max - min) + min;
+                    newValue = Math.min(max, Math.max(min, newValue));
+                    slider.value = newValue;
+                    slider.dispatchEvent(new Event('input'));
+                    if (s.id === 'alarm_slider' && exportButton) {
+                        exportButton.classList.add('active');
+                    }
+                });
+
+                document.addEventListener('touchmove', (e) => {
+                    if (!isDragging) return;
+                    const rect = slider.getBoundingClientRect();
+                    const min = parseFloat(slider.min);
+                    const max = parseFloat(slider.max);
+                    const touch = e.touches[0];
+                    let newValue = ((touch.clientX - rect.left) / rect.width) * (max - min) + min;
+                    newValue = Math.min(max, Math.max(min, newValue));
+                    slider.value = newValue;
+                    slider.dispatchEvent(new Event('input'));
+                    if (s.id === 'alarm_slider' && exportButton) {
+                        exportButton.classList.add('active');
+                    }
+                });
+
+                document.addEventListener('mouseup', () => {
+                    if (isDragging) {
+                        isDragging = false;
+                        document.body.style.userSelect = '';
+                        deactivateGlow();
+                    }
+                });
+
+                document.addEventListener('touchend', () => {
+                    if (isDragging) {
+                        isDragging = false;
+                        document.body.style.userSelect = '';
+                        deactivateGlow();
+                    }
+                });
+            });
+        }
+
+        function updateSavings() {
+            const payySlider = document.getElementById('payy_slider');
+            if (!payySlider) return;
+            updateSliderBubble(payySlider);
+            const payyPercent = Math.round(parseFloat(payySlider.value));
+            const remainderPercent = 100 - payyPercent;
+            const [savings1, savings2, savings3] = generateRandomPercentages(remainderPercent);
+
+            document.getElementById('savings1_percent').textContent = savings1;
+            document.getElementById('savings2_percent').textContent = savings2;
+            document.getElementById('savings3_percent').textContent = savings3;
+
+            document.getElementById('payy_amount').textContent = formatAmount((payyPercent / 100) * totalAmount);
+            document.getElementById('savings1_amount').textContent = formatAmount((savings1 / 100) * totalAmount);
+            document.getElementById('savings2_amount').textContent = formatAmount((savings2 / 100) * totalAmount);
+            document.getElementById('savings3_amount').textContent = formatAmount((savings3 / 100) * totalAmount);
         }
 
         function attachAllListeners() {
-             const sliders = [
-                { id: 'unshield_slider', outputs: ['unshield2_percent'] },
-                { id: 'intent_slider', outputs: ['intent2_percent'] },
-                { id: 'consolidation_slider', outputs: ['consolidation2_percent'] },
-                { id: 'cold_slider', outputs: ['cold2_percent'] },
-                { id: 'savings_slider', outputs: ['savings2_percent', 'savings3_percent'] }
+            const sliders = [
+                { id: 'unshield_slider', outputs: ['unshield2_percent'], amountOutputs: ['unshield1_amount', 'unshield2_amount'], class: 'p2' },
+                { id: 'intent_slider', outputs: ['intent2_percent'], amountOutputs: ['intent1_amount', 'intent2_amount'], class: 'p2' },
+                { id: 'consolidation_slider', outputs: ['consolidation2_percent'], amountOutputs: ['consol1_amount', 'consol2_amount'], class: 'p4' },
+                { id: 'cold_slider', outputs: ['cold2_percent'], amountOutputs: ['cold1_amount', 'cold2_amount'], class: 'p4' },
+                { id: 'payy_slider', outputs: ['savings1_percent', 'savings2_percent', 'savings3_percent'], amountOutputs: ['payy_amount', 'savings1_amount', 'savings2_amount', 'savings3_amount'], class: 'p3' },
+                { id: 'alarm_slider', outputs: [], amountOutputs: [], class: '' }
             ];
             sliders.forEach(s => {
                 const sliderEl = document.getElementById(s.id);
                 if (sliderEl) {
                     const update = () => {
-                        updateSliderBubble(sliderEl);
-                        if (s.id === 'savings_slider') {
-                            const sliderValue = parseInt(sliderEl.value);
-                            const remainder = 100 - sliderValue;
-                            const batch2 = Math.round(remainder * 0.55);
-                            const batch3 = remainder - batch2;
-                            document.getElementById(s.outputs[0]).textContent = batch2;
-                            document.getElementById(s.outputs[1]).textContent = batch3;
-                        } else {
-                            document.getElementById(s.outputs[0]).textContent = 100 - sliderEl.value;
+                        if (s.id !== 'alarm_slider') {
+                            updateSliderBubble(sliderEl);
+                        }
+                        if (s.id === 'alarm_slider') {
+                            updateAlarmText(sliderEl);
+                        }
+                        const sliderValue = Math.round(parseFloat(sliderEl.value));
+                        if (s.id === 'payy_slider') {
+                            updateSavings();
+                        } else if (s.id !== 'alarm_slider') {
+                            const remainder = Math.round(100 - sliderValue);
+                            document.getElementById(s.outputs[0]).textContent = remainder;
+                            document.getElementById(s.amountOutputs[0]).textContent = formatAmount((sliderValue / 100) * totalAmount);
+                            document.getElementById(s.amountOutputs[1]).textContent = formatAmount((remainder / 100) * totalAmount);
                         }
                     };
                     sliderEl.addEventListener('input', update);
@@ -299,75 +805,86 @@
                     update();
                 }
             });
+            attachBubbleListeners();
         }
 
-        function formatICSDate(date) {
-            return date.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
+        function updateAllAmounts() {
+            document.getElementById('base_amount').textContent = formatAmount(totalAmount);
+            document.getElementById('shield_amount').textContent = formatAmount(totalAmount);
         }
 
-        function exportToICS() {
+        function exportToOrg() {
             const inputElement = document.getElementById('receiptDate');
             if (!inputElement.value) { alert("Please select a start date and time first."); return; }
             
             const baseDate = new Date(inputElement.value);
             const timestamps = getScheduleTimestamps(baseDate);
+            const alarmMinutes = Math.round(parseFloat(document.getElementById('alarm_slider').value));
 
-            const unshield1 = document.getElementById('unshield_slider').value;
+            const unshield1 = Math.round(parseFloat(document.getElementById('unshield_slider').value));
             const unshield2 = 100 - unshield1;
-            const intent1 = document.getElementById('intent_slider').value;
+            const intent1 = Math.round(parseFloat(document.getElementById('intent_slider').value));
             const intent2 = 100 - intent1;
-            const savings1 = document.getElementById('savings_slider').value;
-            const savingsRemainder = 100 - savings1;
-            const savings2 = Math.round(savingsRemainder * 0.55);
-            const savings3 = savingsRemainder - savings2;
-            const consolidation1 = document.getElementById('consolidation_slider').value;
-            const consolidation2 = 100 - consolidation1;
-            const cold1 = document.getElementById('cold_slider').value;
+            const payy = Math.round(parseFloat(document.getElementById('payy_slider').value));
+            const remainderPercent = 100 - payy;
+            const [savings1, savings2, savings3] = generateRandomPercentages(remainderPercent);
+
+            const payyAmount = formatAmount((payy / 100) * totalAmount);
+            const savings1Amount = formatAmount((savings1 / 100) * totalAmount);
+            const savings2Amount = formatAmount((savings2 / 100) * totalAmount);
+            const savings3Amount = formatAmount((savings3 / 100) * totalAmount);
+            const unshield1Amount = formatAmount((unshield1 / 100) * totalAmount);
+            const unshield2Amount = formatAmount((unshield2 / 100) * totalAmount);
+            const intent1Amount = formatAmount((intent1 / 100) * totalAmount);
+            const intent2Amount = formatAmount((intent2 / 100) * totalAmount);
+            const consol1 = Math.round(parseFloat(document.getElementById('consolidation_slider').value));
+            const consol2 = 100 - consol1;
+            const consol1Amount = formatAmount((consol1 / 100) * totalAmount);
+            const consol2Amount = formatAmount((consol2 / 100) * totalAmount);
+            const cold1 = Math.round(parseFloat(document.getElementById('cold_slider').value));
             const cold2 = 100 - cold1;
+            const cold1Amount = formatAmount((cold1 / 100) * totalAmount);
+            const cold2Amount = formatAmount((cold2 / 100) * totalAmount);
 
             const events = [
-                { date: timestamps.p1_shield, summary: "Phase 1: B1 -> Railgun (Shield)" },
-                { date: timestamps.p2_unshield1, summary: `Phase 2: Railgun -> B2 (Unshield 1/2) [${unshield1}%]` },
-                { date: timestamps.p2_unshield2, summary: `Phase 2: Railgun -> B2 (Unshield 2/2) [${unshield2}%]` },
-                { date: timestamps.p2_intent1, summary: `Phase 2: B2 -> ZEC (Intent 1/2) [${intent1}%]` },
-                { date: timestamps.p2_intent2, summary: `Phase 2: B2 -> ZEC (Intent 2/2) [${intent2}%]` },
-                { date: timestamps.p3_payy, summary: "Phase 3: Zashi -> Payy" },
-                { date: timestamps.p3_crosspay1, summary: `Phase 3: Zashi -> B3 (Batch 1/3) [${savings1}%]` },
-                { date: timestamps.p3_crosspay2, summary: `Phase 3: Zashi -> B3 (Batch 2/3) [~${savings2}% of remainder]` },
-                { date: timestamps.p3_crosspay3, summary: `Phase 3: Zashi -> B3 (Batch 3/3) [~${savings3}% of remainder]` },
-                { date: timestamps.p4_consol1, summary: `Phase 4: B3 -> Savings (Consolidation 1/2) [${consolidation1}%]` },
-                { date: timestamps.p4_consol2, summary: `Phase 4: B3 -> Savings (Consolidation 2/2) [${consolidation2}%]` },
-                { date: timestamps.p4_cold1, summary: `Phase 4: Savings -> Cold Wallet (Batch 1/2) [${cold1}%]` },
-                { date: timestamps.p4_cold2, summary: `Phase 4: Savings -> Cold Wallet (Batch 2/2) [${cold2}%]` }
+                { phase: 'Phase 1 – Secure Accumulation', title: 'Funds received in B1', date: timestamps.baseDate, amount: formatAmount(totalAmount), percent: '100', note: 'Starting point of the schedule.' },
+                { phase: 'Phase 1 – Secure Accumulation', title: 'B1 → Railgun (Shield)', date: timestamps.p1_shield, amount: formatAmount(totalAmount), percent: '100', note: 'Move funds to the privacy pool.' },
+                { phase: 'Phase 2 – "Flash Pass"', title: 'Railgun → B2 (Unshield 1/2)', date: timestamps.p2_unshield1, amount: unshield1Amount, percent: unshield1, note: 'First withdrawal from pool.' },
+                { phase: 'Phase 2 – "Flash Pass"', title: 'Railgun → B2 (Unshield 2/2)', date: timestamps.p2_unshield2, amount: unshield2Amount, percent: unshield2, note: 'Second withdrawal.' },
+                { phase: 'Phase 2 – "Flash Pass"', title: 'B2 → ZEC (Intent 1/2)', date: timestamps.p2_intent1, amount: intent1Amount, percent: intent1, note: 'First USDC→ZEC conversion.' },
+                { phase: 'Phase 2 – "Flash Pass"', title: 'B2 → ZEC (Intent 2/2)', date: timestamps.p2_intent2, amount: intent2Amount, percent: intent2, note: 'Second USDC→ZEC conversion.' },
+                { phase: 'Phase 3 – Private Exits', title: 'Zashi CrossPay → Payy (Single Batch)', date: timestamps.p3_payy, amount: payyAmount, percent: payy, note: 'Priority exit for Spending to minimize volatility.' },
+                { phase: 'Phase 3 – Private Exits', title: 'Zashi CrossPay → B3 (Batch 1/3)', date: timestamps.p3_crosspay1, amount: savings1Amount, percent: savings1, note: 'Exit ZEC→USDC Arbitrum for Savings.' },
+                { phase: 'Phase 3 – Private Exits', title: 'Zashi CrossPay → B3 (Batch 2/3)', date: timestamps.p3_crosspay2, amount: savings2Amount, percent: savings2, note: 'Second exit for Savings.' },
+                { phase: 'Phase 3 – Private Exits', title: 'Zashi CrossPay → B3 (Batch 3/3)', date: timestamps.p3_crosspay3, amount: savings3Amount, percent: savings3, note: 'Third exit for Savings.' },
+                { phase: 'Phase 4 – Consolidation & Cold Storage', title: 'B3 → Savings Wallet (Consolidation 1/2)', date: timestamps.p4_consol1, amount: consol1Amount, percent: consol1, note: 'Move funds from B3 to savings wallet.' },
+                { phase: 'Phase 4 – Consolidation & Cold Storage', title: 'B3 → Savings Wallet (Consolidation 2/2)', date: timestamps.p4_consol2, amount: consol2Amount, percent: consol2, note: 'Second batch to savings.' },
+                { phase: 'Phase 4 – Consolidation & Cold Storage', title: 'Savings → Cold Wallet (Batch 1/2)', date: timestamps.p4_cold1, amount: cold1Amount, percent: cold1, note: 'Movement to cold storage.' },
+                { phase: 'Phase 4 – Consolidation & Cold Storage', title: 'Savings → Cold Wallet (Batch 2/2)', date: timestamps.p4_cold2, amount: cold2Amount, percent: cold2, note: 'Final movement to cold storage.' }
             ];
 
-            let icsString = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//PrivacyScheduler//EN'].join('\n') + '\n';
-            events.forEach((event, i) => {
-                const eventStart = event.date;
-                const eventEnd = new Date(eventStart.getTime() + 15 * 60 * 1000);
-                icsString += [
-                    'BEGIN:VEVENT', `UID:${Date.now()}${i}@privacyscheduler.com`,
-                    `DTSTAMP:${formatICSDate(new Date())}`, `DTSTART:${formatICSDate(eventStart)}`,
-                    `DTEND:${formatICSDate(eventEnd)}`, `SUMMARY:${event.summary}`,
-                    'END:VEVENT'
-                ].join('\n') + '\n';
+            let orgString = '#+TITLE: Privacy Schedule\n\n';
+            let currentPhase = '';
+            events.forEach(event => {
+                if (event.phase !== currentPhase) {
+                    currentPhase = event.phase;
+                    orgString += `* ${currentPhase}\n`;
+                }
+                orgString += `** ${event.title}\n`;
+                orgString += `   SCHEDULED: ${formatOrgDate(event.date, alarmMinutes)}\n`;
+                orgString += `:PROPERTIES:\n:AMOUNT: $${event.amount}\n:PERCENT: ${event.percent}%\n:END:\n`;
+                orgString += `${event.note}\n\n`;
             });
-            icsString += 'END:VCALENDAR';
 
-            const blob = new Blob([icsString], { type: 'text/calendar;charset=utf-8' });
+            const blob = new Blob([orgString], { type: 'text/plain;charset=utf-8' });
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
-            link.setAttribute("download", "privacy_schedule.ics");
+            link.setAttribute("download", "privacy_schedule.org");
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
         }
 
-        // =======================================================
-        // 2. REGISTRO DEL SERVICE WORKER (AÑADIDO)
-        // Esto activa el service worker para que la app
-        // funcione offline y cumpla los requisitos de PWA.
-        // =======================================================
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js')
@@ -380,6 +897,5 @@
             });
         }
     </script>
-
 </body>
 </html>
