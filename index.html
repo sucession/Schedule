@@ -313,13 +313,6 @@
             border: 1px solid var(--phase4-color); 
             box-shadow: 0 0 5px var(--phase4-color); 
         }
-        .credit-card-icon {
-            width: 16px;
-            height: 16px;
-            fill: var(--primary-text);
-            vertical-align: middle;
-            margin-left: 5px;
-        }
 
         @media (max-width: 600px) {
             body { padding: 10px; padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
@@ -374,13 +367,6 @@
                 box-sizing: content-box;
                 margin-top: 5px;
             }
-            .credit-card-icon {
-                width: 16px;
-                height: 16px;
-                fill: var(--primary-text);
-                vertical-align: middle;
-                margin-left: 5px;
-            }
             @media (max-width: 360px) {
                 .alarm-section { gap: 3px; padding: 3px; }
                 .alarm-card { padding: 3px; }
@@ -392,7 +378,7 @@
     <div class="container">
         <div class="input-section">
             <div class="input-wrapper">
-                <input type="text" id="totalAmount" placeholder="Amount ($0.00)" aria-label="Total amount">
+                <input type="text" id="totalAmount" placeholder="Amount" aria-label="Total amount">
                 <button class="reset-button" id="resetAmount" aria-label="Reset amount">×</button>
             </div>
             <div class="input-wrapper date">
@@ -586,7 +572,7 @@
                     <table class="phase-table"><tbody>
                         <tr class="phase-header phase-3"><th colspan="2">Phase 3 – Private Exits</th></tr>
                         <tr>
-                            <td><div class="flex-container"><div class="text-content"><strong>Zashi CrossPay → <span class="credit-card-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v1h14V4a1 1 0 0 0-1-1H2zm13 4H1v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V7z"/></svg></span> <span class="parenthesis">(Single Batch)</span></strong><br><span class="calculated-value p3">$<span id="payy_amount">${formatAmount(0)}</span></span><span class="notes">Priority exit for Spending to minimize volatility.</span></div><div class="slider-container p3"><div class="slider-bubble"></div><input type="range" min="0" max="30" value="0" id="payy_slider" class="p3"></div></div></td>
+                            <td><div class="flex-container"><div class="text-content"><strong>Zashi CrossPay → Expenses Wallets <span class="parenthesis">(Single Batch)</span></strong><br><span class="calculated-value p3">$<span id="payy_amount">${formatAmount(0)}</span></span><span class="notes">Priority exit for Spending to minimize volatility.</span></div><div class="slider-container p3"><div class="slider-bubble"></div><input type="range" min="0" max="30" value="0" id="payy_slider" class="p3"></div></div></td>
                             <td class="col-time">${formatDateTime(timestamps.p3_payy)}</td>
                         </tr>
                         <tr>
@@ -886,7 +872,7 @@
                 { phase: 'Phase 2 – "Flash Pass"', title: 'Railgun → B2 (Unshield 2/2)', date: timestamps.p2_unshield2, amount: unshield2Amount, percent: unshield2, note: 'Second withdrawal.' },
                 { phase: 'Phase 2 – "Flash Pass"', title: 'B2 → ZEC (Intent 1/2)', date: timestamps.p2_intent1, amount: intent1Amount, percent: intent1, note: 'First USDC→ZEC conversion.' },
                 { phase: 'Phase 2 – "Flash Pass"', title: 'B2 → ZEC (Intent 2/2)', date: timestamps.p2_intent2, amount: intent2Amount, percent: intent2, note: 'Second USDC→ZEC conversion.' },
-                { phase: 'Phase 3 – Private Exits', title: 'Zashi CrossPay → Credit Card (Single Batch)', date: timestamps.p3_payy, amount: payyAmount, percent: payy, note: 'Priority exit for Spending to minimize volatility.' },
+                { phase: 'Phase 3 – Private Exits', title: 'Zashi CrossPay → Expenses Wallets (Single Batch)', date: timestamps.p3_payy, amount: payyAmount, percent: payy, note: 'Priority exit for Spending to minimize volatility.' },
                 { phase: 'Phase 3 – Private Exits', title: 'Zashi CrossPay → B3 (Batch 1/3)', date: timestamps.p3_crosspay1, amount: savings1Amount, percent: savings1, note: 'Exit ZEC→USDC Arbitrum for Savings.' },
                 { phase: 'Phase 3 – Private Exits', title: 'Zashi CrossPay → B3 (Batch 2/3)', date: timestamps.p3_crosspay2, amount: savings2Amount, percent: savings2, note: 'Second exit for Savings.' },
                 { phase: 'Phase 3 – Private Exits', title: 'Zashi CrossPay → B3 (Batch 3/3)', date: timestamps.p3_crosspay3, amount: savings3Amount, percent: savings3, note: 'Third exit for Savings.' },
