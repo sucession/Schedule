@@ -145,14 +145,17 @@
         .btn-icon-only { width: 50px; height: 50px; }
         .btn-calendar { 
             background-color: var(--button-calendar-bg); 
-            font-size: 16px; 
+            font-size: 14px;
             color: white; 
             font-weight: bold;
-            transition: box-shadow 0.3s ease, text-shadow 0.3s ease;
+            padding: 0 18px;
+            white-space: nowrap;
+            transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, text-shadow 0.2s ease-in-out;
         }
         .btn-calendar:not(:disabled):hover, .btn-calendar.active { 
-            background-color: var(--button-calendar-bg);
-            box-shadow: 0 0 8px var(--button-calendar-bg);
+            background-color: var(--button-calendar-bg-hover);
+            box-shadow: 0 0 6px var(--button-calendar-bg-hover);
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
         }
         .btn-calendar:not(:disabled):hover > span, .btn-calendar.active > span { 
             text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
@@ -185,7 +188,7 @@
         .col-description { width: 65%; }
         .col-time { width: 35%; text-align: right; white-space: nowrap; }
         .notes { font-size: 0.9em; color: var(--secondary-text); display: block; margin-top: 4px; }
-        .parenthesis { font-size: 0.85em; }
+        .parenthesis { font-size: 0.80em; }
         .flex-container { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
         .text-content { display: block; margin-top: 5px; width: auto; }
         .slider-container { position: relative; flex-shrink: 0; }
@@ -204,7 +207,7 @@
             pointer-events: auto; 
             cursor: pointer;
             z-index: 10;
-            box-sizing: content-box;
+            box-sizing: content-content;
             border: none;
         }
         .p2 .slider-bubble { background-color: var(--phase2-color); }
@@ -262,7 +265,7 @@
             width: auto;
             text-align: center; 
             line-height: 1.4;
-            box-sizing: content-box;
+            box-sizing: content-content;
             transition: box-shadow 0.3s ease, text-shadow 0.3s ease;
         }
         .calculated-value.p1 { background-color: var(--phase1-darker); }
@@ -291,7 +294,7 @@
             font-size: 0.85em;
             margin-left: 5px;
             width: auto;
-            box-sizing: content-box;
+            box-sizing: content-content;
             background: none;
             transition: text-shadow 0.3s ease, border 0.3s ease, box-shadow 0.3s ease;
         }
@@ -313,6 +316,14 @@
             border: 1px solid var(--phase4-color); 
             box-shadow: 0 0 5px var(--phase4-color); 
         }
+        .phase1-arrow { color: var(--phase1-color); font-size: 1.3em; transition: text-shadow 0.3s ease; }
+        .phase2-arrow { color: var(--phase2-color); font-size: 1.3em; transition: text-shadow 0.3s ease; }
+        .phase3-arrow { color: var(--phase3-color); font-size: 1.3em; transition: text-shadow 0.3s ease; }
+        .phase4-arrow { color: var(--phase4-color); font-size: 1.3em; transition: text-shadow 0.3s ease; }
+        .phase1-arrow.active { text-shadow: 0 0 10px var(--phase1-color), 0 0 15px var(--phase1-color), 0 0 20px rgba(255, 255, 255, 0.5); }
+        .phase2-arrow.active { text-shadow: 0 0 10px var(--phase2-color), 0 0 15px var(--phase2-color), 0 0 20px rgba(255, 255, 255, 0.5); }
+        .phase3-arrow.active { text-shadow: 0 0 10px var(--phase3-color), 0 0 15px var(--phase3-color), 0 0 20px rgba(255, 255, 255, 0.5); }
+        .phase4-arrow.active { text-shadow: 0 0 10px var(--phase4-color), 0 0 15px var(--phase4-color), 0 0 20px rgba(255, 255, 255, 0.5); }
 
         @media (max-width: 600px) {
             body { padding: 10px; padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
@@ -364,9 +375,14 @@
             .percent-border, .calculated-value { 
                 display: inline-block; 
                 width: auto; 
-                box-sizing: content-box;
+                box-sizing: content-content;
                 margin-top: 5px;
             }
+            .btn-calendar { 
+                font-size: 13px;
+                padding: 0 16px;
+            }
+            .phase1-arrow, .phase2-arrow, .phase3-arrow, .phase4-arrow { font-size: 1.2em; }
             @media (max-width: 360px) {
                 .alarm-section { gap: 3px; padding: 3px; }
                 .alarm-card { padding: 3px; }
@@ -393,8 +409,8 @@
                 <div class="slider-container alarm">
                     <input type="range" min="1" max="60" value="30" id="alarm_slider" aria-label="Alarm time in minutes">
                 </div>
-                <button class="btn-icon-only btn-calendar" id="exportButton" onclick="exportToOrg()" aria-label="Export to Orgzly"><span>30'</span></button>
             </div>
+            <button class="btn-icon-only btn-calendar" id="exportButton" onclick="exportToOrg()" aria-label="Export to Orgzly"><span>30 min</span></button>
         </div>
         <div id="schedule-container"></div>
     </div>
@@ -407,6 +423,8 @@
         const resetButton = document.getElementById('resetAmount');
         const scheduleContainer = document.getElementById('schedule-container');
         const alarmSection = document.querySelector('.alarm-section');
+        const alarmSlider = document.getElementById('alarm_slider');
+        const exportButton = document.getElementById('exportButton');
 
         function validateInputs() {
             const amountValue = amountInput.value.replace('$', '').replace(/,/g, '');
@@ -447,6 +465,8 @@
             generateButton.disabled = true;
             scheduleContainer.innerHTML = '';
             alarmSection.style.display = 'none';
+            alarmSlider.value = 30;
+            updateAlarmText(alarmSlider);
         });
 
         function addRandomTime(baseDate, minHours = 0, maxHours = 0, minMinutes = 0, maxMinutes = 0) {
@@ -476,9 +496,8 @@
         }
 
         function updateAlarmText(slider) {
-            const exportButton = document.getElementById('exportButton');
             if (exportButton) {
-                exportButton.querySelector('span').textContent = `${Math.round(slider.value)}'`;
+                exportButton.querySelector('span').textContent = `${Math.round(slider.value)} min`;
             }
         }
 
@@ -544,26 +563,26 @@
                     <table class="phase-table"><tbody>
                         <tr class="phase-header phase-1"><th colspan="2">Phase 1 – Secure Accumulation</th></tr>
                         <tr><td class="col-description"><strong>Funds received in B1</strong><br><div class="text-content"><span class="calculated-value p1">$<span id="base_amount">${formatAmount(totalAmount)}</span></span></div><span class="notes">Starting point of the schedule.</span></td><td class="col-time">${formatDateTime(timestamps.baseDate)}</td></tr>
-                        <tr><td class="col-description"><strong>B1 → Railgun <span class="parenthesis">(Shield)</span></strong><br><div class="text-content"><span class="calculated-value p1">$<span id="shield_amount">${formatAmount(totalAmount)}</span></span></div><span class="notes">Move funds to the privacy pool.</span></td><td class="col-time">${formatDateTime(timestamps.p1_shield)}</td></tr>
+                        <tr><td class="col-description"><strong>B1 <span class="phase1-arrow">→</span> Railgun [Shield]</strong><br><div class="text-content"><span class="calculated-value p1">$<span id="shield_amount">${formatAmount(totalAmount)}</span></span></div><span class="notes">Move funds to the privacy pool.</span></td><td class="col-time">${formatDateTime(timestamps.p1_shield)}</td></tr>
                     </tbody></table>
                 </div>
                 <div class="phase-card">
                     <table class="phase-table"><tbody>
                         <tr class="phase-header phase-2"><th colspan="2">Phase 2 – "Flash Pass"</th></tr>
                         <tr>
-                            <td><div class="flex-container"><div class="text-content"><strong>Railgun → B2 <span class="parenthesis">(Unshield 1/2)</span></strong><br><span class="calculated-value p2">$<span id="unshield1_amount">${formatAmount(totalAmount * 0.65)}</span></span><span class="notes">First withdrawal from pool.</span></div><div class="slider-container p2"><div class="slider-bubble"></div><input type="range" min="50" max="65" value="65" id="unshield_slider" class="p2"></div></div></td>
+                            <td><div class="flex-container"><div class="text-content"><strong>Railgun <span class="phase2-arrow">→</span> B2 [Unshield] <span class="parenthesis">(1/2)</span></strong><br><span class="calculated-value p2">$<span id="unshield1_amount">${formatAmount(totalAmount * 0.65)}</span></span><span class="notes">First withdrawal from pool.</span></div><div class="slider-container p2"><div class="slider-bubble"></div><input type="range" min="50" max="65" value="65" id="unshield_slider" class="p2"></div></div></td>
                             <td class="col-time">${formatDateTime(timestamps.p2_unshield1)}</td>
                         </tr>
                         <tr>
-                            <td class="col-description"><strong>Railgun → B2 <span class="parenthesis">(Unshield 2/2)</span> <span class="percent-border p2"><span id="unshield2_percent">35</span>%</span></strong><br><div class="text-content"><span class="calculated-value p2">$<span id="unshield2_amount">${formatAmount(totalAmount * 0.35)}</span></span></div><span class="notes">Second withdrawal.</span></td>
+                            <td class="col-description"><strong>Railgun <span class="phase2-arrow">→</span> B2 [Unshield] <span class="parenthesis">(2/2)</span> <span class="percent-border p2"><span id="unshield2_percent">35</span>%</span></strong><br><div class="text-content"><span class="calculated-value p2">$<span id="unshield2_amount">${formatAmount(totalAmount * 0.35)}</span></span></div><span class="notes">Second withdrawal.</span></td>
                             <td class="col-time">${formatDateTime(timestamps.p2_unshield2)}</td>
                         </tr>
                         <tr>
-                            <td><div class="flex-container"><div class="text-content"><strong>B2 → ZEC <span class="parenthesis">(Intent 1/2)</span></strong><br><span class="calculated-value p2">$<span id="intent1_amount">${formatAmount(totalAmount * 0.70)}</span></span><span class="notes">First USDC→ZEC conversion.</span></div><div class="slider-container p2"><div class="slider-bubble"></div><input type="range" min="60" max="80" value="70" id="intent_slider" class="p2"></div></div></td>
+                            <td><div class="flex-container"><div class="text-content"><strong>B2 <span class="phase2-arrow">→</span> Zashi In <span class="parenthesis">(1/2)</span></strong><br><span class="calculated-value p2">$<span id="intent1_amount">${formatAmount(totalAmount * 0.70)}</span></span><span class="notes">First USDC→ZEC conversion.</span></div><div class="slider-container p2"><div class="slider-bubble"></div><input type="range" min="60" max="80" value="70" id="intent_slider" class="p2"></div></div></td>
                             <td class="col-time">${formatDateTime(timestamps.p2_intent1)}</td>
                         </tr>
                         <tr>
-                            <td class="col-description"><strong>B2 → ZEC <span class="parenthesis">(Intent 2/2)</span> <span class="percent-border p2"><span id="intent2_percent">30</span>%</span></strong><br><div class="text-content"><span class="calculated-value p2">$<span id="intent2_amount">${formatAmount(totalAmount * 0.30)}</span></span></div><span class="notes">Second USDC→ZEC conversion.</span></td>
+                            <td class="col-description"><strong>B2 <span class="phase2-arrow">→</span> Zashi In <span class="parenthesis">(2/2)</span> <span class="percent-border p2"><span id="intent2_percent">30</span>%</span></strong><br><div class="text-content"><span class="calculated-value p2">$<span id="intent2_amount">${formatAmount(totalAmount * 0.30)}</span></span></div><span class="notes">Second USDC→ZEC conversion.</span></td>
                             <td class="col-time">${formatDateTime(timestamps.p2_intent2)}</td>
                         </tr>
                     </tbody></table>
@@ -572,19 +591,19 @@
                     <table class="phase-table"><tbody>
                         <tr class="phase-header phase-3"><th colspan="2">Phase 3 – Private Exits</th></tr>
                         <tr>
-                            <td><div class="flex-container"><div class="text-content"><strong>Zashi CrossPay → Milano <span class="parenthesis">(Single Batch)</span></strong><br><span class="calculated-value p3">$<span id="payy_amount">${formatAmount(0)}</span></span><span class="notes">Priority exit for spending to minimize volatility.</span></div><div class="slider-container p3"><div class="slider-bubble"></div><input type="range" min="0" max="30" value="0" id="payy_slider" class="p3"></div></div></td>
+                            <td><div class="flex-container"><div class="text-content"><strong>Zashi Out <span class="phase3-arrow">→</span> Milano</strong><br><span class="calculated-value p3">$<span id="payy_amount">${formatAmount(0)}</span></span><span class="notes">Priority exit for Spending (ZEC→USDC).</span></div><div class="slider-container p3"><div class="slider-bubble"></div><input type="range" min="0" max="30" value="0" id="payy_slider" class="p3"></div></div></td>
                             <td class="col-time">${formatDateTime(timestamps.p3_payy)}</td>
                         </tr>
                         <tr>
-                            <td class="col-description"><strong>Zashi CrossPay → B3 <span class="parenthesis">(Batch 1/3)</span> <span class="percent-border p3"><span id="savings1_percent">${initialSavings1}</span>%</span></strong><br><div class="text-content"><span class="calculated-value p3">$<span id="savings1_amount">${formatAmount(totalAmount * (initialSavings1 / 100))}</span></span></div><span class="notes">Exit ZEC→USDC Arbitrum for Savings.</span></td>
+                            <td class="col-description"><strong>Zashi Out <span class="phase3-arrow">→</span> B3 <span class="parenthesis">(1/3)</span> <span class="percent-border p3"><span id="savings1_percent">${initialSavings1}</span>%</span></strong><br><div class="text-content"><span class="calculated-value p3">$<span id="savings1_amount">${formatAmount(totalAmount * (initialSavings1 / 100))}</span></span></div><span class="notes">Exit ZEC→USDC for Savings.</span></td>
                             <td class="col-time">${formatDateTime(timestamps.p3_crosspay1)}</td>
                         </tr>
                         <tr>
-                            <td class="col-description"><strong>Zashi CrossPay → B3 <span class="parenthesis">(Batch 2/3)</span> <span class="percent-border p3"><span id="savings2_percent">${initialSavings2}</span>%</span></strong><br><div class="text-content"><span class="calculated-value p3">$<span id="savings2_amount">${formatAmount(totalAmount * (initialSavings2 / 100))}</span></span></div><span class="notes">Second exit for Savings.</span></td>
+                            <td class="col-description"><strong>Zashi Out <span class="phase3-arrow">→</span> B3 <span class="parenthesis">(2/3)</span> <span class="percent-border p3"><span id="savings2_percent">${initialSavings2}</span>%</span></strong><br><div class="text-content"><span class="calculated-value p3">$<span id="savings2_amount">${formatAmount(totalAmount * (initialSavings2 / 100))}</span></span></div><span class="notes">Second exit for Savings (ZEC→USDC).</span></td>
                             <td class="col-time">${formatDateTime(timestamps.p3_crosspay2)}</td>
                         </tr>
                         <tr>
-                            <td class="col-description"><strong>Zashi CrossPay → B3 <span class="parenthesis">(Batch 3/3)</span> <span class="percent-border p3"><span id="savings3_percent">${initialSavings3}</span>%</span></strong><br><div class="text-content"><span class="calculated-value p3">$<span id="savings3_amount">${formatAmount(totalAmount * (initialSavings3 / 100))}</span></span></div><span class="notes">Third exit for Savings.</span></td>
+                            <td class="col-description"><strong>Zashi Out <span class="phase3-arrow">→</span> B3 <span class="parenthesis">(3/3)</span> <span class="percent-border p3"><span id="savings3_percent">${initialSavings3}</span>%</span></strong><br><div class="text-content"><span class="calculated-value p3">$<span id="savings3_amount">${formatAmount(totalAmount * (initialSavings3 / 100))}</span></span></div><span class="notes">Third exit for Savings (ZEC→USDC).</span></td>
                             <td class="col-time">${formatDateTime(timestamps.p3_crosspay3)}</td>
                         </tr>
                     </tbody></table>
@@ -593,19 +612,19 @@
                     <table class="phase-table"><tbody>
                         <tr class="phase-header phase-4"><th colspan="2">Phase 4 – Consolidation & Cold Storage</th></tr>
                         <tr>
-                            <td><div class="flex-container"><div class="text-content"><strong>B3 → Barcelona <span class="parenthesis">(Consolidation 1/2)</span></strong><br><span class="calculated-value p4">$<span id="consol1_amount">${formatAmount(totalAmount * 0.50)}</span></span><span class="notes">Move funds from B3 to savings wallet.</span></div><div class="slider-container p4"><div class="slider-bubble"></div><input type="range" min="40" max="60" value="50" id="consolidation_slider" class="p4"></div></div></td>
+                            <td><div class="flex-container"><div class="text-content"><strong>B3 <span class="phase4-arrow">→</span> Barcelona <span class="parenthesis">(1/2)</span></strong><br><span class="calculated-value p4">$<span id="consol1_amount">${formatAmount(totalAmount * 0.50)}</span></span><span class="notes">Move funds from B3 to Savings Wallet.</span></div><div class="slider-container p4"><div class="slider-bubble"></div><input type="range" min="40" max="60" value="50" id="consolidation_slider" class="p4"></div></div></td>
                             <td class="col-time">${formatDateTime(timestamps.p4_consol1)}</td>
                         </tr>
                         <tr>
-                            <td class="col-description"><strong>B3 → Barcelona <span class="parenthesis">(Consolidation 2/2)</span> <span class="percent-border p4"><span id="consolidation2_percent">50</span>%</span></strong><br><div class="text-content"><span class="calculated-value p4">$<span id="consol2_amount">${formatAmount(totalAmount * 0.50)}</span></span></div><span class="notes">Second batch to savings.</span></td>
+                            <td class="col-description"><strong>B3 <span class="phase4-arrow">→</span> Barcelona <span class="parenthesis">(2/2)</span> <span class="percent-border p4"><span id="consolidation2_percent">50</span>%</span></strong><br><div class="text-content"><span class="calculated-value p4">$<span id="consol2_amount">${formatAmount(totalAmount * 0.50)}</span></span></div><span class="notes">Second batch to Savings Wallet.</span></td>
                             <td class="col-time">${formatDateTime(timestamps.p4_consol2)}</td>
                         </tr>
                         <tr>
-                            <td><div class="flex-container"><div class="text-content"><strong>Savings → Cold Wallet <span class="parenthesis">(Batch 1/2)</span></strong><br><span class="calculated-value p4">$<span id="cold1_amount">${formatAmount(totalAmount * 0.50)}</span></span><span class="notes">Movement to cold storage.</span></div><div class="slider-container p4"><div class="slider-bubble"></div><input type="range" min="40" max="60" value="50" id="cold_slider" class="p4"></div></div></td>
+                            <td><div class="flex-container"><div class="text-content"><strong>Savings <span class="phase4-arrow">→</span> Cold Wallet <span class="parenthesis">(1/2)</span></strong><br><span class="calculated-value p4">$<span id="cold1_amount">${formatAmount(totalAmount * 0.50)}</span></span><span class="notes">First movement to cold storage.</span></div><div class="slider-container p4"><div class="slider-bubble"></div><input type="range" min="40" max="60" value="50" id="cold_slider" class="p4"></div></div></td>
                             <td class="col-time">${formatDateTime(timestamps.p4_cold1)}</td>
                         </tr>
                         <tr>
-                            <td class="col-description"><strong>Savings → Cold Wallet <span class="parenthesis">(Batch 2/2)</span> <span class="percent-border p4"><span id="cold2_percent">50</span>%</span></strong><br><div class="text-content"><span class="calculated-value p4">$<span id="cold2_amount">${formatAmount(totalAmount * 0.50)}</span></span></div><span class="notes">Final movement to cold storage.</span></td>
+                            <td class="col-description"><strong>Savings <span class="phase4-arrow">→</span> Cold Wallet <span class="parenthesis">(2/2)</span> <span class="percent-border p4"><span id="cold2_percent">50</span>%</span></strong><br><div class="text-content"><span class="calculated-value p4">$<span id="cold2_amount">${formatAmount(totalAmount * 0.50)}</span></span></div><span class="notes">Final movement to cold storage.</span></td>
                             <td class="col-time">${formatDateTime(timestamps.p4_cold2)}</td>
                         </tr>
                     </tbody></table>
@@ -632,23 +651,29 @@
 
         function attachBubbleListeners() {
             const sliders = [
-                { id: 'unshield_slider', outputs: ['unshield2_percent'], amountOutputs: ['unshield1_amount', 'unshield2_amount'] },
-                { id: 'intent_slider', outputs: ['intent2_percent'], amountOutputs: ['intent1_amount', 'intent2_amount'] },
-                { id: 'consolidation_slider', outputs: ['consolidation2_percent'], amountOutputs: ['consol1_amount', 'consol2_amount'] },
-                { id: 'cold_slider', outputs: ['cold2_percent'], amountOutputs: ['cold1_amount', 'cold2_amount'] },
-                { id: 'payy_slider', outputs: ['savings1_percent', 'savings2_percent', 'savings3_percent'], amountOutputs: ['payy_amount', 'savings1_amount', 'savings2_amount', 'savings3_amount'] },
-                { id: 'alarm_slider', outputs: [], amountOutputs: [] }
+                { id: 'unshield_slider', outputs: ['unshield2_percent'], amountOutputs: ['unshield1_amount', 'unshield2_amount'], arrowClass: 'phase2-arrow', arrowSelector: '.phase-card:nth-child(2) tr:nth-child(2) .phase2-arrow, .phase-card:nth-child(2) tr:nth-child(3) .phase2-arrow' },
+                { id: 'intent_slider', outputs: ['intent2_percent'], amountOutputs: ['intent1_amount', 'intent2_amount'], arrowClass: 'phase2-arrow', arrowSelector: '.phase-card:nth-child(2) tr:nth-child(4) .phase2-arrow, .phase-card:nth-child(2) tr:nth-child(5) .phase2-arrow' },
+                { id: 'payy_slider', outputs: ['savings1_percent', 'savings2_percent', 'savings3_percent'], amountOutputs: ['payy_amount', 'savings1_amount', 'savings2_amount', 'savings3_amount'], arrowClass: 'phase3-arrow', arrowSelector: '.phase-card:nth-child(3) tr:nth-child(2) .phase3-arrow, .phase-card:nth-child(3) tr:nth-child(3) .phase3-arrow, .phase-card:nth-child(3) tr:nth-child(4) .phase3-arrow, .phase-card:nth-child(3) tr:nth-child(5) .phase3-arrow' },
+                { id: 'consolidation_slider', outputs: ['consolidation2_percent'], amountOutputs: ['consol1_amount', 'consol2_amount'], arrowClass: 'phase4-arrow', arrowSelector: '.phase-card:nth-child(4) tr:nth-child(2) .phase4-arrow, .phase-card:nth-child(4) tr:nth-child(3) .phase4-arrow' },
+                { id: 'cold_slider', outputs: ['cold2_percent'], amountOutputs: ['cold1_amount', 'cold2_amount'], arrowClass: 'phase4-arrow', arrowSelector: '.phase-card:nth-child(4) tr:nth-child(4) .phase4-arrow, .phase-card:nth-child(4) tr:nth-child(5) .phase4-arrow' },
+                { id: 'alarm_slider', outputs: [], amountOutputs: [], arrowClass: '', arrowSelector: '' }
             ];
+
+            const clearAllGlow = () => {
+                document.querySelectorAll('.phase1-arrow, .phase2-arrow, .phase3-arrow, .phase4-arrow').forEach(el => {
+                    el.classList.remove('active');
+                });
+            };
 
             sliders.forEach(s => {
                 const slider = document.getElementById(s.id);
                 if (!slider) return;
                 const bubble = slider.previousElementSibling;
-                const exportButton = document.getElementById('exportButton');
 
                 let isDragging = false;
 
                 const activateGlow = () => {
+                    clearAllGlow();
                     if (s.id === 'alarm_slider' && exportButton) {
                         exportButton.classList.add('active');
                     } else {
@@ -667,6 +692,11 @@
                                 amountEl.parentElement.classList.add('active');
                             }
                         });
+                        if (s.arrowSelector) {
+                            document.querySelectorAll(s.arrowSelector).forEach(el => {
+                                el.classList.add('active');
+                            });
+                        }
                     }
                 };
 
@@ -689,6 +719,11 @@
                                 amountEl.parentElement.classList.remove('active');
                             }
                         });
+                        if (s.arrowSelector) {
+                            document.querySelectorAll(s.arrowSelector).forEach(el => {
+                                el.classList.remove('active');
+                            });
+                        }
                     }
                 };
 
@@ -792,12 +827,12 @@
 
         function attachAllListeners() {
             const sliders = [
-                { id: 'unshield_slider', outputs: ['unshield2_percent'], amountOutputs: ['unshield1_amount', 'unshield2_amount'], class: 'p2' },
-                { id: 'intent_slider', outputs: ['intent2_percent'], amountOutputs: ['intent1_amount', 'intent2_amount'], class: 'p2' },
-                { id: 'consolidation_slider', outputs: ['consolidation2_percent'], amountOutputs: ['consol1_amount', 'consol2_amount'], class: 'p4' },
-                { id: 'cold_slider', outputs: ['cold2_percent'], amountOutputs: ['cold1_amount', 'cold2_amount'], class: 'p4' },
-                { id: 'payy_slider', outputs: ['savings1_percent', 'savings2_percent', 'savings3_percent'], amountOutputs: ['payy_amount', 'savings1_amount', 'savings2_amount', 'savings3_amount'], class: 'p3' },
-                { id: 'alarm_slider', outputs: [], amountOutputs: [], class: '' }
+                { id: 'unshield_slider', outputs: ['unshield2_percent'], amountOutputs: ['unshield1_amount', 'unshield2_amount'], class: 'p2', arrowClass: 'phase2-arrow', arrowSelector: '.phase-card:nth-child(2) tr:nth-child(2) .phase2-arrow, .phase-card:nth-child(2) tr:nth-child(3) .phase2-arrow' },
+                { id: 'intent_slider', outputs: ['intent2_percent'], amountOutputs: ['intent1_amount', 'intent2_amount'], class: 'p2', arrowClass: 'phase2-arrow', arrowSelector: '.phase-card:nth-child(2) tr:nth-child(4) .phase2-arrow, .phase-card:nth-child(2) tr:nth-child(5) .phase2-arrow' },
+                { id: 'payy_slider', outputs: ['savings1_percent', 'savings2_percent', 'savings3_percent'], amountOutputs: ['payy_amount', 'savings1_amount', 'savings2_amount', 'savings3_amount'], class: 'p3', arrowClass: 'phase3-arrow', arrowSelector: '.phase-card:nth-child(3) tr:nth-child(2) .phase3-arrow, .phase-card:nth-child(3) tr:nth-child(3) .phase3-arrow, .phase-card:nth-child(3) tr:nth-child(4) .phase3-arrow, .phase-card:nth-child(3) tr:nth-child(5) .phase3-arrow' },
+                { id: 'consolidation_slider', outputs: ['consolidation2_percent'], amountOutputs: ['consol1_amount', 'consol2_amount'], class: 'p4', arrowClass: 'phase4-arrow', arrowSelector: '.phase-card:nth-child(4) tr:nth-child(2) .phase4-arrow, .phase-card:nth-child(4) tr:nth-child(3) .phase4-arrow' },
+                { id: 'cold_slider', outputs: ['cold2_percent'], amountOutputs: ['cold1_amount', 'cold2_amount'], class: 'p4', arrowClass: 'phase4-arrow', arrowSelector: '.phase-card:nth-child(4) tr:nth-child(4) .phase4-arrow, .phase-card:nth-child(4) tr:nth-child(5) .phase4-arrow' },
+                { id: 'alarm_slider', outputs: [], amountOutputs: [], class: '', arrowClass: '', arrowSelector: '' }
             ];
             sliders.forEach(s => {
                 const sliderEl = document.getElementById(s.id);
@@ -845,9 +880,9 @@
             const intent1 = Math.round(parseFloat(document.getElementById('intent_slider').value));
             const intent2 = 100 - intent1;
             const payy = Math.round(parseFloat(document.getElementById('payy_slider').value));
-            const remainderPercent = 100 - payy;
-            const [savings1, savings2, savings3] = generateRandomPercentages(remainderPercent);
-
+            const savings1 = parseInt(document.getElementById('savings1_percent').textContent, 10);
+            const savings2 = parseInt(document.getElementById('savings2_percent').textContent, 10);
+            const savings3 = parseInt(document.getElementById('savings3_percent').textContent, 10);
             const payyAmount = formatAmount((payy / 100) * totalAmount);
             const savings1Amount = formatAmount((savings1 / 100) * totalAmount);
             const savings2Amount = formatAmount((savings2 / 100) * totalAmount);
@@ -867,19 +902,19 @@
 
             const events = [
                 { phase: 'Phase 1 – Secure Accumulation', title: 'Funds received in B1', date: timestamps.baseDate, amount: formatAmount(totalAmount), percent: '100', note: 'Starting point of the schedule.' },
-                { phase: 'Phase 1 – Secure Accumulation', title: 'B1 → Railgun (Shield)', date: timestamps.p1_shield, amount: formatAmount(totalAmount), percent: '100', note: 'Move funds to the privacy pool.' },
-                { phase: 'Phase 2 – "Flash Pass"', title: 'Railgun → B2 (Unshield 1/2)', date: timestamps.p2_unshield1, amount: unshield1Amount, percent: unshield1, note: 'First withdrawal from pool.' },
-                { phase: 'Phase 2 – "Flash Pass"', title: 'Railgun → B2 (Unshield 2/2)', date: timestamps.p2_unshield2, amount: unshield2Amount, percent: unshield2, note: 'Second withdrawal.' },
-                { phase: 'Phase 2 – "Flash Pass"', title: 'B2 → Zashi In (1/2): USDC → ZEC', date: timestamps.p2_intent1, amount: intent1Amount, percent: intent1, note: 'First USDC→ZEC conversion.' },
-                { phase: 'Phase 2 – "Flash Pass"', title: 'B2 → Zashi In (2/2): USDC → ZEC', date: timestamps.p2_intent2, amount: intent2Amount, percent: intent2, note: 'Second USDC→ZEC conversion.' },
-                { phase: 'Phase 3 – Private Exits', title: 'Zashi Out: ZEC → USDC (Milano)', date: timestamps.p3_payy, amount: payyAmount, percent: payy, note: 'Priority exit for spending to minimize volatility.' },
-                { phase: 'Phase 3 – Private Exits', title: 'Zashi Out (1/3) → B3: ZEC → USDC', date: timestamps.p3_crosspay1, amount: savings1Amount, percent: savings1, note: 'Exit ZEC→USDC Arbitrum for Savings.' },
-                { phase: 'Phase 3 – Private Exits', title: 'Zashi Out (2/3) → B3: ZEC → USDC', date: timestamps.p3_crosspay2, amount: savings2Amount, percent: savings2, note: 'Second exit for Savings.' },
-                { phase: 'Phase 3 – Private Exits', title: 'Zashi Out (3/3) → B3: ZEC → USDC', date: timestamps.p3_crosspay3, amount: savings3Amount, percent: savings3, note: 'Third exit for Savings.' },
-                { phase: 'Phase 4 – Consolidation & Cold Storage', title: 'B3 → Barcelona (Consolidation 1/2)', date: timestamps.p4_consol1, amount: consol1Amount, percent: consol1, note: 'Move funds from B3 to savings wallet.' },
-                { phase: 'Phase 4 – Consolidation & Cold Storage', title: 'B3 → Barcelona (Consolidation 2/2)', date: timestamps.p4_consol2, amount: consol2Amount, percent: consol2, note: 'Second batch to savings.' },
-                { phase: 'Phase 4 – Consolidation & Cold Storage', title: 'Savings → Cold Wallet (Batch 1/2)', date: timestamps.p4_cold1, amount: cold1Amount, percent: cold1, note: 'Movement to cold storage.' },
-                { phase: 'Phase 4 – Consolidation & Cold Storage', title: 'Savings → Cold Wallet (Batch 2/2)', date: timestamps.p4_cold2, amount: cold2Amount, percent: cold2, note: 'Final movement to cold storage.' }
+                { phase: 'Phase 1 – Secure Accumulation', title: 'B1 → Railgun [Shield]', date: timestamps.p1_shield, amount: formatAmount(totalAmount), percent: '100', note: 'Move funds to the privacy pool.' },
+                { phase: 'Phase 2 – "Flash Pass"', title: 'Railgun → B2 [Unshield] (1/2)', date: timestamps.p2_unshield1, amount: unshield1Amount, percent: unshield1, note: 'First withdrawal from pool.' },
+                { phase: 'Phase 2 – "Flash Pass"', title: 'Railgun → B2 [Unshield] (2/2)', date: timestamps.p2_unshield2, amount: unshield2Amount, percent: unshield2, note: 'Second withdrawal.' },
+                { phase: 'Phase 2 – "Flash Pass"', title: 'B2 → Zashi In (1/2)', date: timestamps.p2_intent1, amount: intent1Amount, percent: intent1, note: 'First USDC→ZEC conversion.' },
+                { phase: 'Phase 2 – "Flash Pass"', title: 'B2 → Zashi In (2/2)', date: timestamps.p2_intent2, amount: intent2Amount, percent: intent2, note: 'Second USDC→ZEC conversion.' },
+                { phase: 'Phase 3 – Private Exits', title: 'Zashi Out → Milano', date: timestamps.p3_payy, amount: payyAmount, percent: payy, note: 'Priority exit for Spending (ZEC→USDC).' },
+                { phase: 'Phase 3 – Private Exits', title: 'Zashi Out → B3 (1/3)', date: timestamps.p3_crosspay1, amount: savings1Amount, percent: savings1, note: 'Exit ZEC→USDC for Savings.' },
+                { phase: 'Phase 3 – Private Exits', title: 'Zashi Out → B3 (2/3)', date: timestamps.p3_crosspay2, amount: savings2Amount, percent: savings2, note: 'Second exit for Savings (ZEC→USDC).' },
+                { phase: 'Phase 3 – Private Exits', title: 'Zashi Out → B3 (3/3)', date: timestamps.p3_crosspay3, amount: savings3Amount, percent: savings3, note: 'Third exit for Savings (ZEC→USDC).' },
+                { phase: 'Phase 4 – Consolidation & Cold Storage', title: 'B3 → Barcelona (1/2)', date: timestamps.p4_consol1, amount: consol1Amount, percent: consol1, note: 'Move funds from B3 to Savings Wallet.' },
+                { phase: 'Phase 4 – Consolidation & Cold Storage', title: 'B3 → Barcelona (2/2)', date: timestamps.p4_consol2, amount: consol2Amount, percent: consol2, note: 'Second batch to Savings Wallet.' },
+                { phase: 'Phase 4 – Consolidation & Cold Storage', title: 'Savings → Cold Wallet (1/2)', date: timestamps.p4_cold1, amount: cold1Amount, percent: cold1, note: 'First movement to cold storage.' },
+                { phase: 'Phase 4 – Consolidation & Cold Storage', title: 'Savings → Cold Wallet (2/2)', date: timestamps.p4_cold2, amount: cold2Amount, percent: cold2, note: 'Final movement to cold storage.' }
             ];
 
             let orgString = '#+TITLE: Privacy Schedule\n\n';
