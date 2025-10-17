@@ -4,34 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Schedule</title>
-
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1a1a1a">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
     <style>
         :root {
-            --bg-color: #1a1a1a;
-            --surface-color: #2c2c2c;
-            --primary-text: #e0e0e0;
-            --secondary-text: #a0a0a0;
-            --border-color: #444;
-            --row-alt-color: #222222;
-            --phase1-color: #6f42c1;
-            --phase2-color: #fd7e14;
-            --phase3-color: #d63384;
-            --phase4-color: #198754;
-            --phase1-darker: #4c2c87;
-            --phase2-darker: #b05000;
-            --phase3-darker: #8b1d55;
-            --phase4-darker: #0f5132;
-            --button-primary-bg: #0d6efd;
-            --button-primary-bg-hover: #0b5ed7;
-            --button-calendar-bg: #ffc107;
+            /* Paleta de colores actualizada y refinada */
+            --bg-color: #121212;
+            --surface-color: #1e1e1e; 
+            --primary-text: #e1e1e1;
+            --secondary-text: #b3b3b3;
+            --border-color: #333333;
+            --row-alt-color: #2c2c2c; /* Tono más claro para mejor contraste */
+            --button-primary-bg: #2196F3; /* Azul más vibrante y distintivo */
+            --button-primary-bg-hover: #1976D2; /* Tono más oscuro para el hover */
+            --button-calendar-bg: #ffc107; /* Coincide con la campana del slider */
             --button-calendar-bg-hover: #e0a800;
-        }
+            --dropdown-card-bg: #404040; /* Nuevo color más claro para selectores */
 
+            --phase1-color: #8b5fbf;
+            --phase2-color: #00BCD4; /* Tono cian para mejor distinción */
+            --phase3-color: #EC407A; /* Nuevo color Magenta */
+            --phase4-color: #9CCC65; /* Nuevo color Verde Lima */
+            --phase5-color: #E53935; /* Anterior Fase 4 (rojo) ahora es Fase 5 */
+            --phase6-color: #26A69A; /* Anterior Fase 5 (teal) ahora es Fase 6 */
+
+            /* Tonos más oscuros para los fondos de valores en $ */
+            --phase1-darker: #593a80;
+            --phase2-darker: #0097A7;
+            --phase3-darker: #AD1457; /* Versión oscura del nuevo Magenta */
+            --phase4-darker: #689F38; /* Versión oscura del nuevo Verde Lima */
+            --phase5-darker: #B71C1C;
+            --phase6-darker: #1B6E66;
+
+            /* Variables RGB para fondos sutiles */
+            --phase5-rgb: 229, 57, 53;
+            --phase6-rgb: 38, 166, 154;
+        }
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
@@ -69,11 +83,12 @@
             box-sizing: border-box; 
             height: 50px; 
             font-family: 'Inter', sans-serif;
-            transition: box-shadow 0.3s ease;
+            transition: box-shadow 0.3s ease, border-color 0.3s ease;
         }
         input[type="datetime-local"] { width: 280px; }
         input[type="text"]#totalAmount { width: 200px; padding-right: 30px; }
         input[type="datetime-local"]:focus, input[type="text"]:focus {
+            border-color: var(--button-primary-bg);
             box-shadow: 0 0 8px var(--button-primary-bg);
             outline: none;
         }
@@ -124,13 +139,16 @@
             border: none;
             border-radius: 8px; 
             cursor: pointer; 
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.1s ease;
             height: 50px; 
             padding: 0 15px; 
             display: flex; 
             justify-content: center; 
             align-items: center; 
             font-weight: 500;
+        }
+        button:not(:disabled):active {
+            transform: scale(0.97);
         }
         button:not(.reset-button, .btn-calendar):not(:disabled):hover { 
             background-color: var(--button-primary-bg-hover); 
@@ -140,17 +158,26 @@
             background-color: var(--surface-color);
             cursor: not-allowed;
         }
-        button:disabled .button-icon { fill: var(--button-primary-bg); }
+        button#generateButton:disabled {
+            background-color: #1d3c6e; /* Muted blue */
+        }
+        button:disabled .button-icon { 
+            fill: var(--secondary-text); 
+        }
+        button#generateButton:disabled .button-icon {
+            fill: #6c757d; /* Gray color */
+        }
         .button-icon { width: 24px; height: 24px; fill: white; }
         .btn-icon-only { width: 50px; height: 50px; }
         .btn-calendar { 
             background-color: var(--button-calendar-bg); 
             font-size: 14px;
-            color: white; 
+            color: white; /* Cambiado a blanco */
             font-weight: bold;
             padding: 0 18px;
             white-space: nowrap;
             transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, text-shadow 0.2s ease-in-out;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Sombra para legibilidad */
         }
         .btn-calendar:not(:disabled):hover, .btn-calendar.active { 
             background-color: var(--button-calendar-bg-hover);
@@ -172,6 +199,7 @@
         .phase-table td { padding: 14px 18px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
         .phase-table tr:last-child td { border-bottom: none; }
         .phase-table tr:nth-child(even) { background-color: var(--row-alt-color); }
+
         .phase-header th {
             color: white; 
             text-align: center; 
@@ -185,34 +213,56 @@
         .phase-2 th { background-color: var(--phase2-color) !important; }
         .phase-3 th { background-color: var(--phase3-color) !important; }
         .phase-4 th { background-color: var(--phase4-color) !important; }
+        .phase-5 th { background-color: var(--phase5-color) !important; }
+        .phase-6 th { background-color: var(--phase6-color) !important; }
         .col-description { width: 65%; }
         .col-time { width: 35%; text-align: right; white-space: nowrap; }
         .notes { font-size: 0.9em; color: var(--secondary-text); display: block; margin-top: 4px; }
         .parenthesis { font-size: 0.80em; }
         .flex-container { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
         .text-content { display: block; margin-top: 5px; width: auto; }
-        .slider-container { position: relative; flex-shrink: 0; }
+        
+        .slider-group-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 25px; /* Aumentado el espacio */
+            width: 150px;
+        }
+        
+        .slider-container, .range-wrapper {
+            position: relative;
+            flex-shrink: 0;
+            height: 18px;
+            display: flex;
+            align-items: center;
+        }
+
         .slider-bubble {
             position: absolute; 
-            top: 50%; 
-            width: auto;
+            width: auto; 
+            min-width: 38px;
             height: auto;
-            padding: 2px 6px;
+            padding: 4px 6px; 
             border-radius: 4px; 
             color: white; 
             font-size: 0.85em; 
             font-weight: bold;
             text-align: center;
-            transform: translate(-50%, -50%); 
-            pointer-events: auto; 
-            cursor: pointer;
+            transform: translate(-50%, -50%); /* Modificado para centrar en ambos ejes */
+            pointer-events: none; 
             z-index: 10;
-            box-sizing: content-content;
-            border: none;
+            top: 50%; /* Modificado para centrar verticalmente */
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+        .p1 .slider-bubble { background-color: var(--phase1-color); }
         .p2 .slider-bubble { background-color: var(--phase2-color); }
         .p3 .slider-bubble { background-color: var(--phase3-color); }
         .p4 .slider-bubble { background-color: var(--phase4-color); }
+        .p5 .slider-bubble { background-color: var(--phase5-color); }
+        .p6 .slider-bubble { background-color: var(--phase6-color); }
         input[type="range"] { 
             -webkit-appearance: none; 
             appearance: none; 
@@ -223,37 +273,139 @@
             outline: none; 
             position: relative;
             z-index: 5;
+            margin: 0;
         }
+        /* El thumb ahora es un área invisible que se arrastra */
         input[type="range"]::-webkit-slider-thumb { 
             -webkit-appearance: none; 
             appearance: none; 
-            width: 0; 
-            height: 0; 
+            width: 38px; /* Área de agarre, coincide con la burbuja */
+            height: 25px; /* Área de agarre */
+            background: transparent;
+            border: 0;
+            cursor: pointer;
+            z-index: 6;
         }
         input[type="range"]::-moz-range-thumb { 
-            width: 0; 
-            height: 0; 
+            width: 38px; 
+            height: 25px; 
+            background: transparent;
             border: none;
+            cursor: pointer;
+            z-index: 6;
         }
-        input[type="range"]#alarm_slider { width: 100px; }
+        
+        input[type="range"]#alarm_slider {
+            width: 100px;
+        }
+        /* Se restaura el estilo original solo para el thumb de la alarma */
         input[type="range"]#alarm_slider::-webkit-slider-thumb { 
-            -webkit-appearance: none;
-            appearance: none;
-            width: 20px; 
-            height: 20px; 
-            cursor: pointer; 
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
             background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 16 16"><path fill="%23ffc107" d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/></svg>') no-repeat center;
             background-size: 20px 20px;
-            border: none;
         }
         input[type="range"]#alarm_slider::-moz-range-thumb { 
             width: 20px; 
             height: 20px; 
-            cursor: pointer; 
+            border-radius: 50%;
             background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 16 16"><path fill="%23ffc107" d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/></svg>') no-repeat center;
             background-size: 20px 20px;
-            border: none;
         }
+
+        /* --- Estilos para Selectores Personalizados --- */
+        .custom-select-container {
+            position: relative;
+            width: 140px;
+        }
+
+        .select-selected {
+            background-color: var(--dropdown-card-bg); /* Fondo de tarjeta para selectores */
+            color: white;
+            padding: 6px 10px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-family: 'Inter', sans-serif;
+            font-weight: bold;
+            text-align: center;
+            transition: box-shadow 0.3s ease, border-color 0.3s ease;
+            position: relative;
+            user-select: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra sutil */
+        }
+        
+        .p2 .select-selected { border-color: var(--phase2-color); }
+        .p3 .select-selected { border-color: var(--phase3-color); }
+        .p4 .select-selected { border-color: var(--phase4-color); }
+        .p5 .select-selected { border-color: var(--phase5-color); }
+        
+        .p2 .select-selected.active { box-shadow: 0 2px 5px rgba(0,0,0,0.2), 0 0 8px var(--phase2-color); }
+        .p3 .select-selected.active { box-shadow: 0 2px 5px rgba(0,0,0,0.2), 0 0 8px var(--phase3-color); }
+        .p4 .select-selected.active { box-shadow: 0 2px 5px rgba(0,0,0,0.2), 0 0 8px var(--phase4-color); }
+        .p5 .select-selected.active { box-shadow: 0 2px 5px rgba(0,0,0,0.2), 0 0 8px var(--phase5-color); }
+        
+        .select-selected::after {
+            position: absolute;
+            content: "";
+            top: 50%;
+            right: 10px;
+            width: 0;
+            height: 0;
+            border: 5px solid transparent;
+            transform: translateY(-25%);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .select-selected.select-arrow-active::after {
+            transform: translateY(-75%) rotate(180deg);
+        }
+
+        .select-items {
+            position: absolute;
+            background-color: var(--surface-color);
+            top: calc(100% + 5px);
+            left: 0;
+            right: 0;
+            z-index: 99;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        }
+
+        .select-hide {
+            display: none;
+        }
+
+        .select-items div {
+            color: white;
+            padding: 8px 16px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 500;
+            font-size: 0.9em;
+            transition: background-color 0.2s ease;
+        }
+        
+        .p3 .select-items div:hover { background-color: var(--phase3-color); }
+        .p4 .select-items div:hover { background-color: var(--phase4-color); }
+        .p5 .select-items div:hover { background-color: var(--phase5-color); }
+
+        .same-as-selected {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Resalta las celdas de las filas importantes con un fondo sutil y consistente */
+        #phase-5-card .highlight-row td {
+            background: linear-gradient(rgba(var(--phase5-rgb), 0.1), rgba(var(--phase5-rgb), 0.1)), var(--row-alt-color);
+        }
+        #phase-6-card .highlight-row td {
+            background: linear-gradient(rgba(var(--phase6-rgb), 0.1), rgba(var(--phase6-rgb), 0.1)), var(--row-alt-color);
+        }
+
         .calculated-value {
             display: inline-block; 
             border-radius: 6px; 
@@ -265,10 +417,14 @@
             width: auto;
             text-align: center; 
             line-height: 1.4;
-            box-sizing: content-content;
+            box-sizing: content-box;
             transition: box-shadow 0.3s ease, text-shadow 0.3s ease;
         }
         .calculated-value.p1 { background-color: var(--phase1-darker); }
+        .calculated-value.p1.active { 
+            box-shadow: 0 0 5px var(--phase1-color); 
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); 
+        }
         .calculated-value.p2 { background-color: var(--phase2-darker); }
         .calculated-value.p2.active { 
             box-shadow: 0 0 5px var(--phase2-color); 
@@ -284,19 +440,36 @@
             box-shadow: 0 0 5px var(--phase4-color); 
             text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); 
         }
+         .calculated-value.p5 { background-color: var(--phase5-darker); }
+        .calculated-value.p5.active { 
+            box-shadow: 0 0 5px var(--phase5-color); 
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); 
+        }
+        .calculated-value.p6 { background-color: var(--phase6-darker); }
+        .calculated-value.p6.active { 
+            box-shadow: 0 0 5px var(--phase6-color); 
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); 
+        }
+
         .percent-border {
             position: relative;
             display: inline-block;
             padding: 2px 6px; 
             border-radius: 4px; 
             color: white; 
-            font-weight: bold;
             font-size: 0.85em;
+            font-weight: bold;
             margin-left: 5px;
             width: auto;
-            box-sizing: content-content;
+            box-sizing: content-box;
             background: none;
             transition: text-shadow 0.3s ease, border 0.3s ease, box-shadow 0.3s ease;
+        }
+        .percent-border.p1 { border: 1px dashed var(--phase1-color); }
+        .percent-border.p1.active { 
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); 
+            border: 1px solid var(--phase1-color); 
+            box-shadow: 0 0 5px var(--phase1-color); 
         }
         .percent-border.p2 { border: 1px dashed var(--phase2-color); }
         .percent-border.p2.active { 
@@ -316,14 +489,32 @@
             border: 1px solid var(--phase4-color); 
             box-shadow: 0 0 5px var(--phase4-color); 
         }
+        .percent-border.p5 { border: 1px dashed var(--phase5-color); }
+        .percent-border.p5.active { 
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); 
+            border: 1px solid var(--phase5-color); 
+            box-shadow: 0 0 5px var(--phase5-color); 
+        }
+        .percent-border.p6 { border: 1px dashed var(--phase6-color); }
+        .percent-border.p6.active { 
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); 
+            border: 1px solid var(--phase6-color); 
+            box-shadow: 0 0 5px var(--phase6-color); 
+        }
+
         .phase1-arrow { color: var(--phase1-color); font-size: 1.3em; transition: text-shadow 0.3s ease; }
         .phase2-arrow { color: var(--phase2-color); font-size: 1.3em; transition: text-shadow 0.3s ease; }
         .phase3-arrow { color: var(--phase3-color); font-size: 1.3em; transition: text-shadow 0.3s ease; }
         .phase4-arrow { color: var(--phase4-color); font-size: 1.3em; transition: text-shadow 0.3s ease; }
+        .phase5-arrow { color: var(--phase5-color); font-size: 1.3em; transition: text-shadow 0.3s ease; }
+        .phase6-arrow { color: var(--phase6-color); font-size: 1.3em; transition: text-shadow 0.3s ease; }
+
         .phase1-arrow.active { text-shadow: 0 0 10px var(--phase1-color), 0 0 15px var(--phase1-color), 0 0 20px rgba(255, 255, 255, 0.5); }
         .phase2-arrow.active { text-shadow: 0 0 10px var(--phase2-color), 0 0 15px var(--phase2-color), 0 0 20px rgba(255, 255, 255, 0.5); }
         .phase3-arrow.active { text-shadow: 0 0 10px var(--phase3-color), 0 0 15px var(--phase3-color), 0 0 20px rgba(255, 255, 255, 0.5); }
         .phase4-arrow.active { text-shadow: 0 0 10px var(--phase4-color), 0 0 15px var(--phase4-color), 0 0 20px rgba(255, 255, 255, 0.5); }
+        .phase5-arrow.active { text-shadow: 0 0 10px var(--phase5-color), 0 0 15px var(--phase5-color), 0 0 20px rgba(255, 255, 255, 0.5); }
+        .phase6-arrow.active { text-shadow: 0 0 10px var(--phase6-color), 0 0 15px var(--phase6-color), 0 0 20px rgba(255, 255, 255, 0.5); }
 
         @media (max-width: 600px) {
             body { padding: 10px; padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
@@ -334,7 +525,7 @@
             .col-time { padding-top: 0; padding-left: 15px; padding-bottom: 12px; font-weight: 500; color: var(--secondary-text); }
             .phase-table tr:last-child .col-time { padding-bottom: 10px; }
             .flex-container { flex-direction: column; align-items: flex-start; gap: 10px; }
-            .slider-container { padding-top: 10px; padding-bottom: 10px; }
+            .slider-container, .range-wrapper { padding-top: 10px; padding-bottom: 10px; }
             .input-section { 
                 display: flex; 
                 flex-direction: column; 
@@ -371,18 +562,19 @@
             .input-wrapper.date { width: 295px; display: flex; align-items: center; gap: 5px; }
             .btn-icon-only { width: 50px; height: 50px; }
             input[type="range"]#alarm_slider { width: 100px; }
+            .dropdown-container { width: 140px; }
             .text-content { display: block; width: auto; margin-top: 5px; }
             .percent-border, .calculated-value { 
                 display: inline-block; 
                 width: auto; 
-                box-sizing: content-content;
+                box-sizing: content-box;
                 margin-top: 5px;
             }
             .btn-calendar { 
                 font-size: 13px;
                 padding: 0 16px;
             }
-            .phase1-arrow, .phase2-arrow, .phase3-arrow, .phase4-arrow { font-size: 1.2em; }
+            .phase1-arrow, .phase2-arrow, .phase3-arrow, .phase4-arrow, .phase5-arrow, .phase6-arrow { font-size: 1.2em; }
             @media (max-width: 360px) {
                 .alarm-section { gap: 3px; padding: 3px; }
                 .alarm-card { padding: 3px; }
@@ -400,7 +592,7 @@
             <div class="input-wrapper date">
                 <input type="datetime-local" id="receiptDate" aria-label="Receipt date and time">
                 <button class="btn-icon-only" id="generateButton" onclick="generateSchedule()" aria-label="Generate Schedule" disabled>
-                    <svg class="button-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path><path d="M13 7h-2v5.414l3.293 3.293 1.414-1.414L13 11.586z"></path></svg>
+                    <svg class="button-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm3.71,12.29a1,1,0,0,1,0,1.42,1,1,0,0,1-1.42,0L11,12.41V7a1,1,0,0,1,2,0v4.59Z"/></svg>
                 </button>
             </div>
         </div>
@@ -414,9 +606,33 @@
         </div>
         <div id="schedule-container"></div>
     </div>
-
+    <!-- Flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                // Verificar si flatpickr está disponible
+                if (typeof flatpickr !== 'undefined') {
+                    flatpickr("#receiptDate", {
+                        enableTime: true,
+                        dateFormat: "Y-m-d H:i",
+                        altInput: true,
+                        altFormat: "M j, Y h:i K",
+                    });
+                } else {
+                    // El script de Flatpickr no cargó
+                    throw new Error("Flatpickr library not found.");
+                }
+            } catch (error) {
+                console.warn(error.message, "Falling back to native date/time picker. The UI may not look as intended, but functionality is preserved.");
+                // No se necesita ninguna acción, el navegador usará el input datetime-local por defecto
+            }
+        });
+
         let totalAmount = 0;
+        let effectiveAmount = 0;
+        let cachedTimestamps = null;
+
         const amountInput = document.getElementById('totalAmount');
         const dateInput = document.getElementById('receiptDate');
         const generateButton = document.getElementById('generateButton');
@@ -425,6 +641,18 @@
         const alarmSection = document.querySelector('.alarm-section');
         const alarmSlider = document.getElementById('alarm_slider');
         const exportButton = document.getElementById('exportButton');
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
 
         function validateInputs() {
             const amountValue = amountInput.value.replace('$', '').replace(/,/g, '');
@@ -437,7 +665,7 @@
         amountInput.addEventListener('input', function(e) {
             let value = e.target.value.replace(/[^0-9.$]/g, '');
             if (value.startsWith('$')) {
-                value = '$' + value.replace('$', '');
+                value = '$' + value.replace(/\$/g, '');
             }
             e.target.value = value;
             validateInputs();
@@ -456,11 +684,16 @@
             validateInputs();
         });
 
-        dateInput.addEventListener('input', validateInputs);
+        dateInput.addEventListener('input', function() {
+            cachedTimestamps = null;
+            validateInputs();
+        });
 
         resetButton.addEventListener('click', () => {
             amountInput.value = '';
             totalAmount = 0;
+            effectiveAmount = 0;
+            cachedTimestamps = null;
             resetButton.classList.remove('visible');
             generateButton.disabled = true;
             scheduleContainer.innerHTML = '';
@@ -492,7 +725,7 @@
             const hours = String(date.getHours()).padStart(2, '0');
             const minutes = String(date.getMinutes()).padStart(2, '0');
             const dayName = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][date.getDay()];
-            return `<${year}-${month}-${day} ${dayName} ${hours}:${minutes} -${alarmMinutes}'>`;
+            return `<${year}-${month}-${day} ${dayName} ${hours}:${minutes} -${alarmMinutes}m>`;
         }
 
         function updateAlarmText(slider) {
@@ -502,420 +735,586 @@
         }
 
         function getScheduleTimestamps(baseDate) {
-            const p1_shield = addRandomTime(baseDate, 8, 12);
-            const p2_start = addRandomTime(baseDate, 22, 26);
-            const p2_unshield1 = p2_start;
-            const p2_unshield2 = addRandomTime(p2_unshield1, 0, 0, 3, 15);
-            const p2_intent1 = addRandomTime(p2_unshield2, 0, 0, 3, 8);
-            const p2_intent2 = addRandomTime(p2_intent1, 0, 0, 5, 12);
-            const p3_payy = addRandomTime(p2_intent2, 0, 0, 3, 7);
-            const p3_crosspay1 = addRandomTime(p3_payy, 0, 0, 5, 20);
-            const p3_crosspay2 = addRandomTime(p3_crosspay1, 0, 0, 5, 20);
-            const p3_crosspay3 = addRandomTime(p3_crosspay2, 0, 0, 5, 20);
-            const p4_consol1 = addRandomTime(p3_crosspay3, 8, 12);
-            const p4_consol2 = addRandomTime(p4_consol1, 1, 3);
-            const p4_cold1 = addRandomTime(p4_consol2, 18, 30);
-            const p4_cold2 = addRandomTime(p4_cold1, 8, 16);
-            return { baseDate, p1_shield, p2_unshield1, p2_unshield2, p2_intent1, p2_intent2, p3_payy, p3_crosspay1, p3_crosspay2, p3_crosspay3, p4_consol1, p4_consol2, p4_cold1, p4_cold2 };
+            if (cachedTimestamps) return cachedTimestamps;
+
+            let timestamps = {};
+            let usedTimes = new Set();
+
+            function ensureUniqueTime(base, minHours, maxHours, minMinutes, maxMinutes) {
+                let newTime;
+                let timeString;
+                do {
+                    newTime = addRandomTime(base, minHours, maxHours, minMinutes, maxMinutes);
+                    timeString = newTime.toISOString().slice(0, 16); 
+                    if (!usedTimes.has(timeString)) {
+                        usedTimes.add(timeString);
+                        break;
+                    }
+                    base = new Date(base.getTime() + 60000); 
+                } while (true);
+                return newTime;
+            }
+
+            timestamps.baseDate = baseDate;
+            usedTimes.add(baseDate.toISOString().slice(0, 16));
+            timestamps.p1_shield = ensureUniqueTime(baseDate, 6, 12, 0, 0);
+
+            const numUnshields = parseInt(document.getElementById('num_unshield_select')?.value || 2);
+            let lastTime = baseDate;
+            timestamps.p3_unshield = Array.from({ length: numUnshields }, (_, i) => {
+                if (i === 0) {
+                    lastTime = ensureUniqueTime(baseDate, 18, 24, 0, 0);
+                } else {
+                    lastTime = ensureUniqueTime(lastTime, 0, 0, 10, 20);
+                }
+                return lastTime;
+            });
+            
+            const numIntents = parseInt(document.getElementById('num_intent_select')?.value || 2);
+             timestamps.p4_intent = Array.from({ length: numIntents }, () => {
+                lastTime = ensureUniqueTime(lastTime, 0, 0, 10, 20);
+                return lastTime;
+            });
+
+            timestamps.p5_payy = ensureUniqueTime(lastTime, 0, 0, 15, 30);
+            lastTime = timestamps.p5_payy;
+
+            const numCrosspays = parseInt(document.getElementById('num_crosspay_select')?.value || 3);
+            timestamps.p5_crosspay = Array.from({ length: numCrosspays }, () => {
+                lastTime = ensureUniqueTime(lastTime, 0, 0, 10, 20);
+                return lastTime;
+            });
+
+            timestamps.p6_consol = [];
+            timestamps.p6_consol[0] = ensureUniqueTime(lastTime, 6, 12, 0, 0);
+            timestamps.p6_consol[1] = ensureUniqueTime(timestamps.p6_consol[0], 0, 0, 10, 20);
+            
+            timestamps.p6_cold = [];
+            timestamps.p6_cold[0] = ensureUniqueTime(timestamps.p6_consol[1], 6, 12, 0, 0);
+            timestamps.p6_cold[1] = ensureUniqueTime(timestamps.p6_cold[0], 0, 0, 10, 20);
+            
+            cachedTimestamps = timestamps;
+            return timestamps;
         }
 
-        function generateRandomPercentages(remainderPercent) {
-            const minPercent = 10;
-            if (remainderPercent < minPercent * 3) {
-                const equalPercent = Math.round(remainderPercent / 3);
-                const savings1 = equalPercent;
-                const savings2 = equalPercent;
-                const savings3 = remainderPercent - savings1 - savings2;
-                return [savings1, savings2, savings3];
-            }
-            const maxSavings1 = remainderPercent - 2 * minPercent;
-            const savings1 = Math.round(minPercent + Math.random() * (maxSavings1 - minPercent));
-            const maxSavings2 = remainderPercent - savings1 - minPercent;
-            const savings2 = Math.round(minPercent + Math.random() * (maxSavings2 - minPercent));
-            const savings3 = remainderPercent - savings1 - savings2;
-            if (savings3 < minPercent) {
-                const excess = minPercent - savings3;
-                if (savings1 > minPercent + excess) {
-                    return [savings1 - excess, savings2, savings3 + excess];
-                } else if (savings2 > minPercent + excess) {
-                    return [savings1, savings2 - excess, savings3 + excess];
-                }
-            }
-            return [savings1, savings2, savings3];
+        function generateRandomPercentages(remainderPercent, numOperations) {
+             if (numOperations <= 0) return Array(numOperations).fill(0);
+             if (remainderPercent <= 0) return Array(numOperations).fill(0);
+             if (numOperations === 1) return [remainderPercent];
+
+             const percentages = Array(numOperations).fill(0);
+             for (let i = 0; i < remainderPercent; i++) {
+                 percentages[Math.floor(Math.random() * numOperations)]++;
+             }
+             
+             const allSame = percentages.every(p => p === percentages[0]);
+             if (allSame && percentages.length > 1) {
+                 if (percentages[0] > 0) {
+                    percentages[0]--;
+                    percentages[1]++;
+                 }
+             }
+             return percentages;
         }
+        
+        function manageState(action = 'save') {
+            const elementsToTrack = [
+                'non_distributed_slider', 'unshield_slider', 'intent_slider', 'payy_slider', 'consolidation_slider', 'cold_slider',
+                'num_unshield_select', 'num_intent_select', 'num_crosspay_select'
+            ];
+            const defaults = {
+                'non_distributed_slider': 5, 'unshield_slider': 30, 'intent_slider': 30, 'payy_slider': 10, 'consolidation_slider': 50, 'cold_slider': 50,
+                'num_unshield_select': 2, 'num_intent_select': 2, 'num_crosspay_select': 3
+            };
+
+            if (action === 'save') {
+                const state = {};
+                elementsToTrack.forEach(id => {
+                    const el = document.getElementById(id);
+                    state[id] = el ? el.value : defaults[id];
+                });
+                return state;
+            } else if (action === 'restore') {
+                const state = arguments[1]; 
+                if (!state) return;
+                elementsToTrack.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el && state[id]) {
+                        el.value = state[id];
+                    }
+                });
+            }
+        }
+
 
         function generateSchedule() {
+            cachedTimestamps = null;
             const amountElement = document.getElementById('totalAmount');
             const inputElement = document.getElementById('receiptDate');
-            const container = document.getElementById('schedule-container');
+
             if (!inputElement.value || !amountElement.value || parseFloat(amountElement.value.replace(/[^0-9.]/g, '')) <= 0) {
-                container.innerHTML = `<p style="color: #d63384; text-align: center;">Please select a valid date, time, and positive amount.</p>`;
+                scheduleContainer.innerHTML = `<p style="color: #d63384; text-align: center;">Please select a valid date, time, and positive amount.</p>`;
                 return;
             }
+            
+            const currentState = manageState('save'); 
+            
             totalAmount = parseFloat(amountElement.value.replace(/[^0-9.]/g, ''));
             alarmSection.style.display = 'flex';
-            const baseDate = new Date(inputElement.value);
-            const timestamps = getScheduleTimestamps(baseDate);
-            const [initialSavings1, initialSavings2, initialSavings3] = generateRandomPercentages(100);
+            
+            buildScheduleSkeleton(currentState); 
+            manageState('restore', currentState); 
+            
+            updateValues();
+            attachAllListeners();
+        }
 
-            let html = `
-                <div class="phase-card">
+        function buildScheduleSkeleton(state = {}) {
+            const numUnshields = parseInt(state.num_unshield_select || 2);
+            const numIntents = parseInt(state.num_intent_select || 2);
+            const numCrosspays = parseInt(state.num_crosspay_select || 3);
+            
+            let unshieldRows = '';
+            for (let i = 0; i < numUnshields; i++) {
+                const isFirst = i === 0;
+                unshieldRows += `
+                    <tr data-group="unshield" class="op-row">
+                        <td>
+                            <div class="flex-container">
+                                <div class="text-content">
+                                    <strong>Railgun <span class="phase3-arrow">→</span> B2 [Unshield] <span class="parenthesis">(${i+1}/${numUnshields})</span>
+                                    ${!isFirst ? ` <span class="percent-border p3"><span id="unshield${i+1}_percent">0</span>%</span>` : ''}
+                                    </strong><br>
+                                    <span class="calculated-value p3">$<span id="unshield${i+1}_amount">0.00</span></span>
+                                    <span class="notes">${i === 0 ? 'First' : i === numUnshields - 1 ? 'Final' : 'Intermediate'} withdrawal from pool.</span>
+                                </div>
+                                ${isFirst ? `<div class="slider-group-container">
+                                    <div class="custom-select-container p3">
+                                        <select id="num_unshield_select" style="display: none;">
+                                            <option value="2">2 operations</option>
+                                            <option value="3">3 operations</option>
+                                            <option value="4">4 operations</option>
+                                        </select>
+                                    </div>
+                                    <div class="range-wrapper p3">
+                                        <input type="range" min="0" max="100" value="30" id="unshield_slider" class="p3">
+                                        <div class="slider-bubble"></div>
+                                    </div>
+                                </div>` : ''}
+                            </div>
+                        </td>
+                        <td class="col-time" id="unshield${i+1}_time"></td>
+                    </tr>`;
+            }
+
+            let intentRows = '';
+            for (let i = 0; i < numIntents; i++) {
+                const isFirst = i === 0;
+                intentRows += `
+                    <tr data-group="intent" class="op-row">
+                        <td>
+                            <div class="flex-container">
+                                <div class="text-content">
+                                    <strong>B2 <span class="phase4-arrow">→</span> Zashi In <span class="parenthesis">(${i+1}/${numIntents})</span>
+                                    ${!isFirst ? ` <span class="percent-border p4"><span id="intent${i+1}_percent">0</span>%</span>` : ''}
+                                    </strong><br>
+                                    <span class="calculated-value p4">$<span id="intent${i+1}_amount">0.00</span></span>
+                                    <span class="notes">${i === 0 ? 'First' : i === numIntents - 1 ? 'Final' : 'Intermediate'} USDC→ZEC conversion.</span>
+                                </div>
+                                ${isFirst ? `<div class="slider-group-container">
+                                    <div class="custom-select-container p4">
+                                        <select id="num_intent_select" style="display: none;">
+                                            <option value="2">2 operations</option>
+                                            <option value="3">3 operations</option>
+                                            <option value="4">4 operations</option>
+                                        </select>
+                                    </div>
+                                    <div class="range-wrapper p4">
+                                        <input type="range" min="0" max="100" value="30" id="intent_slider" class="p4">
+                                        <div class="slider-bubble"></div>
+                                    </div>
+                                </div>` : ''}
+                            </div>
+                        </td>
+                        <td class="col-time" id="intent${i+1}_time"></td>
+                    </tr>`;
+            }
+
+            let crosspayRows = `
+                <tr data-group="crosspay" class="op-row highlight-row">
+                    <td>
+                        <div class="flex-container">
+                            <div class="text-content">
+                                <strong>Zashi Out <span class="phase5-arrow">→</span> Milano</strong><br>
+                                <span class="calculated-value p5">$<span id="payy_amount">0.00</span></span>
+                                <span class="notes">Priority exit for Spending (ZEC→USDC).</span>
+                            </div>
+                           <div class="slider-group-container">
+                                <div class="custom-select-container p5">
+                                    <select id="num_crosspay_select" style="display: none;">
+                                        <option value="3">3 operations</option>
+                                        <option value="4">4 operations</option>
+                                        <option value="5">5 operations</option>
+                                    </select>
+                                </div>
+                                <div class="range-wrapper p5">
+                                    <input type="range" min="0" max="100" value="10" id="payy_slider" class="p5">
+                                    <div class="slider-bubble"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="col-time" id="payy_time"></td>
+                </tr>`;
+            for (let i = 0; i < numCrosspays; i++) {
+                crosspayRows += `
+                    <tr data-group="crosspay" class="op-row">
+                        <td class="col-description">
+                            <strong>Zashi Out <span class="phase5-arrow">→</span> B3 <span class="parenthesis">(${i+1}/${numCrosspays})</span> 
+                            <span class="percent-border p5"><span id="savings${i+1}_percent">0</span>%</span>
+                            </strong><br>
+                            <div class="text-content"><span class="calculated-value p5">$<span id="savings${i+1}_amount">0.00</span></span></div>
+                            <span class="notes">${i === 0 ? 'First' : i === numCrosspays - 1 ? 'Final' : 'Intermediate'} exit for Savings (ZEC→USDC).</span>
+                        </td>
+                        <td class="col-time" id="savings${i+1}_time"></td>
+                    </tr>`;
+            }
+
+            scheduleContainer.innerHTML = `
+                <div class="phase-card" id="phase-1-card">
                     <table class="phase-table"><tbody>
                         <tr class="phase-header phase-1"><th colspan="2">Phase 1 – Secure Accumulation</th></tr>
-                        <tr><td class="col-description"><strong>Funds received in B1</strong><br><div class="text-content"><span class="calculated-value p1">$<span id="base_amount">${formatAmount(totalAmount)}</span></span></div><span class="notes">Starting point of the schedule.</span></td><td class="col-time">${formatDateTime(timestamps.baseDate)}</td></tr>
-                        <tr><td class="col-description"><strong>B1 <span class="phase1-arrow">→</span> Railgun [Shield]</strong><br><div class="text-content"><span class="calculated-value p1">$<span id="shield_amount">${formatAmount(totalAmount)}</span></span></div><span class="notes">Move funds to the privacy pool.</span></td><td class="col-time">${formatDateTime(timestamps.p1_shield)}</td></tr>
+                        <tr><td class="col-description"><strong>Funds received in B1</strong><br><div class="text-content"><span class="calculated-value p1">$<span id="base_amount">0.00</span></span></div><span class="notes">Starting point of the schedule.</span></td><td class="col-time" id="base_time"></td></tr>
+                        <tr><td class="col-description"><strong>B1 <span class="phase1-arrow">→</span> Railgun [Shield]</strong><br><div class="text-content"><span class="calculated-value p1">$<span id="shield_amount">0.00</span></span></div><span class="notes">Move funds to the privacy pool.</span></td><td class="col-time" id="shield_time"></td></tr>
                     </tbody></table>
                 </div>
-                <div class="phase-card">
+                <div class="phase-card" id="phase-2-card">
                     <table class="phase-table"><tbody>
-                        <tr class="phase-header phase-2"><th colspan="2">Phase 2 – "Flash Pass"</th></tr>
-                        <tr>
-                            <td><div class="flex-container"><div class="text-content"><strong>Railgun <span class="phase2-arrow">→</span> B2 [Unshield] <span class="parenthesis">(1/2)</span></strong><br><span class="calculated-value p2">$<span id="unshield1_amount">${formatAmount(totalAmount * 0.65)}</span></span><span class="notes">First withdrawal from pool.</span></div><div class="slider-container p2"><div class="slider-bubble"></div><input type="range" min="50" max="65" value="65" id="unshield_slider" class="p2"></div></div></td>
-                            <td class="col-time">${formatDateTime(timestamps.p2_unshield1)}</td>
-                        </tr>
-                        <tr>
-                            <td class="col-description"><strong>Railgun <span class="phase2-arrow">→</span> B2 [Unshield] <span class="parenthesis">(2/2)</span> <span class="percent-border p2"><span id="unshield2_percent">35</span>%</span></strong><br><div class="text-content"><span class="calculated-value p2">$<span id="unshield2_amount">${formatAmount(totalAmount * 0.35)}</span></span></div><span class="notes">Second withdrawal.</span></td>
-                            <td class="col-time">${formatDateTime(timestamps.p2_unshield2)}</td>
-                        </tr>
-                        <tr>
-                            <td><div class="flex-container"><div class="text-content"><strong>B2 <span class="phase2-arrow">→</span> Zashi In <span class="parenthesis">(1/2)</span></strong><br><span class="calculated-value p2">$<span id="intent1_amount">${formatAmount(totalAmount * 0.70)}</span></span><span class="notes">First USDC→ZEC conversion.</span></div><div class="slider-container p2"><div class="slider-bubble"></div><input type="range" min="60" max="80" value="70" id="intent_slider" class="p2"></div></div></td>
-                            <td class="col-time">${formatDateTime(timestamps.p2_intent1)}</td>
-                        </tr>
-                        <tr>
-                            <td class="col-description"><strong>B2 <span class="phase2-arrow">→</span> Zashi In <span class="parenthesis">(2/2)</span> <span class="percent-border p2"><span id="intent2_percent">30</span>%</span></strong><br><div class="text-content"><span class="calculated-value p2">$<span id="intent2_amount">${formatAmount(totalAmount * 0.30)}</span></span></div><span class="notes">Second USDC→ZEC conversion.</span></td>
-                            <td class="col-time">${formatDateTime(timestamps.p2_intent2)}</td>
-                        </tr>
+                        <tr class="phase-header phase-2"><th colspan="2">Phase 2 - Staging & Allocation</th></tr>
+                        <tr><td><div class="flex-container"><div class="text-content"><strong>Funds retained in Railgun</strong><br><span class="calculated-value p2">$<span id="non_distributed_amount">0.00</span></span><span class="notes">Leave 1-10% in Railgun for privacy.</span></div><div class="range-wrapper p2"><input type="range" min="1" max="10" value="5" id="non_distributed_slider" class="p2"><div class="slider-bubble"></div></div></div></td><td class="col-time"></td></tr>
+                        <tr><td class="col-description"><strong>Distributable Funds</strong><br><div class="text-content"><span class="calculated-value p2">$<span id="distributable_amount">0.00</span></span></div><span class="notes">Base amount for next phases.</span></td><td class="col-time"></td></tr>
                     </tbody></table>
                 </div>
-                <div class="phase-card">
+                <div class="phase-card" id="phase-3-card">
                     <table class="phase-table"><tbody>
-                        <tr class="phase-header phase-3"><th colspan="2">Phase 3 – Private Exits</th></tr>
-                        <tr>
-                            <td><div class="flex-container"><div class="text-content"><strong>Zashi Out <span class="phase3-arrow">→</span> Milano</strong><br><span class="calculated-value p3">$<span id="payy_amount">${formatAmount(0)}</span></span><span class="notes">Priority exit for Spending (ZEC→USDC).</span></div><div class="slider-container p3"><div class="slider-bubble"></div><input type="range" min="0" max="30" value="0" id="payy_slider" class="p3"></div></div></td>
-                            <td class="col-time">${formatDateTime(timestamps.p3_payy)}</td>
-                        </tr>
-                        <tr>
-                            <td class="col-description"><strong>Zashi Out <span class="phase3-arrow">→</span> B3 <span class="parenthesis">(1/3)</span> <span class="percent-border p3"><span id="savings1_percent">${initialSavings1}</span>%</span></strong><br><div class="text-content"><span class="calculated-value p3">$<span id="savings1_amount">${formatAmount(totalAmount * (initialSavings1 / 100))}</span></span></div><span class="notes">Exit ZEC→USDC for Savings.</span></td>
-                            <td class="col-time">${formatDateTime(timestamps.p3_crosspay1)}</td>
-                        </tr>
-                        <tr>
-                            <td class="col-description"><strong>Zashi Out <span class="phase3-arrow">→</span> B3 <span class="parenthesis">(2/3)</span> <span class="percent-border p3"><span id="savings2_percent">${initialSavings2}</span>%</span></strong><br><div class="text-content"><span class="calculated-value p3">$<span id="savings2_amount">${formatAmount(totalAmount * (initialSavings2 / 100))}</span></span></div><span class="notes">Second exit for Savings (ZEC→USDC).</span></td>
-                            <td class="col-time">${formatDateTime(timestamps.p3_crosspay2)}</td>
-                        </tr>
-                        <tr>
-                            <td class="col-description"><strong>Zashi Out <span class="phase3-arrow">→</span> B3 <span class="parenthesis">(3/3)</span> <span class="percent-border p3"><span id="savings3_percent">${initialSavings3}</span>%</span></strong><br><div class="text-content"><span class="calculated-value p3">$<span id="savings3_amount">${formatAmount(totalAmount * (initialSavings3 / 100))}</span></span></div><span class="notes">Third exit for Savings (ZEC→USDC).</span></td>
-                            <td class="col-time">${formatDateTime(timestamps.p3_crosspay3)}</td>
-                        </tr>
+                        <tr class="phase-header phase-3"><th colspan="2">Phase 3 – Unshielding</th></tr>
+                        ${unshieldRows}
                     </tbody></table>
                 </div>
-                <div class="phase-card">
+                <div class="phase-card" id="phase-4-card">
                     <table class="phase-table"><tbody>
-                        <tr class="phase-header phase-4"><th colspan="2">Phase 4 – Consolidation & Cold Storage</th></tr>
-                        <tr>
-                            <td><div class="flex-container"><div class="text-content"><strong>B3 <span class="phase4-arrow">→</span> Barcelona <span class="parenthesis">(1/2)</span></strong><br><span class="calculated-value p4">$<span id="consol1_amount">${formatAmount(totalAmount * 0.50)}</span></span><span class="notes">Move funds from B3 to Savings Wallet.</span></div><div class="slider-container p4"><div class="slider-bubble"></div><input type="range" min="40" max="60" value="50" id="consolidation_slider" class="p4"></div></div></td>
-                            <td class="col-time">${formatDateTime(timestamps.p4_consol1)}</td>
-                        </tr>
-                        <tr>
-                            <td class="col-description"><strong>B3 <span class="phase4-arrow">→</span> Barcelona <span class="parenthesis">(2/2)</span> <span class="percent-border p4"><span id="consolidation2_percent">50</span>%</span></strong><br><div class="text-content"><span class="calculated-value p4">$<span id="consol2_amount">${formatAmount(totalAmount * 0.50)}</span></span></div><span class="notes">Second batch to Savings Wallet.</span></td>
-                            <td class="col-time">${formatDateTime(timestamps.p4_consol2)}</td>
-                        </tr>
-                        <tr>
-                            <td><div class="flex-container"><div class="text-content"><strong>Savings <span class="phase4-arrow">→</span> Cold Wallet <span class="parenthesis">(1/2)</span></strong><br><span class="calculated-value p4">$<span id="cold1_amount">${formatAmount(totalAmount * 0.50)}</span></span><span class="notes">First movement to cold storage.</span></div><div class="slider-container p4"><div class="slider-bubble"></div><input type="range" min="40" max="60" value="50" id="cold_slider" class="p4"></div></div></td>
-                            <td class="col-time">${formatDateTime(timestamps.p4_cold1)}</td>
-                        </tr>
-                        <tr>
-                            <td class="col-description"><strong>Savings <span class="phase4-arrow">→</span> Cold Wallet <span class="parenthesis">(2/2)</span> <span class="percent-border p4"><span id="cold2_percent">50</span>%</span></strong><br><div class="text-content"><span class="calculated-value p4">$<span id="cold2_amount">${formatAmount(totalAmount * 0.50)}</span></span></div><span class="notes">Final movement to cold storage.</span></td>
-                            <td class="col-time">${formatDateTime(timestamps.p4_cold2)}</td>
-                        </tr>
+                        <tr class="phase-header phase-4"><th colspan="2">Phase 4 – Conversion</th></tr>
+                        ${intentRows}
                     </tbody></table>
-                </div>`;
+                </div>
+                <div class="phase-card" id="phase-5-card">
+                     <table class="phase-table"><tbody>
+                        <tr class="phase-header phase-5"><th colspan="2">Phase 5 – Private Exits</th></tr>
+                        ${crosspayRows}
+                    </tbody></table>
+                </div>
+                <div class="phase-card" id="phase-6-card">
+                    <table class="phase-table"><tbody>
+                        <tr class="phase-header phase-6"><th colspan="2">Phase 6 – Consolidation & Cold Storage</th></tr>
+                        <tr><td><div class="flex-container"><div class="text-content"><strong>B3 <span class="phase6-arrow">→</span> Barcelona <span class="parenthesis">(1/2)</span></strong><br><span class="calculated-value p6">$<span id="consol1_amount">0.00</span></span><span class="notes">Move funds from B3 to Savings Wallet.</span></div><div class="range-wrapper p6"><input type="range" min="0" max="100" value="50" id="consolidation_slider" class="p6"><div class="slider-bubble"></div></div></div></td><td class="col-time" id="consol1_time"></td></tr>
+                        <tr><td class="col-description"><strong>B3 <span class="phase6-arrow">→</span> Barcelona <span class="parenthesis">(2/2)</span> <span class="percent-border p6"><span id="consolidation2_percent">50</span>%</span></strong><br><div class="text-content"><span class="calculated-value p6">$<span id="consol2_amount">0.00</span></span></div><span class="notes">Second batch to Savings Wallet.</span></td><td class="col-time" id="consol2_time"></td></tr>
+                        <tr class="highlight-row"><td><div class="flex-container"><div class="text-content"><strong>Savings <span class="phase6-arrow">→</span> Cold Wallet <span class="parenthesis">(1/2)</span></strong><br><span class="calculated-value p6">$<span id="cold1_amount">0.00</span></span><span class="notes">First movement to cold storage.</span></div><div class="range-wrapper p6"><input type="range" min="0" max="100" value="50" id="cold_slider" class="p6"><div class="slider-bubble"></div></div></div></td><td class="col-time" id="cold1_time"></td></tr>
+                        <tr class="highlight-row"><td class="col-description"><strong>Savings <span class="phase6-arrow">→</span> Cold Wallet <span class="parenthesis">(2/2)</span> <span class="percent-border p6"><span id="cold2_percent">50</span>%</span></strong><br><div class="text-content"><span class="calculated-value p6">$<span id="cold2_amount">0.00</span></span></div><span class="notes">Final movement to cold storage.</span></td><td class="col-time" id="cold2_time"></td></tr>
+                    </tbody></table>
+                </div>
+            `;
+        }
+        
+        function updateValues(groupToUpdate = 'all') {
+            const timestamps = getScheduleTimestamps(new Date(dateInput.value));
+            
+            // Phase 1
+            document.getElementById('base_amount').textContent = formatAmount(totalAmount);
+            document.getElementById('shield_amount').textContent = formatAmount(totalAmount);
+            document.getElementById('base_time').textContent = formatDateTime(timestamps.baseDate);
+            document.getElementById('shield_time').textContent = formatDateTime(timestamps.p1_shield);
 
-            container.innerHTML = html;
-            attachAllListeners();
-            updateAllAmounts();
+            // Phase 2
+            const nonDistributedPercent = parseInt(document.getElementById('non_distributed_slider').value);
+            effectiveAmount = totalAmount * (1 - nonDistributedPercent / 100);
+            document.getElementById('distributable_amount').textContent = formatAmount(effectiveAmount);
+            document.getElementById('non_distributed_amount').textContent = formatAmount(totalAmount * nonDistributedPercent / 100);
+            
+            // Phase 3
+            if (groupToUpdate === 'all' || groupToUpdate === 'unshield') {
+                const numUnshields = parseInt(document.getElementById('num_unshield_select').value);
+                let unshield1Percent = parseInt(document.getElementById('unshield_slider').value);
+                const unshieldPercents = [unshield1Percent, ...generateRandomPercentages(100 - unshield1Percent, numUnshields - 1)];
+                for (let i = 0; i < numUnshields; i++) {
+                    document.getElementById(`unshield${i+1}_amount`).textContent = formatAmount(effectiveAmount * unshieldPercents[i] / 100);
+                    if (i > 0) document.getElementById(`unshield${i+1}_percent`).textContent = unshieldPercents[i];
+                }
+            }
+            
+            // Phase 4
+            if (groupToUpdate === 'all' || groupToUpdate === 'intent') {
+                const numIntents = parseInt(document.getElementById('num_intent_select').value);
+                let intent1Percent = parseInt(document.getElementById('intent_slider').value);
+                const intentPercents = [intent1Percent, ...generateRandomPercentages(100 - intent1Percent, numIntents - 1)];
+                for (let i = 0; i < numIntents; i++) {
+                     document.getElementById(`intent${i+1}_amount`).textContent = formatAmount(effectiveAmount * intentPercents[i] / 100);
+                    if (i > 0) document.getElementById(`intent${i+1}_percent`).textContent = intentPercents[i];
+                }
+            }
+            
+            // Phase 5
+            if (groupToUpdate === 'all' || groupToUpdate === 'crosspay') {
+                const numCrosspays = parseInt(document.getElementById('num_crosspay_select').value);
+                let payyPercent = parseInt(document.getElementById('payy_slider').value);
+                const crosspayPercents = generateRandomPercentages(100 - payyPercent, numCrosspays);
+                document.getElementById('payy_amount').textContent = formatAmount(effectiveAmount * payyPercent / 100);
+                for (let i = 0; i < numCrosspays; i++) {
+                    document.getElementById(`savings${i+1}_amount`).textContent = formatAmount(effectiveAmount * crosspayPercents[i] / 100);
+                    document.getElementById(`savings${i+1}_percent`).textContent = crosspayPercents[i];
+                }
+            }
+
+            // Update times
+            timestamps.p3_unshield.forEach((time, i) => document.getElementById(`unshield${i+1}_time`).textContent = formatDateTime(time));
+            timestamps.p4_intent.forEach((time, i) => document.getElementById(`intent${i+1}_time`).textContent = formatDateTime(time));
+            document.getElementById('payy_time').textContent = formatDateTime(timestamps.p5_payy);
+            timestamps.p5_crosspay.forEach((time, i) => document.getElementById(`savings${i+1}_time`).textContent = formatDateTime(time));
+
+            // Phase 6
+            const consol1Percent = parseInt(document.getElementById('consolidation_slider').value);
+            document.getElementById('consol1_amount').textContent = formatAmount(effectiveAmount * consol1Percent / 100);
+            document.getElementById('consol2_amount').textContent = formatAmount(effectiveAmount * (100 - consol1Percent) / 100);
+            document.getElementById('consolidation2_percent').textContent = 100 - consol1Percent;
+            document.getElementById('consol1_time').textContent = formatDateTime(timestamps.p6_consol[0]);
+            document.getElementById('consol2_time').textContent = formatDateTime(timestamps.p6_consol[1]);
+
+            const cold1Percent = parseInt(document.getElementById('cold_slider').value);
+            document.getElementById('cold1_amount').textContent = formatAmount(effectiveAmount * cold1Percent / 100);
+            document.getElementById('cold2_amount').textContent = formatAmount(effectiveAmount * (100 - cold1Percent) / 100);
+            document.getElementById('cold2_percent').textContent = 100 - cold1Percent;
+            document.getElementById('cold1_time').textContent = formatDateTime(timestamps.p6_cold[0]);
+            document.getElementById('cold2_time').textContent = formatDateTime(timestamps.p6_cold[1]);
+        }
+        
+        function initializeCustomSelects() {
+            const containers = document.querySelectorAll('.custom-select-container');
+
+            containers.forEach(container => {
+                const originalSelect = container.querySelector('select');
+                // Si ya está inicializado (tiene un .select-selected), no hacer nada.
+                if (!originalSelect || container.querySelector('.select-selected')) return;
+
+                const selectedDiv = document.createElement('DIV');
+                selectedDiv.setAttribute('class', 'select-selected');
+                
+                const phaseClass = Array.from(container.classList).find(c => c.startsWith('p'));
+                if (phaseClass) {
+                    selectedDiv.classList.add(phaseClass);
+                    const colorVar = getComputedStyle(document.documentElement).getPropertyValue(`--phase${phaseClass.substring(1)}-color`);
+                    selectedDiv.style.borderColor = colorVar;
+                }
+
+                selectedDiv.innerHTML = originalSelect.options[originalSelect.selectedIndex].innerHTML;
+                container.appendChild(selectedDiv);
+
+                const optionsList = document.createElement('DIV');
+                optionsList.setAttribute('class', 'select-items select-hide');
+                 if (phaseClass) optionsList.classList.add(phaseClass);
+                
+                Array.from(originalSelect.options).forEach((option, index) => {
+                    const optionDiv = document.createElement('DIV');
+                    optionDiv.innerHTML = option.innerHTML;
+                    
+                    if (index === originalSelect.selectedIndex) {
+                        optionDiv.classList.add("same-as-selected");
+                    }
+
+                    optionDiv.addEventListener('click', function() {
+                        originalSelect.selectedIndex = index;
+                        selectedDiv.innerHTML = this.innerHTML;
+                        
+                        const siblings = this.parentNode.querySelectorAll('div');
+                        siblings.forEach(sib => sib.classList.remove("same-as-selected"));
+                        this.classList.add("same-as-selected");
+                        
+                        selectedDiv.click(); // Cierra el dropdown
+                        generateSchedule(); 
+                    });
+                    optionsList.appendChild(optionDiv);
+                });
+                container.appendChild(optionsList);
+
+                selectedDiv.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    closeAllSelect(this);
+                    this.nextSibling.classList.toggle('select-hide');
+                    this.classList.toggle('select-arrow-active');
+                });
+            });
+        }
+
+        function closeAllSelect(elmnt) {
+            const items = document.querySelectorAll(".select-items");
+            const selected = document.querySelectorAll(".select-selected");
+            
+            selected.forEach(sel => {
+                if (elmnt !== sel) {
+                    sel.classList.remove("select-arrow-active");
+                }
+            });
+
+            items.forEach(item => {
+                if (!elmnt || item !== elmnt.nextSibling) {
+                    item.classList.add("select-hide");
+                }
+            });
+        }
+
+        document.addEventListener("click", () => closeAllSelect(null));
+
+        function attachAllListeners() {
+            document.querySelectorAll('input[type="range"]').forEach(slider => {
+                updateSliderBubble(slider);
+                const toggleGlow = (isActive) => {
+                    const elementsToToggle = [];
+                    let group;
+                    let baseId = slider.id.replace('_slider', '');
+                    
+                    switch(baseId) {
+                        case 'non_distributed':
+                            elementsToToggle.push(...slider.closest('tr').querySelectorAll('.calculated-value'));
+                            const distributableRow = document.getElementById('distributable_amount').closest('tr');
+                            if (distributableRow) elementsToToggle.push(...distributableRow.querySelectorAll('.calculated-value'));
+                            document.querySelectorAll('#phase-3-card, #phase-4-card, #phase-5-card, #phase-6-card').forEach(card => {
+                                elementsToToggle.push(...card.querySelectorAll('.calculated-value, .select-selected, .percent-border, [class*="-arrow"]'));
+                            });
+                            break;
+                        case 'unshield':
+                            group = baseId;
+                            elementsToToggle.push(...document.querySelectorAll(`[data-group="${group}"] .calculated-value, [data-group="${group}"] .percent-border, [data-group="${group}"] .phase3-arrow`));
+                            elementsToToggle.push(document.getElementById(`num_${group}_select`).parentNode.querySelector('.select-selected'));
+                            break;
+                        case 'intent':
+                             group = baseId;
+                            elementsToToggle.push(...document.querySelectorAll(`[data-group="${group}"] .calculated-value, [data-group="${group}"] .percent-border, [data-group="${group}"] .phase4-arrow`));
+                            elementsToToggle.push(document.getElementById(`num_${group}_select`).parentNode.querySelector('.select-selected'));
+                            break;
+                        case 'payy':
+                            group = 'crosspay';
+                            elementsToToggle.push(...document.querySelectorAll(`[data-group="${group}"] .calculated-value, [data-group="${group}"] .percent-border, [data-group="${group}"] .phase5-arrow`));
+                            elementsToToggle.push(document.getElementById(`num_${group}_select`).parentNode.querySelector('.select-selected'));
+                            break;
+                        case 'consolidation':
+                        case 'cold':
+                            const parentRow = slider.closest('tr');
+                            elementsToToggle.push(...parentRow.querySelectorAll('.calculated-value, .phase6-arrow'));
+                            if (parentRow.nextElementSibling) {
+                                elementsToToggle.push(...parentRow.nextElementSibling.querySelectorAll('.calculated-value, .percent-border, .phase6-arrow'));
+                            }
+                            break;
+                        case 'alarm':
+                            exportButton.classList.toggle('active', isActive);
+                            return;
+                    }
+
+                    const bubble = slider.nextElementSibling;
+                    if (bubble && bubble.classList.contains('slider-bubble')) {
+                         bubble.classList.toggle('active', isActive);
+                    }
+                    elementsToToggle.forEach(el => el?.classList.toggle('active', isActive));
+                };
+                
+                slider.addEventListener('input', () => {
+                    if (slider.id === 'alarm_slider') {
+                        updateAlarmText(slider);
+                        return;
+                    }
+                    updateSliderBubble(slider);
+                    let group = slider.id.replace(/_slider$/, '');
+                    if (group === 'payy') group = 'crosspay';
+                    if (slider.id === 'non_distributed_slider') group = 'all';
+                    if (slider.id.startsWith('consolidation') || slider.id.startsWith('cold')) group = 'phase6';
+
+                    debounce(() => updateValues(group), 50)();
+                });
+                
+                slider.addEventListener('mousedown', () => toggleGlow(true));
+                slider.addEventListener('touchstart', () => toggleGlow(true), {passive: true});
+                slider.addEventListener('mouseup', () => toggleGlow(false));
+                slider.addEventListener('touchend', () => toggleGlow(false));
+                window.addEventListener('resize', () => updateSliderBubble(slider));
+            });
+
+            initializeCustomSelects();
         }
 
         function updateSliderBubble(slider) {
-            const bubble = slider.previousElementSibling;
-            if (!bubble || slider.id === 'alarm_slider') return;
+            const bubble = slider.nextElementSibling;
+            if (!bubble || !bubble.classList.contains('slider-bubble')) return;
             const currentValue = Math.round(slider.value);
+            bubble.textContent = `${currentValue}%`;
             const min = parseFloat(slider.min);
             const max = parseFloat(slider.max);
+            const progress = (max - min > 0) ? (currentValue - min) / (max - min) : 0;
             const sliderWidth = slider.offsetWidth;
-            bubble.innerHTML = `${currentValue}%`;
-            const progress = (currentValue - min) / (max - min);
-            const trackWidth = sliderWidth - bubble.offsetWidth;
-            const newPosition = progress * trackWidth + (bubble.offsetWidth / 2);
-            bubble.style.left = `calc(${newPosition}px)`;
-        }
+            const thumbWidth = 38; 
+            
+            const bubbleOffset = progress * (sliderWidth - thumbWidth) + (thumbWidth / 2);
 
-        function attachBubbleListeners() {
-            const sliders = [
-                { id: 'unshield_slider', outputs: ['unshield2_percent'], amountOutputs: ['unshield1_amount', 'unshield2_amount'], arrowClass: 'phase2-arrow', arrowSelector: '.phase-card:nth-child(2) tr:nth-child(2) .phase2-arrow, .phase-card:nth-child(2) tr:nth-child(3) .phase2-arrow' },
-                { id: 'intent_slider', outputs: ['intent2_percent'], amountOutputs: ['intent1_amount', 'intent2_amount'], arrowClass: 'phase2-arrow', arrowSelector: '.phase-card:nth-child(2) tr:nth-child(4) .phase2-arrow, .phase-card:nth-child(2) tr:nth-child(5) .phase2-arrow' },
-                { id: 'payy_slider', outputs: ['savings1_percent', 'savings2_percent', 'savings3_percent'], amountOutputs: ['payy_amount', 'savings1_amount', 'savings2_amount', 'savings3_amount'], arrowClass: 'phase3-arrow', arrowSelector: '.phase-card:nth-child(3) tr:nth-child(2) .phase3-arrow, .phase-card:nth-child(3) tr:nth-child(3) .phase3-arrow, .phase-card:nth-child(3) tr:nth-child(4) .phase3-arrow, .phase-card:nth-child(3) tr:nth-child(5) .phase3-arrow' },
-                { id: 'consolidation_slider', outputs: ['consolidation2_percent'], amountOutputs: ['consol1_amount', 'consol2_amount'], arrowClass: 'phase4-arrow', arrowSelector: '.phase-card:nth-child(4) tr:nth-child(2) .phase4-arrow, .phase-card:nth-child(4) tr:nth-child(3) .phase4-arrow' },
-                { id: 'cold_slider', outputs: ['cold2_percent'], amountOutputs: ['cold1_amount', 'cold2_amount'], arrowClass: 'phase4-arrow', arrowSelector: '.phase-card:nth-child(4) tr:nth-child(4) .phase4-arrow, .phase-card:nth-child(4) tr:nth-child(5) .phase4-arrow' },
-                { id: 'alarm_slider', outputs: [], amountOutputs: [], arrowClass: '', arrowSelector: '' }
-            ];
-
-            const clearAllGlow = () => {
-                document.querySelectorAll('.phase1-arrow, .phase2-arrow, .phase3-arrow, .phase4-arrow').forEach(el => {
-                    el.classList.remove('active');
-                });
-            };
-
-            sliders.forEach(s => {
-                const slider = document.getElementById(s.id);
-                if (!slider) return;
-                const bubble = slider.previousElementSibling;
-
-                let isDragging = false;
-
-                const activateGlow = () => {
-                    clearAllGlow();
-                    if (s.id === 'alarm_slider' && exportButton) {
-                        exportButton.classList.add('active');
-                    } else {
-                        if (bubble) {
-                            bubble.classList.add('active');
-                        }
-                        s.outputs.forEach(outputId => {
-                            const percentEl = document.getElementById(outputId);
-                            if (percentEl) {
-                                percentEl.parentElement.classList.add('active');
-                            }
-                        });
-                        s.amountOutputs.forEach(amountId => {
-                            const amountEl = document.getElementById(amountId);
-                            if (amountEl) {
-                                amountEl.parentElement.classList.add('active');
-                            }
-                        });
-                        if (s.arrowSelector) {
-                            document.querySelectorAll(s.arrowSelector).forEach(el => {
-                                el.classList.add('active');
-                            });
-                        }
-                    }
-                };
-
-                const deactivateGlow = () => {
-                    if (s.id === 'alarm_slider' && exportButton) {
-                        exportButton.classList.remove('active');
-                    } else {
-                        if (bubble) {
-                            bubble.classList.remove('active');
-                        }
-                        s.outputs.forEach(outputId => {
-                            const percentEl = document.getElementById(outputId);
-                            if (percentEl) {
-                                percentEl.parentElement.classList.remove('active');
-                            }
-                        });
-                        s.amountOutputs.forEach(amountId => {
-                            const amountEl = document.getElementById(amountId);
-                            if (amountEl) {
-                                amountEl.parentElement.classList.remove('active');
-                            }
-                        });
-                        if (s.arrowSelector) {
-                            document.querySelectorAll(s.arrowSelector).forEach(el => {
-                                el.classList.remove('active');
-                            });
-                        }
-                    }
-                };
-
-                if (bubble) {
-                    bubble.addEventListener('mousedown', (e) => {
-                        isDragging = true;
-                        document.body.style.userSelect = 'none';
-                        activateGlow();
-                    });
-
-                    bubble.addEventListener('mouseover', () => {
-                        if (s.id === 'alarm_slider' && exportButton) {
-                            exportButton.classList.add('active');
-                        }
-                    });
-
-                    bubble.addEventListener('mouseout', () => {
-                        if (s.id === 'alarm_slider' && !isDragging && exportButton) {
-                            exportButton.classList.remove('active');
-                        }
-                    });
-                }
-
-                slider.addEventListener('mousedown', () => {
-                    isDragging = true;
-                    document.body.style.userSelect = 'none';
-                    activateGlow();
-                });
-
-                slider.addEventListener('touchstart', (e) => {
-                    isDragging = true;
-                    document.body.style.userSelect = 'none';
-                    activateGlow();
-                    e.preventDefault();
-                });
-
-                document.addEventListener('mousemove', (e) => {
-                    if (!isDragging) return;
-                    const rect = slider.getBoundingClientRect();
-                    const min = parseFloat(slider.min);
-                    const max = parseFloat(slider.max);
-                    let newValue = ((e.clientX - rect.left) / rect.width) * (max - min) + min;
-                    newValue = Math.min(max, Math.max(min, newValue));
-                    slider.value = newValue;
-                    slider.dispatchEvent(new Event('input'));
-                    if (s.id === 'alarm_slider' && exportButton) {
-                        exportButton.classList.add('active');
-                    }
-                });
-
-                document.addEventListener('touchmove', (e) => {
-                    if (!isDragging) return;
-                    const rect = slider.getBoundingClientRect();
-                    const min = parseFloat(slider.min);
-                    const max = parseFloat(slider.max);
-                    const touch = e.touches[0];
-                    let newValue = ((touch.clientX - rect.left) / rect.width) * (max - min) + min;
-                    newValue = Math.min(max, Math.max(min, newValue));
-                    slider.value = newValue;
-                    slider.dispatchEvent(new Event('input'));
-                    if (s.id === 'alarm_slider' && exportButton) {
-                        exportButton.classList.add('active');
-                    }
-                });
-
-                document.addEventListener('mouseup', () => {
-                    if (isDragging) {
-                        isDragging = false;
-                        document.body.style.userSelect = '';
-                        deactivateGlow();
-                    }
-                });
-
-                document.addEventListener('touchend', () => {
-                    if (isDragging) {
-                        isDragging = false;
-                        document.body.style.userSelect = '';
-                        deactivateGlow();
-                    }
-                });
-            });
-        }
-
-        function updateSavings() {
-            const payySlider = document.getElementById('payy_slider');
-            if (!payySlider) return;
-            updateSliderBubble(payySlider);
-            const payyPercent = Math.round(parseFloat(payySlider.value));
-            const remainderPercent = 100 - payyPercent;
-            const [savings1, savings2, savings3] = generateRandomPercentages(remainderPercent);
-
-            document.getElementById('savings1_percent').textContent = savings1;
-            document.getElementById('savings2_percent').textContent = savings2;
-            document.getElementById('savings3_percent').textContent = savings3;
-
-            document.getElementById('payy_amount').textContent = formatAmount((payyPercent / 100) * totalAmount);
-            document.getElementById('savings1_amount').textContent = formatAmount((savings1 / 100) * totalAmount);
-            document.getElementById('savings2_amount').textContent = formatAmount((savings2 / 100) * totalAmount);
-            document.getElementById('savings3_amount').textContent = formatAmount((savings3 / 100) * totalAmount);
-        }
-
-        function attachAllListeners() {
-            const sliders = [
-                { id: 'unshield_slider', outputs: ['unshield2_percent'], amountOutputs: ['unshield1_amount', 'unshield2_amount'], class: 'p2', arrowClass: 'phase2-arrow', arrowSelector: '.phase-card:nth-child(2) tr:nth-child(2) .phase2-arrow, .phase-card:nth-child(2) tr:nth-child(3) .phase2-arrow' },
-                { id: 'intent_slider', outputs: ['intent2_percent'], amountOutputs: ['intent1_amount', 'intent2_amount'], class: 'p2', arrowClass: 'phase2-arrow', arrowSelector: '.phase-card:nth-child(2) tr:nth-child(4) .phase2-arrow, .phase-card:nth-child(2) tr:nth-child(5) .phase2-arrow' },
-                { id: 'payy_slider', outputs: ['savings1_percent', 'savings2_percent', 'savings3_percent'], amountOutputs: ['payy_amount', 'savings1_amount', 'savings2_amount', 'savings3_amount'], class: 'p3', arrowClass: 'phase3-arrow', arrowSelector: '.phase-card:nth-child(3) tr:nth-child(2) .phase3-arrow, .phase-card:nth-child(3) tr:nth-child(3) .phase3-arrow, .phase-card:nth-child(3) tr:nth-child(4) .phase3-arrow, .phase-card:nth-child(3) tr:nth-child(5) .phase3-arrow' },
-                { id: 'consolidation_slider', outputs: ['consolidation2_percent'], amountOutputs: ['consol1_amount', 'consol2_amount'], class: 'p4', arrowClass: 'phase4-arrow', arrowSelector: '.phase-card:nth-child(4) tr:nth-child(2) .phase4-arrow, .phase-card:nth-child(4) tr:nth-child(3) .phase4-arrow' },
-                { id: 'cold_slider', outputs: ['cold2_percent'], amountOutputs: ['cold1_amount', 'cold2_amount'], class: 'p4', arrowClass: 'phase4-arrow', arrowSelector: '.phase-card:nth-child(4) tr:nth-child(4) .phase4-arrow, .phase-card:nth-child(4) tr:nth-child(5) .phase4-arrow' },
-                { id: 'alarm_slider', outputs: [], amountOutputs: [], class: '', arrowClass: '', arrowSelector: '' }
-            ];
-            sliders.forEach(s => {
-                const sliderEl = document.getElementById(s.id);
-                if (sliderEl) {
-                    const update = () => {
-                        if (s.id !== 'alarm_slider') {
-                            updateSliderBubble(sliderEl);
-                        }
-                        if (s.id === 'alarm_slider') {
-                            updateAlarmText(sliderEl);
-                        }
-                        const sliderValue = Math.round(parseFloat(sliderEl.value));
-                        if (s.id === 'payy_slider') {
-                            updateSavings();
-                        } else if (s.id !== 'alarm_slider') {
-                            const remainder = Math.round(100 - sliderValue);
-                            document.getElementById(s.outputs[0]).textContent = remainder;
-                            document.getElementById(s.amountOutputs[0]).textContent = formatAmount((sliderValue / 100) * totalAmount);
-                            document.getElementById(s.amountOutputs[1]).textContent = formatAmount((remainder / 100) * totalAmount);
-                        }
-                    };
-                    sliderEl.addEventListener('input', update);
-                    window.addEventListener('resize', update);
-                    update();
-                }
-            });
-            attachBubbleListeners();
-        }
-
-        function updateAllAmounts() {
-            document.getElementById('base_amount').textContent = formatAmount(totalAmount);
-            document.getElementById('shield_amount').textContent = formatAmount(totalAmount);
+            bubble.style.left = `${bubbleOffset}px`;
         }
 
         function exportToOrg() {
             const inputElement = document.getElementById('receiptDate');
-            if (!inputElement.value) { alert("Please select a start date and time first."); return; }
+            if (!inputElement.value) { return; }
             
             const baseDate = new Date(inputElement.value);
             const timestamps = getScheduleTimestamps(baseDate);
             const alarmMinutes = Math.round(parseFloat(document.getElementById('alarm_slider').value));
-
-            const unshield1 = Math.round(parseFloat(document.getElementById('unshield_slider').value));
-            const unshield2 = 100 - unshield1;
-            const intent1 = Math.round(parseFloat(document.getElementById('intent_slider').value));
-            const intent2 = 100 - intent1;
-            const payy = Math.round(parseFloat(document.getElementById('payy_slider').value));
-            const savings1 = parseInt(document.getElementById('savings1_percent').textContent, 10);
-            const savings2 = parseInt(document.getElementById('savings2_percent').textContent, 10);
-            const savings3 = parseInt(document.getElementById('savings3_percent').textContent, 10);
-            const payyAmount = formatAmount((payy / 100) * totalAmount);
-            const savings1Amount = formatAmount((savings1 / 100) * totalAmount);
-            const savings2Amount = formatAmount((savings2 / 100) * totalAmount);
-            const savings3Amount = formatAmount((savings3 / 100) * totalAmount);
-            const unshield1Amount = formatAmount((unshield1 / 100) * totalAmount);
-            const unshield2Amount = formatAmount((unshield2 / 100) * totalAmount);
-            const intent1Amount = formatAmount((intent1 / 100) * totalAmount);
-            const intent2Amount = formatAmount((intent2 / 100) * totalAmount);
-            const consol1 = Math.round(parseFloat(document.getElementById('consolidation_slider').value));
-            const consol2 = 100 - consol1;
-            const consol1Amount = formatAmount((consol1 / 100) * totalAmount);
-            const consol2Amount = formatAmount((consol2 / 100) * totalAmount);
-            const cold1 = Math.round(parseFloat(document.getElementById('cold_slider').value));
-            const cold2 = 100 - cold1;
-            const cold1Amount = formatAmount((cold1 / 100) * totalAmount);
-            const cold2Amount = formatAmount((cold2 / 100) * totalAmount);
+            const nonDistributedPercent = parseInt(document.getElementById('non_distributed_slider').value);
+            
+            const numUnshields = parseInt(document.getElementById('num_unshield_select').value);
+            const unshield1Percent = parseInt(document.getElementById('unshield_slider').value);
+            const unshieldPercents = [unshield1Percent, ...generateRandomPercentages(100 - unshield1Percent, numUnshields - 1)];
+            
+            const numIntents = parseInt(document.getElementById('num_intent_select').value);
+            const intent1Percent = parseInt(document.getElementById('intent_slider').value);
+            const intentPercents = [intent1Percent, ...generateRandomPercentages(100 - intent1Percent, numIntents - 1)];
+            
+            const numCrosspays = parseInt(document.getElementById('num_crosspay_select').value);
+            let payyPercent = parseInt(document.getElementById('payy_slider').value);
+            const crosspayPercents = generateRandomPercentages(100 - payyPercent, numCrosspays);
+            
+            const consol1Percent = parseInt(document.getElementById('consolidation_slider').value);
+            const cold1Percent = parseInt(document.getElementById('cold_slider').value);
+            const effectiveAmount = totalAmount * (1 - nonDistributedPercent / 100);
 
             const events = [
-                { phase: 'Phase 1 – Secure Accumulation', title: 'Funds received in B1', date: timestamps.baseDate, amount: formatAmount(totalAmount), percent: '100', note: 'Starting point of the schedule.' },
-                { phase: 'Phase 1 – Secure Accumulation', title: 'B1 → Railgun [Shield]', date: timestamps.p1_shield, amount: formatAmount(totalAmount), percent: '100', note: 'Move funds to the privacy pool.' },
-                { phase: 'Phase 2 – "Flash Pass"', title: 'Railgun → B2 [Unshield] (1/2)', date: timestamps.p2_unshield1, amount: unshield1Amount, percent: unshield1, note: 'First withdrawal from pool.' },
-                { phase: 'Phase 2 – "Flash Pass"', title: 'Railgun → B2 [Unshield] (2/2)', date: timestamps.p2_unshield2, amount: unshield2Amount, percent: unshield2, note: 'Second withdrawal.' },
-                { phase: 'Phase 2 – "Flash Pass"', title: 'B2 → Zashi In (1/2)', date: timestamps.p2_intent1, amount: intent1Amount, percent: intent1, note: 'First USDC→ZEC conversion.' },
-                { phase: 'Phase 2 – "Flash Pass"', title: 'B2 → Zashi In (2/2)', date: timestamps.p2_intent2, amount: intent2Amount, percent: intent2, note: 'Second USDC→ZEC conversion.' },
-                { phase: 'Phase 3 – Private Exits', title: 'Zashi Out → Milano', date: timestamps.p3_payy, amount: payyAmount, percent: payy, note: 'Priority exit for Spending (ZEC→USDC).' },
-                { phase: 'Phase 3 – Private Exits', title: 'Zashi Out → B3 (1/3)', date: timestamps.p3_crosspay1, amount: savings1Amount, percent: savings1, note: 'Exit ZEC→USDC for Savings.' },
-                { phase: 'Phase 3 – Private Exits', title: 'Zashi Out → B3 (2/3)', date: timestamps.p3_crosspay2, amount: savings2Amount, percent: savings2, note: 'Second exit for Savings (ZEC→USDC).' },
-                { phase: 'Phase 3 – Private Exits', title: 'Zashi Out → B3 (3/3)', date: timestamps.p3_crosspay3, amount: savings3Amount, percent: savings3, note: 'Third exit for Savings (ZEC→USDC).' },
-                { phase: 'Phase 4 – Consolidation & Cold Storage', title: 'B3 → Barcelona (1/2)', date: timestamps.p4_consol1, amount: consol1Amount, percent: consol1, note: 'Move funds from B3 to Savings Wallet.' },
-                { phase: 'Phase 4 – Consolidation & Cold Storage', title: 'B3 → Barcelona (2/2)', date: timestamps.p4_consol2, amount: consol2Amount, percent: consol2, note: 'Second batch to Savings Wallet.' },
-                { phase: 'Phase 4 – Consolidation & Cold Storage', title: 'Savings → Cold Wallet (1/2)', date: timestamps.p4_cold1, amount: cold1Amount, percent: cold1, note: 'First movement to cold storage.' },
-                { phase: 'Phase 4 – Consolidation & Cold Storage', title: 'Savings → Cold Wallet (2/2)', date: timestamps.p4_cold2, amount: cold2Amount, percent: cold2, note: 'Final movement to cold storage.' }
+                { phase: 'Phase 1 – Secure Accumulation', title: 'Funds received in B1', date: timestamps.baseDate, amount: formatAmount(totalAmount), percent: 100, note: 'Starting point.' },
+                { phase: 'Phase 1 – Secure Accumulation', title: 'B1 → Railgun [Shield]', date: timestamps.p1_shield, amount: formatAmount(totalAmount), percent: 100, note: 'Move to privacy pool.' },
+                { phase: 'Phase 2 – Staging & Allocation', title: 'Funds retained', date: null, amount: formatAmount(totalAmount * nonDistributedPercent / 100), percent: nonDistributedPercent, note: 'Enhance privacy.' }
             ];
+
+            unshieldPercents.forEach((p, i) => events.push({
+                phase: 'Phase 3 – Unshielding', title: `Railgun → B2 [Unshield] (${i+1}/${numUnshields})`, date: timestamps.p3_unshield[i], amount: formatAmount(effectiveAmount * p / 100), percent: p, note: 'Withdrawal from pool.'
+            }));
+
+            intentPercents.forEach((p, i) => events.push({
+                phase: 'Phase 4 – Conversion', title: `B2 → Zashi In (${i+1}/${numIntents})`, date: timestamps.p4_intent[i], amount: formatAmount(effectiveAmount * p / 100), percent: p, note: 'USDC→ZEC conversion.'
+            }));
+            
+            events.push({ phase: 'Phase 5 – Private Exits', title: 'Zashi Out → Milano', date: timestamps.p5_payy, amount: formatAmount(effectiveAmount * payyPercent / 100), percent: payyPercent, note: 'Exit for Spending.' });
+
+            crosspayPercents.forEach((p, i) => events.push({
+                phase: 'Phase 5 – Private Exits', title: `Zashi Out → B3 (${i+1}/${numCrosspays})`, date: timestamps.p5_crosspay[i], amount: formatAmount(effectiveAmount * p / 100), percent: p, note: 'Exit for Savings.'
+            }));
+
+            events.push(
+                { phase: 'Phase 6 – Consolidation & Cold Storage', title: 'B3 → Barcelona (1/2)', date: timestamps.p6_consol[0], amount: formatAmount(effectiveAmount * consol1Percent / 100), percent: consol1Percent, note: 'Move to Savings Wallet.' },
+                { phase: 'Phase 6 – Consolidation & Cold Storage', title: 'B3 → Barcelona (2/2)', date: timestamps.p6_consol[1], amount: formatAmount(effectiveAmount * (100 - consol1Percent) / 100), percent: 100 - consol1Percent, note: 'Second batch.' },
+                { phase: 'Phase 6 – Consolidation & Cold Storage', title: 'Savings → Cold (1/2)', date: timestamps.p6_cold[0], amount: formatAmount(effectiveAmount * cold1Percent / 100), percent: cold1Percent, note: 'To cold storage.' },
+                { phase: 'Phase 6 – Consolidation & Cold Storage', title: 'Savings → Cold (2/2)', date: timestamps.p6_cold[1], amount: formatAmount(effectiveAmount * (100 - cold1Percent) / 100), percent: 100 - cold1Percent, note: 'Final movement.' }
+            );
 
             let orgString = '#+TITLE: Privacy Schedule\n\n';
             let currentPhase = '';
@@ -924,9 +1323,11 @@
                     currentPhase = event.phase;
                     orgString += `* ${currentPhase}\n`;
                 }
-                orgString += `** ${event.title}\n`;
-                orgString += `   SCHEDULED: ${formatOrgDate(event.date, alarmMinutes)}\n`;
-                orgString += `:PROPERTIES:\n:AMOUNT: $${event.amount}\n:PERCENT: ${event.percent}%\n:END:\n`;
+                orgString += `** TODO ${event.title}\n`;
+                if (event.date) {
+                    orgString += `   SCHEDULED: ${formatOrgDate(event.date, alarmMinutes)}\n`;
+                }
+                orgString += `:PROPERTIES:\n:AMOUNT: $${event.amount}\n:PERCENT: ${event.percent}%\n:END:\n\n`;
                 orgString += `${event.note}\n\n`;
             });
 
@@ -941,13 +1342,7 @@
 
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(registration => {
-                        console.log('Service Worker registrado con éxito:', registration.scope);
-                    })
-                    .catch(error => {
-                        console.log('Error al registrar el Service Worker:', error);
-                    });
+                navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW reg failed:', err));
             });
         }
     </script>
