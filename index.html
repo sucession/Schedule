@@ -518,66 +518,49 @@
 
         @media (max-width: 600px) {
             body { padding: 10px; padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
-            .phase-table td { display: block; width: 100%; box-sizing: border-box; text-align: left !important; padding: 10px 15px; border-bottom: none; }
-            .phase-table tr:nth-child(even) td { background-color: var(--row-alt-color); }
-            .phase-table tr:nth-child(odd) td { background-color: var(--surface-color); }
+            .phase-table td { 
+                display: block; 
+                width: 100%; 
+                box-sizing: border-box; 
+                padding: 10px 15px; 
+                border-bottom: 1px solid var(--border-color); /* Añadir borde para separar filas */
+                text-align: left !important;
+            }
+            .phase-table tr:last-child td { border-bottom: none; }
             .phase-table tr td:first-child { padding-bottom: 5px; }
-            .col-time { padding-top: 0; padding-left: 15px; padding-bottom: 12px; font-weight: 500; color: var(--secondary-text); }
-            .phase-table tr:last-child .col-time { padding-bottom: 10px; }
-            .flex-container { flex-direction: column; align-items: flex-start; gap: 10px; }
-            .slider-container, .range-wrapper { padding-top: 10px; padding-bottom: 10px; }
+            .col-time { 
+                display: block;
+                width: 100%;
+                padding-top: 5px; 
+                padding-left: 15px;
+                padding-bottom: 12px; 
+                font-weight: 500; 
+                color: var(--secondary-text);
+                text-align: left !important;
+                border-bottom: none;
+            }
+            .flex-container { 
+                flex-direction: row;  /* Mantener el layout de dos columnas */
+                align-items: center; /* Centrar verticalmente */
+            }
             .input-section { 
-                display: flex; 
                 flex-direction: column; 
-                gap: 10px; 
-                justify-content: center; 
-                align-items: center; 
-                margin-bottom: 10px; 
             }
-            .alarm-section {
-                display: none;
-                flex-direction: row;
-                gap: 5px;
-                justify-content: center;
-                align-items: center;
-                padding: 5px;
-                border-radius: 8px;
-                margin-bottom: 40px;
-                width: fit-content;
-                margin-left: auto;
-                margin-right: auto;
+            
+            .input-wrapper.date { width: auto; }
+            
+            .text-content {
+                flex-grow: 1; /* Permite que el texto ocupe el espacio disponible */
             }
-            .alarm-card {
-                background-color: var(--surface-color);
-                border: 1px solid var(--border-color);
-                border-radius: 8px;
-                padding: 5px;
-                display: flex;
-                gap: inherit;
-                align-items: center;
+            .slider-group-container, .custom-select-container, .range-wrapper {
+                flex-shrink: 0; /* Evita que los controles se encojan */
             }
-            input[type="text"]#totalAmount { width: 160px; }
-            input[type="datetime-local"] { width: 240px; }
-            .input-wrapper { width: 160px; }
-            .input-wrapper.date { width: 295px; display: flex; align-items: center; gap: 5px; }
-            .btn-icon-only { width: 50px; height: 50px; }
-            input[type="range"]#alarm_slider { width: 100px; }
-            .dropdown-container { width: 140px; }
-            .text-content { display: block; width: auto; margin-top: 5px; }
-            .percent-border, .calculated-value { 
-                display: inline-block; 
-                width: auto; 
-                box-sizing: content-box;
-                margin-top: 5px;
-            }
-            .btn-calendar { 
-                font-size: 13px;
-                padding: 0 16px;
-            }
+            
             .phase1-arrow, .phase2-arrow, .phase3-arrow, .phase4-arrow, .phase5-arrow, .phase6-arrow { font-size: 1.2em; }
-            @media (max-width: 360px) {
-                .alarm-section { gap: 3px; padding: 3px; }
-                .alarm-card { padding: 3px; }
+            
+            @media (max-width: 380px) {
+                 .alarm-section { gap: 3px; padding: 3px; }
+                 .alarm-card { padding: 3px; }
             }
         }
     </style>
@@ -949,18 +932,9 @@
                                 <span class="calculated-value p5">$<span id="payy_amount">0.00</span></span>
                                 <span class="notes">Priority exit for Spending (ZEC→USDC).</span>
                             </div>
-                           <div class="slider-group-container">
-                                <div class="custom-select-container p5">
-                                    <select id="num_crosspay_select" style="display: none;">
-                                        <option value="3">3 operations</option>
-                                        <option value="4">4 operations</option>
-                                        <option value="5">5 operations</option>
-                                    </select>
-                                </div>
-                                <div class="range-wrapper p5">
-                                    <input type="range" min="0" max="100" value="10" id="payy_slider" class="p5">
-                                    <div class="slider-bubble"></div>
-                                </div>
+                            <div class="range-wrapper p5">
+                                <input type="range" min="0" max="100" value="10" id="payy_slider" class="p5">
+                                <div class="slider-bubble"></div>
                             </div>
                         </div>
                     </td>
@@ -969,12 +943,23 @@
             for (let i = 0; i < numCrosspays; i++) {
                 crosspayRows += `
                     <tr data-group="crosspay" class="op-row">
-                        <td class="col-description">
-                            <strong>Zashi Out <span class="phase5-arrow">→</span> B3 <span class="parenthesis">(${i+1}/${numCrosspays})</span> 
-                            <span class="percent-border p5"><span id="savings${i+1}_percent">0</span>%</span>
-                            </strong><br>
-                            <div class="text-content"><span class="calculated-value p5">$<span id="savings${i+1}_amount">0.00</span></span></div>
-                            <span class="notes">${i === 0 ? 'First' : i === numCrosspays - 1 ? 'Final' : 'Intermediate'} exit for Savings (ZEC→USDC).</span>
+                        <td>
+                            <div class="flex-container">
+                                <div class="text-content">
+                                    <strong>Zashi Out <span class="phase5-arrow">→</span> B3 <span class="parenthesis">(${i+1}/${numCrosspays})</span> 
+                                    <span class="percent-border p5"><span id="savings${i+1}_percent">0</span>%</span>
+                                    </strong><br>
+                                    <div class="text-content"><span class="calculated-value p5">$<span id="savings${i+1}_amount">0.00</span></span></div>
+                                    <span class="notes">${i === 0 ? 'First' : i === numCrosspays - 1 ? 'Final' : 'Intermediate'} exit for Savings (ZEC→USDC).</span>
+                                </div>
+                                ${i === 0 ? `<div class="custom-select-container p5">
+                                    <select id="num_crosspay_select" style="display: none;">
+                                        <option value="3">3 operations</option>
+                                        <option value="4">4 operations</option>
+                                        <option value="5">5 operations</option>
+                                    </select>
+                                </div>` : ''}
+                            </div>
                         </td>
                         <td class="col-time" id="savings${i+1}_time"></td>
                     </tr>`;
@@ -1202,7 +1187,7 @@
                         case 'payy':
                             group = 'crosspay';
                             elementsToToggle.push(...document.querySelectorAll(`[data-group="${group}"] .calculated-value, [data-group="${group}"] .percent-border, [data-group="${group}"] .phase5-arrow`));
-                            elementsToToggle.push(document.getElementById(`num_${group}_select`).parentNode.querySelector('.select-selected'));
+                            elementsToToggle.push(document.getElementById(`num_crosspay_select`)?.parentNode.querySelector('.select-selected'));
                             break;
                         case 'consolidation':
                         case 'cold':
