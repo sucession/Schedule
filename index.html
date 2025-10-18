@@ -14,37 +14,38 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
     <style>
         :root {
-            /* Paleta de colores actualizada y refinada */
+            /* Paleta de colores "Stealth & Signal" */
             --bg-color: #121212;
             --surface-color: #1e1e1e; 
             --primary-text: #e1e1e1;
             --secondary-text: #b3b3b3;
             --border-color: #333333;
-            --row-alt-color: #2c2c2c; /* Tono más claro para mejor contraste */
-            --button-primary-bg: #2196F3; /* Azul más vibrante y distintivo */
-            --button-primary-bg-hover: #1976D2; /* Tono más oscuro para el hover */
-            --button-calendar-bg: #ffc107; /* Coincide con la campana del slider */
+            --row-alt-color: #2c2c2c;
+            --button-primary-bg: #2196F3;
+            --button-primary-bg-hover: #1976D2;
+            --button-calendar-bg: #ffc107;
             --button-calendar-bg-hover: #e0a800;
-            --dropdown-card-bg: #404040; /* Nuevo color más claro para selectores */
+            --dropdown-card-bg: #404040;
 
-            --phase1-color: #8b5fbf;
-            --phase2-color: #00BCD4; /* Tono cian para mejor distinción */
-            --phase3-color: #EC407A; /* Nuevo color Magenta */
-            --phase4-color: #9CCC65; /* Nuevo color Verde Lima */
-            --phase5-color: #E53935; /* Anterior Fase 4 (rojo) ahora es Fase 5 */
-            --phase6-color: #26A69A; /* Anterior Fase 5 (teal) ahora es Fase 6 */
+            /* "Stealth & Signal" Palette v3 */
+            --phase1-color: #3F51B5; /* Azul Profundo (Seguridad) */
+            --phase2-color: #009688; /* Verde Azulado (Transición) */
+            --phase3-color: #673AB7; /* Índigo (Preparación) */
+            --phase4-color: #E67E22; /* Naranja Intenso (Alerta de Riesgo) */
+            --phase5-color: #E53935; /* Rojo Intenso (Acción Crítica) */
+            --phase6-color: #4CAF50; /* Verde Bosque (Éxito/Seguro) */
 
-            /* Tonos más oscuros para los fondos de valores en $ */
-            --phase1-darker: #593a80;
-            --phase2-darker: #0097A7;
-            --phase3-darker: #AD1457; /* Versión oscura del nuevo Magenta */
-            --phase4-darker: #689F38; /* Versión oscura del nuevo Verde Lima */
-            --phase5-darker: #B71C1C;
-            --phase6-darker: #1B6E66;
+            /* Tonos más oscuros para fondos */
+            --phase1-darker: #303F9F;
+            --phase2-darker: #00796B;
+            --phase3-darker: #512DA8;
+            --phase4-darker: #D35400; /* Naranja Quemado */
+            --phase5-darker: #B71C1C; /* Rojo Oscuro */
+            --phase6-darker: #388E3C;
 
             /* Variables RGB para fondos sutiles */
-            --phase5-rgb: 229, 57, 53;
-            --phase6-rgb: 38, 166, 154;
+            --phase5-rgb: 229, 57, 53; /* Rojo Intenso */
+            --phase6-rgb: 76, 175, 80;  /* Verde */
         }
         body {
             font-family: 'Inter', sans-serif;
@@ -399,16 +400,14 @@
         }
 
         /* Resalta las celdas de las filas importantes con un fondo sutil y consistente */
-        #phase-5-card .highlight-row td,
-        #phase-6-card .highlight-row td {
+        #phase-5-card .highlight-row td {
             background-color: rgba(var(--phase5-rgb), 0.1) !important;
         }
         #phase-6-card .highlight-row td {
             background-color: rgba(var(--phase6-rgb), 0.1) !important;
         }
         /* Borde acentuado para separar filas resaltadas */
-        #phase-5-card .highlight-row:not(:last-child) td,
-        #phase-6-card .highlight-row:not(:last-child) td {
+        #phase-5-card .highlight-row:not(:last-child) td {
             border-bottom-color: var(--phase5-darker);
         }
          #phase-6-card .highlight-row:not(:last-child) td {
@@ -464,7 +463,7 @@
             position: relative;
             display: inline-block;
             padding: 2px 6px; 
-            border-radius: 6px; /* FINAL CHANGE: Matched border-radius */
+            border-radius: 6px; 
             color: white; 
             font-size: 0.85em;
             font-weight: bold;
@@ -769,23 +768,31 @@
                 return lastTime;
             });
             
+            // LENTO-RAPIDO-LENTO: Pausa Larga 1 (8-36 horas)
+            lastTime = ensureUniqueTime(lastTime, 8, 36, 0, 0);
+
+            // RÁFAGA RÁPIDA (Fases 4 y 5)
             const numIntents = parseInt(document.getElementById('num_intent_select')?.value || 2);
              timestamps.p4_intent = Array.from({ length: numIntents }, () => {
-                lastTime = ensureUniqueTime(lastTime, 0, 0, 10, 20);
+                lastTime = ensureUniqueTime(lastTime, 0, 0, 3, 8); // Intervalo corto
                 return lastTime;
             });
 
-            timestamps.p5_payy = ensureUniqueTime(lastTime, 0, 0, 15, 30);
+            timestamps.p5_payy = ensureUniqueTime(lastTime, 0, 0, 3, 8); // Intervalo corto
             lastTime = timestamps.p5_payy;
 
             const numCrosspays = parseInt(document.getElementById('num_crosspay_select')?.value || 3);
             timestamps.p5_crosspay = Array.from({ length: numCrosspays }, () => {
-                lastTime = ensureUniqueTime(lastTime, 0, 0, 10, 20);
+                lastTime = ensureUniqueTime(lastTime, 0, 0, 3, 8); // Intervalo corto
                 return lastTime;
             });
 
+            // LENTO-RAPIDO-LENTO: Pausa Larga 2 (12-48 horas)
+            lastTime = ensureUniqueTime(lastTime, 12, 48, 0, 0);
+
+            // FASE FINAL (Fase 6)
             timestamps.p6_consol = [];
-            timestamps.p6_consol[0] = ensureUniqueTime(lastTime, 6, 12, 0, 0);
+            timestamps.p6_consol[0] = lastTime; // Inicia inmediatamente después de la pausa larga
             timestamps.p6_consol[1] = ensureUniqueTime(timestamps.p6_consol[0], 0, 0, 10, 20);
             
             timestamps.p6_cold = [];
@@ -797,23 +804,33 @@
         }
 
         function generateRandomPercentages(remainderPercent, numOperations) {
-             if (numOperations <= 0) return Array(numOperations).fill(0);
-             if (remainderPercent <= 0) return Array(numOperations).fill(0);
-             if (numOperations === 1) return [remainderPercent];
-
-             const percentages = Array(numOperations).fill(0);
-             for (let i = 0; i < remainderPercent; i++) {
-                 percentages[Math.floor(Math.random() * numOperations)]++;
-             }
-             
-             const allSame = percentages.every(p => p === percentages[0]);
-             if (allSame && percentages.length > 1) {
-                 if (percentages[0] > 0) {
-                     percentages[0]--;
-                     percentages[1]++;
-                 }
-             }
-             return percentages;
+            if (numOperations <= 0 || remainderPercent <= 0) {
+                return Array(numOperations).fill(0);
+            }
+            if (numOperations === 1) {
+                return [parseFloat(remainderPercent.toFixed(2))];
+            }
+            let splits = [];
+            for (let i = 0; i < numOperations - 1; i++) {
+                splits.push(Math.random() * remainderPercent);
+            }
+            splits.push(0, remainderPercent);
+            splits.sort((a, b) => a - b);
+            const percentages = [];
+            let currentSum = 0;
+            for (let i = 0; i < splits.length - 2; i++) {
+                let diff = splits[i + 1] - splits[i];
+                let roundedDiff = parseFloat(diff.toFixed(2));
+                percentages.push(roundedDiff);
+                currentSum += roundedDiff;
+            }
+            const lastPercentage = remainderPercent - currentSum;
+            percentages.push(parseFloat(lastPercentage.toFixed(2)));
+            for (let i = percentages.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [percentages[i], percentages[j]] = [percentages[j], percentages[i]];
+            }
+            return percentages;
         }
         
         function manageState(action = 'save') {
@@ -864,7 +881,7 @@
             buildScheduleSkeleton(currentState); 
             manageState('restore', currentState); 
             
-            updateValues();
+            updateAllValues();
             attachAllListeners();
         }
 
@@ -882,7 +899,7 @@
                             <div class="flex-container">
                                 <div class="text-content">
                                     <strong>Railgun <span class="phase3-arrow">→</span> B2 [Unshield] <span class="parenthesis">(${i+1}/${numUnshields})</span>
-                                    ${!isFirst ? ` <span class="percent-border p3"><span id="unshield${i+1}_percent">0</span>%</span>` : ''}
+                                    ${!isFirst ? ` <span class="percent-border p3"><span id="unshield${i+1}_percent">0.00</span>%</span>` : ''}
                                     </strong><br>
                                     <span class="calculated-value p3">$<span id="unshield${i+1}_amount">0.00</span></span>
                                     <span class="notes">${i === 0 ? 'First' : i === numUnshields - 1 ? 'Final' : 'Intermediate'} withdrawal from pool.</span>
@@ -915,7 +932,7 @@
                             <div class="flex-container">
                                 <div class="text-content">
                                     <strong>B2 <span class="phase4-arrow">→</span> Zashi In <span class="parenthesis">(${i+1}/${numIntents})</span>
-                                    ${!isFirst ? ` <span class="percent-border p4"><span id="intent${i+1}_percent">0</span>%</span>` : ''}
+                                    ${!isFirst ? ` <span class="percent-border p4"><span id="intent${i+1}_percent">0.00</span>%</span>` : ''}
                                     </strong><br>
                                     <span class="calculated-value p4">$<span id="intent${i+1}_amount">0.00</span></span>
                                     <span class="notes">${i === 0 ? 'First' : i === numIntents - 1 ? 'Final' : 'Intermediate'} USDC→ZEC conversion.</span>
@@ -964,7 +981,7 @@
                             <div class="flex-container">
                                 <div class="text-content">
                                     <strong>Zashi Out <span class="phase5-arrow">→</span> B3 <span class="parenthesis">(${i+1}/${numCrosspays})</span> 
-                                    <span class="percent-border p5"><span id="savings${i+1}_percent">0</span>%</span>
+                                    <span class="percent-border p5"><span id="savings${i+1}_percent">0.00</span>%</span>
                                     </strong><br>
                                     <div class="text-content"><span class="calculated-value p5">$<span id="savings${i+1}_amount">0.00</span></span></div>
                                     <span class="notes">${isFirstCrosspay ? 'First' : i === numCrosspays - 1 ? 'Final' : 'Intermediate'} exit for Savings (ZEC→USDC).</span>
@@ -1019,84 +1036,141 @@
                     <table class="phase-table"><tbody>
                         <tr class="phase-header phase-6"><th colspan="2">Phase 6 – Consolidation & Cold Storage</th></tr>
                         <tr><td><div class="flex-container"><div class="text-content"><strong>B3 <span class="phase6-arrow">→</span> Barcelona <span class="parenthesis">(1/2)</span></strong><br><span class="calculated-value p6">$<span id="consol1_amount">0.00</span></span><span class="notes">Move funds from B3 to Savings Wallet.</span></div><div class="range-wrapper p6"><input type="range" min="0" max="100" value="50" id="consolidation_slider" class="p6"><div class="slider-bubble"></div></div></div></td><td class="col-time" id="consol1_time"></td></tr>
-                        <tr><td class="col-description"><strong>B3 <span class="phase6-arrow">→</span> Barcelona <span class="parenthesis">(2/2)</span> <span class="percent-border p6"><span id="consolidation2_percent">50</span>%</span></strong><br><div class="text-content"><span class="calculated-value p6">$<span id="consol2_amount">0.00</span></span></div><span class="notes">Second batch to Savings Wallet.</span></td><td class="col-time" id="consol2_time"></td></tr>
+                        <tr><td class="col-description"><strong>B3 <span class="phase6-arrow">→</span> Barcelona <span class="parenthesis">(2/2)</span> <span class="percent-border p6"><span id="consolidation2_percent">50.00</span>%</span></strong><br><div class="text-content"><span class="calculated-value p6">$<span id="consol2_amount">0.00</span></span></div><span class="notes">Second batch to Savings Wallet.</span></td><td class="col-time" id="consol2_time"></td></tr>
                         <tr class="highlight-row"><td><div class="flex-container"><div class="text-content"><strong>Savings <span class="phase6-arrow">→</span> Cold Wallet <span class="parenthesis">(1/2)</span></strong><br><span class="calculated-value p6">$<span id="cold1_amount">0.00</span></span><span class="notes">First movement to cold storage.</span></div><div class="range-wrapper p6"><input type="range" min="0" max="100" value="50" id="cold_slider" class="p6"><div class="slider-bubble"></div></div></div></td><td class="col-time" id="cold1_time"></td></tr>
-                        <tr class="highlight-row"><td class="col-description"><strong>Savings <span class="phase6-arrow">→</span> Cold Wallet <span class="parenthesis">(2/2)</span> <span class="percent-border p6"><span id="cold2_percent">50</span>%</span></strong><br><div class="text-content"><span class="calculated-value p6">$<span id="cold2_amount">0.00</span></span></div><span class="notes">Final movement to cold storage.</span></td><td class="col-time" id="cold2_time"></td></tr>
+                        <tr class="highlight-row"><td class="col-description"><strong>Savings <span class="phase6-arrow">→</span> Cold Wallet <span class="parenthesis">(2/2)</span> <span class="percent-border p6"><span id="cold2_percent">50.00</span>%</span></strong><br><div class="text-content"><span class="calculated-value p6">$<span id="cold2_amount">0.00</span></span></div><span class="notes">Final movement to cold storage.</span></td><td class="col-time" id="cold2_time"></td></tr>
                     </tbody></table>
                 </div>
             `;
         }
         
-        function updateValues(groupToUpdate = 'all') {
+        // --- START: REFACTORED SLIDER LOGIC ---
+
+        // Helper to add random decimal "jitter" to slider values for privacy
+        function getJitteredSliderValue(sliderId) {
+            let sliderValue = parseFloat(document.getElementById(sliderId).value);
+            const slider = document.getElementById(sliderId);
+            if (!slider) return 0;
+            const sliderMax = parseFloat(slider.max);
+
+            if (sliderValue > 0 && sliderValue < sliderMax) {
+                sliderValue += Math.random(); 
+                sliderValue = Math.min(sliderValue, sliderMax);
+            }
+            return sliderValue;
+        }
+
+        // Updates all values from top to bottom. Called once on generation.
+        function updateAllValues() {
             const timestamps = getScheduleTimestamps(new Date(dateInput.value));
             
-            // Phase 1
-            document.getElementById('base_amount').textContent = formatAmount(totalAmount);
-            document.getElementById('shield_amount').textContent = formatAmount(totalAmount);
+            // Set all timestamps across all phases
             document.getElementById('base_time').textContent = formatDateTime(timestamps.baseDate);
             document.getElementById('shield_time').textContent = formatDateTime(timestamps.p1_shield);
 
-            // Phase 2
-            const nonDistributedPercent = parseInt(document.getElementById('non_distributed_slider').value);
+            timestamps.p3_unshield.forEach((time, i) => {
+                const el = document.getElementById(`unshield${i+1}_time`);
+                if (el) el.textContent = formatDateTime(time);
+            });
+            timestamps.p4_intent.forEach((time, i) => {
+                const el = document.getElementById(`intent${i+1}_time`);
+                if (el) el.textContent = formatDateTime(time);
+            });
+            document.getElementById('payy_time').textContent = formatDateTime(timestamps.p5_payy);
+            timestamps.p5_crosspay.forEach((time, i) => {
+                const el = document.getElementById(`savings${i+1}_time`);
+                if (el) el.textContent = formatDateTime(time);
+            });
+
+            document.getElementById('consol1_time').textContent = formatDateTime(timestamps.p6_consol[0]);
+            document.getElementById('consol2_time').textContent = formatDateTime(timestamps.p6_consol[1]);
+            document.getElementById('cold1_time').textContent = formatDateTime(timestamps.p6_cold[0]);
+            document.getElementById('cold2_time').textContent = formatDateTime(timestamps.p6_cold[1]);
+            
+            // Set static Phase 1 amounts
+            document.getElementById('base_amount').textContent = formatAmount(totalAmount);
+            document.getElementById('shield_amount').textContent = formatAmount(totalAmount);
+            
+            // Kick off the cascade of amount calculations
+            updatePhase2(); 
+        }
+        
+        // Phase 2: The master controller, as it defines effectiveAmount
+        function updatePhase2() {
+            let nonDistributedPercent = getJitteredSliderValue('non_distributed_slider');
             effectiveAmount = totalAmount * (1 - nonDistributedPercent / 100);
             document.getElementById('distributable_amount').textContent = formatAmount(effectiveAmount);
             document.getElementById('non_distributed_amount').textContent = formatAmount(totalAmount * nonDistributedPercent / 100);
             
-            // Phase 3
-            if (groupToUpdate === 'all' || groupToUpdate === 'unshield') {
-                const numUnshields = parseInt(document.getElementById('num_unshield_select').value);
-                let unshield1Percent = parseInt(document.getElementById('unshield_slider').value);
-                const unshieldPercents = [unshield1Percent, ...generateRandomPercentages(100 - unshield1Percent, numUnshields - 1)];
-                for (let i = 0; i < numUnshields; i++) {
-                    document.getElementById(`unshield${i+1}_amount`).textContent = formatAmount(effectiveAmount * unshieldPercents[i] / 100);
-                    if (i > 0) document.getElementById(`unshield${i+1}_percent`).textContent = unshieldPercents[i];
-                }
-            }
-            
-            // Phase 4
-            if (groupToUpdate === 'all' || groupToUpdate === 'intent') {
-                const numIntents = parseInt(document.getElementById('num_intent_select').value);
-                let intent1Percent = parseInt(document.getElementById('intent_slider').value);
-                const intentPercents = [intent1Percent, ...generateRandomPercentages(100 - intent1Percent, numIntents - 1)];
-                for (let i = 0; i < numIntents; i++) {
-                     document.getElementById(`intent${i+1}_amount`).textContent = formatAmount(effectiveAmount * intentPercents[i] / 100);
-                    if (i > 0) document.getElementById(`intent${i+1}_percent`).textContent = intentPercents[i];
-                }
-            }
-            
-            // Phase 5
-            if (groupToUpdate === 'all' || groupToUpdate === 'crosspay') {
-                const numCrosspays = parseInt(document.getElementById('num_crosspay_select').value);
-                let payyPercent = parseInt(document.getElementById('payy_slider').value);
-                const crosspayPercents = generateRandomPercentages(100 - payyPercent, numCrosspays);
-                document.getElementById('payy_amount').textContent = formatAmount(effectiveAmount * payyPercent / 100);
-                for (let i = 0; i < numCrosspays; i++) {
-                    document.getElementById(`savings${i+1}_amount`).textContent = formatAmount(effectiveAmount * crosspayPercents[i] / 100);
-                    document.getElementById(`savings${i+1}_percent`).textContent = crosspayPercents[i];
-                }
-            }
+            // Cascade updates to all dependent phases
+            updatePhase3();
+            updatePhase4();
+            updatePhase5();
+            updatePhase6Consolidation();
+            updatePhase6Cold();
+        }
 
-            // Update times
-            timestamps.p3_unshield.forEach((time, i) => document.getElementById(`unshield${i+1}_time`).textContent = formatDateTime(time));
-            timestamps.p4_intent.forEach((time, i) => document.getElementById(`intent${i+1}_time`).textContent = formatDateTime(time));
-            document.getElementById('payy_time').textContent = formatDateTime(timestamps.p5_payy);
-            timestamps.p5_crosspay.forEach((time, i) => document.getElementById(`savings${i+1}_time`).textContent = formatDateTime(time));
+        // Phase 3: Self-contained update
+        function updatePhase3() {
+            const numUnshields = parseInt(document.getElementById('num_unshield_select').value);
+            let unshield1Percent = getJitteredSliderValue('unshield_slider');
+            const unshieldPercents = [unshield1Percent, ...generateRandomPercentages(100 - unshield1Percent, numUnshields - 1)];
+            for (let i = 0; i < numUnshields; i++) {
+                const amountEl = document.getElementById(`unshield${i+1}_amount`);
+                if(amountEl) amountEl.textContent = formatAmount(effectiveAmount * unshieldPercents[i] / 100);
+                if (i > 0) {
+                   const percentEl = document.getElementById(`unshield${i+1}_percent`);
+                   if(percentEl) percentEl.textContent = unshieldPercents[i].toFixed(2);
+                }
+            }
+        }
 
-            // Phase 6
-            const consol1Percent = parseInt(document.getElementById('consolidation_slider').value);
+        // Phase 4: Self-contained update
+        function updatePhase4() {
+            const numIntents = parseInt(document.getElementById('num_intent_select').value);
+            let intent1Percent = getJitteredSliderValue('intent_slider');
+            const intentPercents = [intent1Percent, ...generateRandomPercentages(100 - intent1Percent, numIntents - 1)];
+            for (let i = 0; i < numIntents; i++) {
+                const amountEl = document.getElementById(`intent${i+1}_amount`);
+                if(amountEl) amountEl.textContent = formatAmount(effectiveAmount * intentPercents[i] / 100);
+                if (i > 0) {
+                    const percentEl = document.getElementById(`intent${i+1}_percent`);
+                    if(percentEl) percentEl.textContent = intentPercents[i].toFixed(2);
+                }
+            }
+        }
+        
+        // Phase 5: Self-contained update
+        function updatePhase5() {
+            const numCrosspays = parseInt(document.getElementById('num_crosspay_select').value);
+            let payyPercent = getJitteredSliderValue('payy_slider');
+            const crosspayPercents = generateRandomPercentages(100 - payyPercent, numCrosspays);
+            document.getElementById('payy_amount').textContent = formatAmount(effectiveAmount * payyPercent / 100);
+            for (let i = 0; i < numCrosspays; i++) {
+                const amountEl = document.getElementById(`savings${i+1}_amount`);
+                const percentEl = document.getElementById(`savings${i+1}_percent`);
+                if(amountEl) amountEl.textContent = formatAmount(effectiveAmount * crosspayPercents[i] / 100);
+                if(percentEl) percentEl.textContent = crosspayPercents[i].toFixed(2);
+            }
+        }
+
+        // Phase 6 (Part 1 - Consolidation): Self-contained update
+        function updatePhase6Consolidation() {
+             let consol1Percent = getJitteredSliderValue('consolidation_slider');
             document.getElementById('consol1_amount').textContent = formatAmount(effectiveAmount * consol1Percent / 100);
             document.getElementById('consol2_amount').textContent = formatAmount(effectiveAmount * (100 - consol1Percent) / 100);
-            document.getElementById('consolidation2_percent').textContent = 100 - consol1Percent;
-            document.getElementById('consol1_time').textContent = formatDateTime(timestamps.p6_consol[0]);
-            document.getElementById('consol2_time').textContent = formatDateTime(timestamps.p6_consol[1]);
+            document.getElementById('consolidation2_percent').textContent = (100 - consol1Percent).toFixed(2);
+        }
 
-            const cold1Percent = parseInt(document.getElementById('cold_slider').value);
+        // Phase 6 (Part 2 - Cold Storage): Self-contained update
+        function updatePhase6Cold() {
+            let cold1Percent = getJitteredSliderValue('cold_slider');
             document.getElementById('cold1_amount').textContent = formatAmount(effectiveAmount * cold1Percent / 100);
             document.getElementById('cold2_amount').textContent = formatAmount(effectiveAmount * (100 - cold1Percent) / 100);
-            document.getElementById('cold2_percent').textContent = 100 - cold1Percent;
-            document.getElementById('cold1_time').textContent = formatDateTime(timestamps.p6_cold[0]);
-            document.getElementById('cold2_time').textContent = formatDateTime(timestamps.p6_cold[1]);
+            document.getElementById('cold2_percent').textContent = (100 - cold1Percent).toFixed(2);
         }
+
+        // --- END: REFACTORED SLIDER LOGIC ---
         
         function initializeCustomSelects() {
             const containers = document.querySelectorAll('.custom-select-container');
@@ -1177,34 +1251,32 @@
         function attachAllListeners() {
             document.querySelectorAll('input[type="range"]').forEach(slider => {
                 updateSliderBubble(slider);
+                
                 const toggleGlow = (isActive) => {
                     const elementsToToggle = [];
-                    let group;
                     let baseId = slider.id.replace('_slider', '');
                     
                     switch(baseId) {
                         case 'non_distributed':
-                            elementsToToggle.push(...slider.closest('tr').querySelectorAll('.calculated-value'));
-                            const distributableRow = document.getElementById('distributable_amount').closest('tr');
-                            if (distributableRow) elementsToToggle.push(...distributableRow.querySelectorAll('.calculated-value'));
-                            document.querySelectorAll('#phase-3-card, #phase-4-card, #phase-5-card, #phase-6-card').forEach(card => {
-                                elementsToToggle.push(...card.querySelectorAll('.calculated-value, .select-selected, .percent-border, [class*="-arrow"]'));
+                            document.querySelectorAll('#phase-2-card, #phase-3-card, #phase-4-card, #phase-5-card, #phase-6-card').forEach(card => {
+                                // Exclude select-selected from the glow effect
+                                elementsToToggle.push(...card.querySelectorAll('.calculated-value, .percent-border, [class*="-arrow"]'));
                             });
                             break;
                         case 'unshield':
-                            group = baseId;
-                            elementsToToggle.push(...document.querySelectorAll(`[data-group="${group}"] .calculated-value, [data-group="${group}"] .percent-border, [data-group="${group}"] .phase3-arrow`));
-                            elementsToToggle.push(document.getElementById(`num_${group}_select`).parentNode.querySelector('.select-selected'));
-                            break;
                         case 'intent':
-                             group = baseId;
-                            elementsToToggle.push(...document.querySelectorAll(`[data-group="${group}"] .calculated-value, [data-group="${group}"] .percent-border, [data-group="${group}"] .phase4-arrow`));
-                            elementsToToggle.push(document.getElementById(`num_${group}_select`).parentNode.querySelector('.select-selected'));
+                             const group = baseId;
+                             elementsToToggle.push(...document.querySelectorAll(`[data-group="${group}"] .calculated-value, [data-group="${group}"] .percent-border, [class*="-arrow"]`));
+                             // Specifically include the selector for glow effect
+                             const select = document.getElementById(`num_${group}_select`);
+                             if (select) elementsToToggle.push(select.parentNode.querySelector('.select-selected'));
                             break;
                         case 'payy':
-                            group = 'crosspay';
-                            elementsToToggle.push(...document.querySelectorAll(`[data-group="${group}"] .calculated-value, [data-group="${group}"] .percent-border, [data-group="${group}"] .phase5-arrow`));
-                            elementsToToggle.push(document.getElementById(`num_crosspay_select`)?.parentNode.querySelector('.select-selected'));
+                             const crosspayGroup = 'crosspay';
+                             elementsToToggle.push(...document.querySelectorAll(`[data-group="${crosspayGroup}"] .calculated-value, [data-group="${crosspayGroup}"] .percent-border, [class*="-arrow"]`));
+                             // Specifically include the selector for glow effect
+                             const crosspaySelect = document.getElementById(`num_crosspay_select`);
+                             if (crosspaySelect) elementsToToggle.push(crosspaySelect.parentNode.querySelector('.select-selected'));
                             break;
                         case 'consolidation':
                         case 'cold':
@@ -1223,7 +1295,9 @@
                     if (bubble && bubble.classList.contains('slider-bubble')) {
                          bubble.classList.toggle('active', isActive);
                     }
-                    elementsToToggle.forEach(el => el?.classList.toggle('active', isActive));
+                    elementsToToggle.forEach(el => {
+                        if (el) el.classList.toggle('active', isActive);
+                    });
                 };
                 
                 slider.addEventListener('input', () => {
@@ -1232,18 +1306,38 @@
                         return;
                     }
                     updateSliderBubble(slider);
-                    let group = slider.id.replace(/_slider$/, '');
-                    if (group === 'payy') group = 'crosspay';
-                    if (slider.id === 'non_distributed_slider') group = 'all';
-                    if (slider.id.startsWith('consolidation') || slider.id.startsWith('cold')) group = 'phase6';
 
-                    debounce(() => updateValues(group), 50)();
+                    let updateFunction;
+                    switch(slider.id) {
+                        case 'non_distributed_slider':
+                            updateFunction = updatePhase2;
+                            break;
+                        case 'unshield_slider':
+                            updateFunction = updatePhase3;
+                            break;
+                        case 'intent_slider':
+                            updateFunction = updatePhase4;
+                            break;
+                        case 'payy_slider':
+                            updateFunction = updatePhase5;
+                            break;
+                        case 'consolidation_slider':
+                            updateFunction = updatePhase6Consolidation;
+                            break;
+                        case 'cold_slider':
+                            updateFunction = updatePhase6Cold;
+                            break;
+                    }
+                    if (updateFunction) {
+                        debounce(updateFunction, 50)();
+                    }
                 });
-                
+
                 slider.addEventListener('mousedown', () => toggleGlow(true));
                 slider.addEventListener('touchstart', () => toggleGlow(true), {passive: true});
                 slider.addEventListener('mouseup', () => toggleGlow(false));
                 slider.addEventListener('touchend', () => toggleGlow(false));
+                
                 window.addEventListener('resize', () => updateSliderBubble(slider));
             });
 
@@ -1253,8 +1347,8 @@
         function updateSliderBubble(slider) {
             const bubble = slider.nextElementSibling;
             if (!bubble || !bubble.classList.contains('slider-bubble')) return;
-            const currentValue = Math.round(slider.value);
-            bubble.textContent = `${currentValue}%`;
+            const currentValue = parseFloat(slider.value);
+            bubble.textContent = `${currentValue.toFixed(0)}%`; // Show integer in bubble for cleanliness
             const min = parseFloat(slider.min);
             const max = parseFloat(slider.max);
             const progress = (max - min > 0) ? (currentValue - min) / (max - min) : 0;
@@ -1273,49 +1367,63 @@
             const baseDate = new Date(inputElement.value);
             const timestamps = getScheduleTimestamps(baseDate);
             const alarmMinutes = Math.round(parseFloat(document.getElementById('alarm_slider').value));
-            const nonDistributedPercent = parseInt(document.getElementById('non_distributed_slider').value);
+            
+            // Re-run getJitteredSliderValue to get the exact values used for the final display
+             function getJitteredSliderValue(sliderId) {
+                let sliderValue = parseFloat(document.getElementById(sliderId).value);
+                const slider = document.getElementById(sliderId);
+                if (!slider) return 0;
+                const sliderMax = parseFloat(slider.max);
+                if (sliderValue > 0 && sliderValue < sliderMax) {
+                    sliderValue += Math.random();
+                    sliderValue = Math.min(sliderValue, sliderMax);
+                }
+                return sliderValue;
+            }
+
+            const nonDistributedPercent = getJitteredSliderValue('non_distributed_slider');
+            const unshield1Percent = getJitteredSliderValue('unshield_slider');
+            const intent1Percent = getJitteredSliderValue('intent_slider');
+            let payyPercent = getJitteredSliderValue('payy_slider');
+            let consol1Percent = getJitteredSliderValue('consolidation_slider');
+            let cold1Percent = getJitteredSliderValue('cold_slider');
             
             const numUnshields = parseInt(document.getElementById('num_unshield_select').value);
-            const unshield1Percent = parseInt(document.getElementById('unshield_slider').value);
             const unshieldPercents = [unshield1Percent, ...generateRandomPercentages(100 - unshield1Percent, numUnshields - 1)];
             
             const numIntents = parseInt(document.getElementById('num_intent_select').value);
-            const intent1Percent = parseInt(document.getElementById('intent_slider').value);
             const intentPercents = [intent1Percent, ...generateRandomPercentages(100 - intent1Percent, numIntents - 1)];
             
             const numCrosspays = parseInt(document.getElementById('num_crosspay_select').value);
-            let payyPercent = parseInt(document.getElementById('payy_slider').value);
             const crosspayPercents = generateRandomPercentages(100 - payyPercent, numCrosspays);
             
-            const consol1Percent = parseInt(document.getElementById('consolidation_slider').value);
-            const cold1Percent = parseInt(document.getElementById('cold_slider').value);
             const effectiveAmount = totalAmount * (1 - nonDistributedPercent / 100);
 
             const events = [
                 { phase: 'Phase 1 – Secure Accumulation', title: 'Funds received in B1', date: timestamps.baseDate, amount: formatAmount(totalAmount), percent: 100, note: 'Starting point.' },
                 { phase: 'Phase 1 – Secure Accumulation', title: 'B1 → Railgun [Shield]', date: timestamps.p1_shield, amount: formatAmount(totalAmount), percent: 100, note: 'Move to privacy pool.' },
-                { phase: 'Phase 2 – Staging & Allocation', title: 'Funds retained', date: null, amount: formatAmount(totalAmount * nonDistributedPercent / 100), percent: nonDistributedPercent, note: 'Enhance privacy.' }
+                { phase: 'Phase 2 – Staging & Allocation', title: 'Funds retained', date: null, amount: formatAmount(totalAmount * nonDistributedPercent / 100), percent: nonDistributedPercent.toFixed(2), note: 'Enhance privacy.' }
             ];
 
             unshieldPercents.forEach((p, i) => events.push({
-                phase: 'Phase 3 – Unshielding', title: `Railgun → B2 [Unshield] (${i+1}/${numUnshields})`, date: timestamps.p3_unshield[i], amount: formatAmount(effectiveAmount * p / 100), percent: p, note: 'Withdrawal from pool.'
+                phase: 'Phase 3 – Unshielding', title: `Railgun → B2 [Unshield] (${i+1}/${numUnshields})`, date: timestamps.p3_unshield[i], amount: formatAmount(effectiveAmount * p / 100), percent: p.toFixed(2), note: 'Withdrawal from pool.'
             }));
 
             intentPercents.forEach((p, i) => events.push({
-                phase: 'Phase 4 – Conversion', title: `B2 → Zashi In (${i+1}/${numIntents})`, date: timestamps.p4_intent[i], amount: formatAmount(effectiveAmount * p / 100), percent: p, note: 'USDC→ZEC conversion.'
+                phase: 'Phase 4 – Conversion', title: `B2 → Zashi In (${i+1}/${numIntents})`, date: timestamps.p4_intent[i], amount: formatAmount(effectiveAmount * p / 100), percent: p.toFixed(2), note: 'USDC→ZEC conversion.'
             }));
             
-            events.push({ phase: 'Phase 5 – Private Exits', title: 'Zashi Out → Milano', date: timestamps.p5_payy, amount: formatAmount(effectiveAmount * payyPercent / 100), percent: payyPercent, note: 'Exit for Spending.' });
+            events.push({ phase: 'Phase 5 – Private Exits', title: 'Zashi Out → Milano', date: timestamps.p5_payy, amount: formatAmount(effectiveAmount * payyPercent / 100), percent: payyPercent.toFixed(2), note: 'Exit for Spending.' });
 
             crosspayPercents.forEach((p, i) => events.push({
-                phase: 'Phase 5 – Private Exits', title: `Zashi Out → B3 (${i+1}/${numCrosspays})`, date: timestamps.p5_crosspay[i], amount: formatAmount(effectiveAmount * p / 100), percent: p, note: 'Exit for Savings.'
+                phase: 'Phase 5 – Private Exits', title: `Zashi Out → B3 (${i+1}/${numCrosspays})`, date: timestamps.p5_crosspay[i], amount: formatAmount(effectiveAmount * p / 100), percent: p.toFixed(2), note: 'Exit for Savings.'
             }));
 
             events.push(
-                { phase: 'Phase 6 – Consolidation & Cold Storage', title: 'B3 → Barcelona (1/2)', date: timestamps.p6_consol[0], amount: formatAmount(effectiveAmount * consol1Percent / 100), percent: consol1Percent, note: 'Move to Savings Wallet.' },
-                { phase: 'Phase 6 – Consolidation & Cold Storage', title: 'B3 → Barcelona (2/2)', date: timestamps.p6_consol[1], amount: formatAmount(effectiveAmount * (100 - consol1Percent) / 100), percent: 100 - consol1Percent, note: 'Second batch.' },
-                { phase: 'Phase 6 – Consolidation & Cold Storage', title: 'Savings → Cold (1/2)', date: timestamps.p6_cold[0], amount: formatAmount(effectiveAmount * cold1Percent / 100), percent: cold1Percent, note: 'To cold storage.' },
-                { phase: 'Phase 6 – Consolidation & Cold Storage', title: 'Savings → Cold (2/2)', date: timestamps.p6_cold[1], amount: formatAmount(effectiveAmount * (100 - cold1Percent) / 100), percent: 100 - cold1Percent, note: 'Final movement.' }
+                { phase: 'Phase 6 – Consolidation & Cold Storage', title: 'B3 → Barcelona (1/2)', date: timestamps.p6_consol[0], amount: formatAmount(effectiveAmount * consol1Percent / 100), percent: consol1Percent.toFixed(2), note: 'Move to Savings Wallet.' },
+                { phase: 'Phase 6 – Consolidation & Cold Storage', title: 'B3 → Barcelona (2/2)', date: timestamps.p6_consol[1], amount: formatAmount(effectiveAmount * (100 - consol1Percent) / 100), percent: (100 - consol1Percent).toFixed(2), note: 'Second batch.' },
+                { phase: 'Phase 6 – Consolidation & Cold Storage', title: 'Savings → Cold (1/2)', date: timestamps.p6_cold[0], amount: formatAmount(effectiveAmount * cold1Percent / 100), percent: cold1Percent.toFixed(2), note: 'To cold storage.' },
+                { phase: 'Phase 6 – Consolidation & Cold Storage', title: 'Savings → Cold (2/2)', date: timestamps.p6_cold[1], amount: formatAmount(effectiveAmount * (100 - cold1Percent) / 100), percent: (100 - cold1Percent).toFixed(2), note: 'Final movement.' }
             );
 
             let orgString = '#+TITLE: Privacy Schedule\n\n';
