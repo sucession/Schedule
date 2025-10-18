@@ -1257,24 +1257,24 @@
                     let baseId = slider.id.replace('_slider', '');
                     
                     switch(baseId) {
-                        case 'non_distributed':
+                        case 'non_distributed': // Phase 2
                             document.querySelectorAll('#phase-2-card, #phase-3-card, #phase-4-card, #phase-5-card, #phase-6-card').forEach(card => {
-                                // Exclude select-selected from the glow effect
                                 elementsToToggle.push(...card.querySelectorAll('.calculated-value, .percent-border, [class*="-arrow"]'));
                             });
                             break;
-                        case 'unshield':
-                        case 'intent':
-                             const group = baseId;
-                             elementsToToggle.push(...document.querySelectorAll(`[data-group="${group}"] .calculated-value, [data-group="${group}"] .percent-border, [class*="-arrow"]`));
-                             // Specifically include the selector for glow effect
-                             const select = document.getElementById(`num_${group}_select`);
-                             if (select) elementsToToggle.push(select.parentNode.querySelector('.select-selected'));
+                        case 'unshield': // Phase 3
+                             elementsToToggle.push(...document.querySelectorAll(`[data-group="unshield"] .calculated-value, [data-group="unshield"] .percent-border, [data-group="unshield"] .phase3-arrow`));
+                             const unshieldSelect = document.getElementById(`num_unshield_select`);
+                             if (unshieldSelect) elementsToToggle.push(unshieldSelect.parentNode.querySelector('.select-selected'));
                             break;
-                        case 'payy':
+                        case 'intent': // Phase 4
+                             elementsToToggle.push(...document.querySelectorAll(`[data-group="intent"] .calculated-value, [data-group="intent"] .percent-border, [data-group="intent"] .phase4-arrow`));
+                             const intentSelect = document.getElementById(`num_intent_select`);
+                             if (intentSelect) elementsToToggle.push(intentSelect.parentNode.querySelector('.select-selected'));
+                            break;
+                        case 'payy': // Phase 5
                              const crosspayGroup = 'crosspay';
-                             elementsToToggle.push(...document.querySelectorAll(`[data-group="${crosspayGroup}"] .calculated-value, [data-group="${crosspayGroup}"] .percent-border, [class*="-arrow"]`));
-                             // Specifically include the selector for glow effect
+                             elementsToToggle.push(...document.querySelectorAll(`[data-group="${crosspayGroup}"] .calculated-value, [data-group="${crosspayGroup}"] .percent-border, [data-group="${crosspayGroup}"] .phase5-arrow`));
                              const crosspaySelect = document.getElementById(`num_crosspay_select`);
                              if (crosspaySelect) elementsToToggle.push(crosspaySelect.parentNode.querySelector('.select-selected'));
                             break;
@@ -1291,10 +1291,6 @@
                             return;
                     }
 
-                    const bubble = slider.nextElementSibling;
-                    if (bubble && bubble.classList.contains('slider-bubble')) {
-                         bubble.classList.toggle('active', isActive);
-                    }
                     elementsToToggle.forEach(el => {
                         if (el) el.classList.toggle('active', isActive);
                     });
