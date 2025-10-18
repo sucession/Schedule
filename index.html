@@ -1259,7 +1259,7 @@
                     switch(baseId) {
                         case 'non_distributed': // Phase 2
                             document.querySelectorAll('#phase-2-card, #phase-3-card, #phase-4-card, #phase-5-card, #phase-6-card').forEach(card => {
-                                elementsToToggle.push(...card.querySelectorAll('.calculated-value, .percent-border, [class*="-arrow"]'));
+                                elementsToToggle.push(...card.querySelectorAll('.calculated-value, .percent-border'));
                             });
                             break;
                         case 'unshield': // Phase 3
