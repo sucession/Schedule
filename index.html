@@ -7,7 +7,7 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1a1a1a">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <!-- Flatpickr CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -28,25 +28,26 @@
             --dropdown-card-bg: #404040;
 
             /* "Stealth & Signal" Palette v3 */
-            --phase1-color: #3F51B5; /* Azul Profundo (Seguridad) */
-            --phase2-color: #009688; /* Verde Azulado (Transición) */
-            --phase3-color: #673AB7; /* Índigo (Preparación) */
-            --phase4-color: #E67E22; /* Naranja Intenso (Alerta de Riesgo) */
-            --phase5-color: #E53935; /* Rojo Intenso (Acción Crítica) */
-            --phase6-color: #4CAF50; /* Verde Bosque (Éxito/Seguro) */
+            --phase1-color: #3F51B5; 
+            --phase2-color: #009688; 
+            --phase3-color: #673AB7; 
+            --phase4-color: #E67E22; 
+            --phase5-color: #E53935; 
+            --phase6-color: #4CAF50; 
 
             /* Tonos más oscuros para fondos */
             --phase1-darker: #303F9F;
             --phase2-darker: #00796B;
             --phase3-darker: #512DA8;
-            --phase4-darker: #D35400; /* Naranja Quemado */
-            --phase5-darker: #B71C1C; /* Rojo Oscuro */
+            --phase4-darker: #D35400;
+            --phase5-darker: #B71C1C;
             --phase6-darker: #388E3C;
 
             /* Variables RGB para fondos sutiles */
-            --phase5-rgb: 229, 57, 53; /* Rojo Intenso */
-            --phase6-rgb: 76, 175, 80;  /* Verde */
+            --phase5-rgb: 229, 57, 53;
+            --phase6-rgb: 76, 175, 80;
         }
+
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
@@ -57,22 +58,38 @@
             box-sizing: border-box;
             padding-bottom: calc(20px + env(safe-area-inset-bottom));
         }
-        .container { max-width: 800px; margin: 20px auto; }
-        .input-section { 
-            display: flex; 
-            flex-direction: row;
-            gap: 10px; 
-            justify-content: center; 
-            align-items: center;
-            margin-bottom: 10px;
+
+        .container { 
+            max-width: 800px; 
+            margin: 20px auto; 
         }
-        .input-wrapper { position: relative; width: 200px; }
+
+        /* ───── INPUT TOP ROW (Amount | Date | botón reloj) ───── */
+
+        .input-section { 
+    display: flex; 
+    flex-direction: row;
+    gap: 10px; 
+    justify-content: center; 
+    align-items: center;
+    margin-bottom: 10px;
+    width: 550px; /* AJUSTADO a 550px */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+        .input-wrapper { 
+            position: relative; 
+            width: 200px; 
+        }
+
         .input-wrapper.date { 
             width: 330px; 
             display: flex; 
             align-items: center; 
             gap: 10px; 
         }
+
         input[type="datetime-local"], input[type="text"] {
             padding: 12px; 
             border: 1px solid var(--border-color); 
@@ -86,13 +103,22 @@
             font-family: 'Inter', sans-serif;
             transition: box-shadow 0.3s ease, border-color 0.3s ease;
         }
-        input[type="datetime-local"] { width: 280px; }
-        input[type="text"]#totalAmount { width: 200px; padding-right: 30px; }
+
+        input[type="datetime-local"] { 
+            width: 280px; 
+        }
+
+        input[type="text"]#totalAmount { 
+            width: 200px; 
+            padding-right: 30px; 
+        }
+
         input[type="datetime-local"]:focus, input[type="text"]:focus {
             border-color: var(--button-primary-bg);
             box-shadow: 0 0 8px var(--button-primary-bg);
             outline: none;
         }
+
         .reset-button {
             display: none;
             position: absolute;
@@ -107,33 +133,162 @@
             padding: 0 5px;
             transition: text-shadow 0.3s ease;
         }
+
         .reset-button.visible { display: block; }
+
         .reset-button:hover { 
             text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); 
             background: none;
         }
+
+        /* ───── SECCIÓN ALARM + TIMEZONE + EXPORT (fila 2) ───── */
+
         .alarm-section {
-            display: none;
-            flex-direction: row;
-            gap: 10px;
-            justify-content: center;
-            align-items: center;
-            padding: 5px;
-            border-radius: 8px;
-            margin-bottom: 40px;
-            width: fit-content;
-            margin-left: auto;
-            margin-right: auto;
+    display: none;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start; /* antes: space-between */
+    gap: 12px;
+    padding: 5px 0;
+    border-radius: 8px;
+    margin-bottom: 40px;
+    width: 540px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Botón de huso horario: mismo largo que Amount (200px) */
+.timezone-wrapper {
+    position: relative;
+    width: 200px;
+    flex-shrink: 0;
+}
+
+.timezone-button {
+    background-color: var(--surface-color);
+    color: var(--primary-text);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    height: 50px;
+    padding: 0 14px;
+    font-size: 0.9em;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    white-space: nowrap;
+    width: 100%;       /* ocupa todo el ancho del wrapper (200px) */
+    box-shadow: none;
+}
+
+
+        .timezone-button:hover,
+        .timezone-button:active {
+            background-color: var(--surface-color);
+            box-shadow: none;
+            transform: none;
         }
+
+        .timezone-button span.label {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .timezone-button span.chevron {
+            font-size: 0.8em;
+            margin-left: 8px;
+            opacity: 0.8;
+        }
+
+        .timezone-menu {
+            position: absolute;
+            right: 0;
+            top: calc(100% + 6px);
+            width: 280px;
+            background-color: var(--surface-color);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.45);
+            z-index: 120;
+            overflow-y: auto;
+            overflow-x: hidden;
+            max-height: 260px;
+        }
+
+        .timezone-menu.select-hide {
+            display: none;
+        }
+
+        .timezone-menu-header {
+            padding: 8px 14px;
+            font-size: 0.8em;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--secondary-text);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .timezone-menu ul {
+            list-style: none;
+            margin: 0;
+            padding: 4px 0 6px 0;
+        }
+
+        .timezone-menu li {
+            display: flex;
+            align-items: center;
+            padding: 6px 14px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: background-color 0.15s ease, color 0.15s ease;
+        }
+
+        .timezone-menu li span.tz-name {
+            flex: 1;
+        }
+
+        .timezone-menu li span.tz-offset {
+            margin-left: 12px;
+            font-variant-numeric: tabular-nums;
+            color: var(--secondary-text);
+            text-align: right;
+        }
+
+        .timezone-menu li:hover {
+            background-color: #2c2c2c;
+        }
+
+        .timezone-menu li.active {
+            background-color: rgba(255, 255, 255, 0.06);
+        }
+
+        /* Slider campana en el centro */
         .alarm-card {
             background-color: var(--surface-color);
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 5px;
+            padding: 5px 10px;
             display: flex;
-            gap: inherit;
             align-items: center;
+            gap: 10px;
+            width: 214px;
+            flex-shrink: 0;
+            flex-grow: 0;
         }
+
+        .slider-container.alarm {
+            padding: 0;
+        }
+
+        /* Export a la derecha */
+        .alarm-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            flex-shrink: 0;
+        }
+
         button {
             background-color: var(--button-primary-bg); 
             color: white; 
@@ -148,47 +303,66 @@
             align-items: center; 
             font-weight: 500;
         }
+
         button:not(:disabled):active {
             transform: scale(0.97);
         }
-        button:not(.reset-button, .btn-calendar):not(:disabled):hover { 
+
+        button:not(.reset-button, .btn-calendar, .timezone-button):not(:disabled):hover { 
             background-color: var(--button-primary-bg-hover); 
             box-shadow: 0 0 8px var(--button-primary-bg);
         }
+
         button:disabled {
             background-color: var(--surface-color);
             cursor: not-allowed;
         }
+
         button#generateButton:disabled {
-            background-color: #1d3c6e; /* Muted blue */
+            background-color: #1d3c6e;
         }
+
         button:disabled .button-icon { 
             fill: var(--secondary-text); 
         }
+
         button#generateButton:disabled .button-icon {
-            fill: #6c757d; /* Gray color */
+            fill: #6c757d;
         }
+
         .button-icon { width: 24px; height: 24px; fill: white; }
         .btn-icon-only { width: 50px; height: 50px; }
+
         .btn-calendar { 
-            background-color: var(--button-calendar-bg); 
-            font-size: 14px;
-            color: white; /* Cambiado a blanco */
-            font-weight: bold;
-            padding: 0 18px;
-            white-space: nowrap;
-            transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, text-shadow 0.2s ease-in-out;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Sombra para legibilidad */
-        }
+    background-color: var(--button-calendar-bg); 
+    font-size: 14px;
+    color: white;
+    font-weight: bold;
+    padding: 0 15px; /* Reducido de 30px */
+    white-space: nowrap;
+    transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, text-shadow 0.2s ease-in-out;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
         .btn-calendar:not(:disabled):hover, .btn-calendar.active { 
             background-color: var(--button-calendar-bg-hover);
             box-shadow: 0 0 6px var(--button-calendar-bg-hover);
             text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
         }
+
         .btn-calendar:not(:disabled):hover > span, .btn-calendar.active > span { 
             text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
         }
-        .slider-container.alarm { padding: 0; }
+
+        /* AJUSTE PARA FORZAR ANCHO FIJO DE 50PX EN EL BOTÓN DE EXPORTAR */
+.btn-icon-only.btn-calendar {
+    padding: 0; /* ELIMINAR CUALQUIER PADDING LATERAL */
+    width: 50px; /* Forzar el ancho de 50px */
+    overflow: hidden;
+}
+
+        /* Rango / sliders generales */
+
         .phase-card {
             background-color: var(--surface-color); 
             border-radius: 12px; 
@@ -196,8 +370,16 @@
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); 
             overflow: hidden;
         }
+
         .phase-table { width: 100%; border-collapse: collapse; }
-        .phase-table td { padding: 14px 18px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+
+        .phase-table td { 
+            padding: 14px 18px; 
+            text-align: left; 
+            border-bottom: 1px solid var(--border-color); 
+            vertical-align: middle; 
+        }
+
         .phase-table tr:last-child td { border-bottom: none; }
         .phase-table tr:not(.highlight-row):nth-child(even) { background-color: var(--row-alt-color); }
 
@@ -210,24 +392,38 @@
             padding: 12px 15px; 
             background-color: var(--surface-color) !important;
         }
+
         .phase-1 th { background-color: var(--phase1-color) !important; }
         .phase-2 th { background-color: var(--phase2-color) !important; }
         .phase-3 th { background-color: var(--phase3-color) !important; }
         .phase-4 th { background-color: var(--phase4-color) !important; }
         .phase-5 th { background-color: var(--phase5-color) !important; }
         .phase-6 th { background-color: var(--phase6-color) !important; }
+
         .col-description { width: 65%; }
         .col-time { width: 35%; text-align: right; white-space: nowrap; }
+
         .notes { font-size: 0.9em; color: var(--secondary-text); display: block; margin-top: 4px; }
         .parenthesis { font-size: 0.80em; }
-        .flex-container { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
-        .text-content { display: block; margin-top: 5px; width: auto; }
+
+        .flex-container { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            gap: 20px; 
+        }
+
+        .text-content { 
+            display: block; 
+            margin-top: 5px; 
+            width: auto; 
+        }
         
         .slider-group-container {
             display: flex;
             flex-direction: column;
             align-items: flex-end;
-            gap: 25px; /* Aumentado el espacio */
+            gap: 25px;
             width: 150px;
         }
         
@@ -250,20 +446,22 @@
             font-size: 0.85em; 
             font-weight: bold;
             text-align: center;
-            transform: translate(-50%, -50%); /* Modificado para centrar en ambos ejes */
+            transform: translate(-50%, -50%);
             pointer-events: none; 
             z-index: 10;
-            top: 50%; /* Modificado para centrar verticalmente */
+            top: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
         }
+
         .p1 .slider-bubble { background-color: var(--phase1-color); }
         .p2 .slider-bubble { background-color: var(--phase2-color); }
         .p3 .slider-bubble { background-color: var(--phase3-color); }
         .p4 .slider-bubble { background-color: var(--phase4-color); }
         .p5 .slider-bubble { background-color: var(--phase5-color); }
         .p6 .slider-bubble { background-color: var(--phase6-color); }
+
         input[type="range"] { 
             -webkit-appearance: none; 
             appearance: none; 
@@ -276,17 +474,18 @@
             z-index: 5;
             margin: 0;
         }
-        /* El thumb ahora es un área invisible que se arrastra */
+
         input[type="range"]::-webkit-slider-thumb { 
             -webkit-appearance: none; 
             appearance: none; 
-            width: 38px; /* Área de agarre, coincide con la burbuja */
-            height: 25px; /* Área de agarre */
+            width: 38px;
+            height: 25px;
             background: transparent;
             border: 0;
             cursor: pointer;
             z-index: 6;
         }
+
         input[type="range"]::-moz-range-thumb { 
             width: 38px; 
             height: 25px; 
@@ -297,9 +496,9 @@
         }
         
         input[type="range"]#alarm_slider {
-            width: 100px;
+            width: 214px;
         }
-        /* Se restaura el estilo original solo para el thumb de la alarma */
+
         input[type="range"]#alarm_slider::-webkit-slider-thumb { 
             width: 20px;
             height: 20px;
@@ -307,6 +506,7 @@
             background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 16 16"><path fill="%23ffc107" d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/></svg>') no-repeat center;
             background-size: 20px 20px;
         }
+
         input[type="range"]#alarm_slider::-moz-range-thumb { 
             width: 20px; 
             height: 20px; 
@@ -315,14 +515,14 @@
             background-size: 20px 20px;
         }
 
-        /* --- Estilos para Selectores Personalizados --- */
+        /* --- Estilos para Selectores Personalizados (Fases) --- */
         .custom-select-container {
             position: relative;
             width: 140px;
         }
 
         .select-selected {
-            background-color: var(--dropdown-card-bg); /* Fondo de tarjeta para selectores */
+            background-color: var(--dropdown-card-bg);
             color: white;
             padding: 6px 10px;
             border: 1px solid transparent;
@@ -335,7 +535,7 @@
             transition: box-shadow 0.3s ease, border-color 0.3s ease;
             position: relative;
             user-select: none;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra sutil */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
         
         .p2 .select-selected { border-color: var(--phase2-color); }
@@ -377,9 +577,7 @@
             box-shadow: 0 8px 16px rgba(0,0,0,0.3);
         }
 
-        .select-hide {
-            display: none;
-        }
+        .select-hide { display: none; }
 
         .select-items div {
             color: white;
@@ -399,18 +597,17 @@
             background-color: rgba(255, 255, 255, 0.1);
         }
 
-        /* Resalta las celdas de las filas importantes con un fondo sutil y consistente */
+        /* Resaltado Fase 5 y 6 */
         #phase-5-card .highlight-row td {
             background-color: rgba(var(--phase5-rgb), 0.1) !important;
         }
         #phase-6-card .highlight-row td {
             background-color: rgba(var(--phase6-rgb), 0.1) !important;
         }
-        /* Borde acentuado para separar filas resaltadas */
         #phase-5-card .highlight-row:not(:last-child) td {
             border-bottom-color: var(--phase5-darker);
         }
-         #phase-6-card .highlight-row:not(:last-child) td {
+        #phase-6-card .highlight-row:not(:last-child) td {
             border-bottom-color: var(--phase6-darker);
         }
 
@@ -428,36 +625,19 @@
             box-sizing: content-box;
             transition: box-shadow 0.3s ease, text-shadow 0.3s ease;
         }
+
         .calculated-value.p1 { background-color: var(--phase1-darker); }
-        .calculated-value.p1.active { 
-            box-shadow: 0 0 5px var(--phase1-color); 
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); 
-        }
+        .calculated-value.p1.active { box-shadow: 0 0 5px var(--phase1-color); text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); }
         .calculated-value.p2 { background-color: var(--phase2-darker); }
-        .calculated-value.p2.active { 
-            box-shadow: 0 0 5px var(--phase2-color); 
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); 
-        }
+        .calculated-value.p2.active { box-shadow: 0 0 5px var(--phase2-color); text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); }
         .calculated-value.p3 { background-color: var(--phase3-darker); }
-        .calculated-value.p3.active { 
-            box-shadow: 0 0 5px var(--phase3-color); 
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); 
-        }
+        .calculated-value.p3.active { box-shadow: 0 0 5px var(--phase3-color); text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); }
         .calculated-value.p4 { background-color: var(--phase4-darker); }
-        .calculated-value.p4.active { 
-            box-shadow: 0 0 5px var(--phase4-color); 
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); 
-        }
-         .calculated-value.p5 { background-color: var(--phase5-darker); }
-        .calculated-value.p5.active { 
-            box-shadow: 0 0 5px var(--phase5-color); 
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); 
-        }
+        .calculated-value.p4.active { box-shadow: 0 0 5px var(--phase4-color); text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); }
+        .calculated-value.p5 { background-color: var(--phase5-darker); }
+        .calculated-value.p5.active { box-shadow: 0 0 5px var(--phase5-color); text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); }
         .calculated-value.p6 { background-color: var(--phase6-darker); }
-        .calculated-value.p6.active { 
-            box-shadow: 0 0 5px var(--phase6-color); 
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); 
-        }
+        .calculated-value.p6.active { box-shadow: 0 0 5px var(--phase6-color); text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); }
 
         .percent-border {
             position: relative;
@@ -473,42 +653,19 @@
             background: none;
             transition: text-shadow 0.3s ease, border 0.3s ease, box-shadow 0.3s ease;
         }
+
         .percent-border.p1 { border: 1px dashed var(--phase1-color); }
-        .percent-border.p1.active { 
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); 
-            border: 1px solid var(--phase1-color); 
-            box-shadow: 0 0 5px var(--phase1-color); 
-        }
+        .percent-border.p1.active { text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); border: 1px solid var(--phase1-color); box-shadow: 0 0 5px var(--phase1-color); }
         .percent-border.p2 { border: 1px dashed var(--phase2-color); }
-        .percent-border.p2.active { 
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); 
-            border: 1px solid var(--phase2-color); 
-            box-shadow: 0 0 5px var(--phase2-color); 
-        }
+        .percent-border.p2.active { text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); border: 1px solid var(--phase2-color); box-shadow: 0 0 5px var(--phase2-color); }
         .percent-border.p3 { border: 1px dashed var(--phase3-color); }
-        .percent-border.p3.active { 
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); 
-            border: 1px solid var(--phase3-color); 
-            box-shadow: 0 0 5px var(--phase3-color); 
-        }
+        .percent-border.p3.active { text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); border: 1px solid var(--phase3-color); box-shadow: 0 0 5px var(--phase3-color); }
         .percent-border.p4 { border: 1px dashed var(--phase4-color); }
-        .percent-border.p4.active { 
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); 
-            border: 1px solid var(--phase4-color); 
-            box-shadow: 0 0 5px var(--phase4-color); 
-        }
+        .percent-border.p4.active { text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); border: 1px solid var(--phase4-color); box-shadow: 0 0 5px var(--phase4-color); }
         .percent-border.p5 { border: 1px dashed var(--phase5-color); }
-        .percent-border.p5.active { 
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); 
-            border: 1px solid var(--phase5-color); 
-            box-shadow: 0 0 5px var(--phase5-color); 
-        }
+        .percent-border.p5.active { text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); border: 1px solid var(--phase5-color); box-shadow: 0 0 5px var(--phase5-color); }
         .percent-border.p6 { border: 1px dashed var(--phase6-color); }
-        .percent-border.p6.active { 
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); 
-            border: 1px solid var(--phase6-color); 
-            box-shadow: 0 0 5px var(--phase6-color); 
-        }
+        .percent-border.p6.active { text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); border: 1px solid var(--phase6-color); box-shadow: 0 0 5px var(--phase6-color); }
 
         .phase1-arrow { color: var(--phase1-color); font-size: 1.3em; transition: text-shadow 0.3s ease; }
         .phase2-arrow { color: var(--phase2-color); font-size: 1.3em; transition: text-shadow 0.3s ease; }
@@ -525,63 +682,102 @@
         .phase6-arrow.active { text-shadow: 0 0 10px var(--phase6-color), 0 0 15px var(--phase6-color), 0 0 20px rgba(255, 255, 255, 0.5); }
 
         @media (max-width: 600px) {
-            body { padding: 10px; padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
-            
-            /* MOBILE CHANGES START HERE */
+            body { 
+                padding: 10px; 
+                padding-bottom: calc(10px + env(safe-area-inset-bottom)); 
+            }
+
             .phase-table td { 
                 display: block; 
                 width: 100%; 
                 box-sizing: border-box; 
                 padding: 10px 15px; 
-                border-bottom: none; /* Change 1: Remove all dividers between item and date */
+                border-bottom: none; 
                 text-align: left !important;
             }
 
-            /* Override desktop highlight borders so they don't appear on mobile */
             #phase-5-card .highlight-row:not(:last-child) td,
             #phase-6-card .highlight-row:not(:last-child) td {
                 border-bottom-color: transparent;
             }
 
-            /* Change 2: Add red divider line *after* Milano (before next item) */
             #phase-5-card .highlight-row + tr > td:first-child {
                 border-top: 1px solid var(--phase5-darker);
             }
 
-            /* Change 3: Add teal divider line *after* Cold Wallet 1/2 (before next item) */
             #phase-6-card .highlight-row + tr > td:first-child {
                 border-top: 1px solid var(--phase6-darker);
             }
-            /* MOBILE CHANGES END HERE */
 
             .flex-container { 
-                flex-direction: row;  /* Mantener el layout de dos columnas */
-                align-items: center; /* Centrar verticalmente */
+                flex-direction: row;
+                align-items: center;
             }
+
             .input-section { 
                 flex-direction: column; 
+                width: 100%;
             }
             
-            .input-wrapper.date { width: auto; }
+            .input-wrapper.date { 
+                width: 100%; 
+            }
+
+            /* Fila 2 en columna en móvil */
+            .alarm-section {
+    display: none;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px; /* Uniformidad: 10px para coincidir con el gap superior */
+    padding: 5px 0;
+    border-radius: 8px;
+    margin-bottom: 40px;
+    width: 550px; /* 200 + 10 + 280 + 10 + 50 = 550px */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+            .timezone-wrapper {
+                width: 100%;
+            }
+
+
+
+            .alarm-actions {
+                width: 100%;
+                justify-content: center;
+            }
             
             .text-content {
-                flex-grow: 1; /* Permite que el texto ocupe el espacio disponible */
+                flex-grow: 1;
             }
-            .slider-group-container, .custom-select-container, .range-wrapper {
-                flex-shrink: 0; /* Evita que los controles se encojan */
+
+            .slider-group-container, 
+            .custom-select-container, 
+            .range-wrapper {
+                flex-shrink: 0;
             }
             
-            .phase1-arrow, .phase2-arrow, .phase3-arrow, .phase4-arrow, .phase5-arrow, .phase6-arrow { font-size: 1.2em; }
+            .phase1-arrow, .phase2-arrow, .phase3-arrow, .phase4-arrow, .phase5-arrow, .phase6-arrow { 
+                font-size: 1.2em; 
+            }
             
             @media (max-width: 380px) {
-                 .alarm-section { gap: 3px; padding: 3px; }
-                 .alarm-card { padding: 3px; }
+                 .alarm-section { 
+                    gap: 3px; 
+                    padding: 3px; 
+                 }
+                 .alarm-card { 
+                    padding: 3px; 
+                 }
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Top row: Amount | Date | botón reloj -->
         <div class="input-section">
             <div class="input-wrapper">
                 <input type="text" id="totalAmount" placeholder="Amount" aria-label="Total amount">
@@ -590,43 +786,97 @@
             <div class="input-wrapper date">
                 <input type="datetime-local" id="receiptDate" aria-label="Receipt date and time">
                 <button class="btn-icon-only" id="generateButton" onclick="generateSchedule()" aria-label="Generate Schedule" disabled>
-                    <svg class="button-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm3.71,12.29a1,1,0,0,1,0,1.42,1,1,0,0,1-1.42,0L11,12.41V7a1,1,0,0,1,2,0v4.59Z"/></svg>
+                    <svg class="button-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Zm3.71,12.29a1,1,0,0,1,0,1.42,1,1,0,0,1-1.42,0L11,12.41V7a1,1,0,0,1,2,0v4.59Z"/>
+                    </svg>
                 </button>
             </div>
         </div>
+
+        <!-- Fila 2: Timezone (izq) | Slider campana (centro) | Export (der) -->
         <div class="alarm-section">
+            <!-- Botón de huso horario a la izquierda -->
+            <div class="timezone-wrapper">
+                <button type="button" class="timezone-button" id="timezoneButton">
+                    <span class="label">Local time</span>
+                    <span class="chevron">▾</span>
+                </button>
+                <div class="timezone-menu select-hide" id="timezoneMenu">
+                    <div class="timezone-menu-header">Display schedule in</div>
+                    <ul>
+                        <li data-tz="local" class="active">
+                            <span class="tz-name">Local (system)</span>
+                        </li>
+                        <li data-tz="America/Bogota">
+                            <span class="tz-name">America/Bogota</span>
+                        </li>
+                        <li data-tz="America/Mexico_City">
+                            <span class="tz-name">America/Mexico_City</span>
+                        </li>
+                        <li data-tz="America/New_York">
+                            <span class="tz-name">America/New_York</span>
+                        </li>
+                        <li data-tz="America/Chicago">
+                            <span class="tz-name">America/Chicago</span>
+                        </li>
+                        <li data-tz="America/Denver">
+                            <span class="tz-name">America/Denver</span>
+                        </li>
+                        <li data-tz="America/Los_Angeles">
+                            <span class="tz-name">America/Los_Angeles</span>
+                        </li>
+                        <li data-tz="America/Toronto">
+                            <span class="tz-name">America/Toronto</span>
+                        </li>
+                        <li data-tz="America/Vancouver">
+                            <span class="tz-name">America/Vancouver</span>
+                        </li>
+                        <li data-tz="Europe/London">
+                            <span class="tz-name">Europe/London</span>
+                        </li>
+                        <li data-tz="Europe/Berlin">
+                            <span class="tz-name">Europe/Berlin</span>
+                        </li>
+                        <li data-tz="Europe/Madrid">
+                            <span class="tz-name">Europe/Madrid</span>
+                        </li>
+                        <li data-tz="Europe/Paris">
+                            <span class="tz-name">Europe/Paris</span>
+                        </li>
+                        <li data-tz="Asia/Singapore">
+                            <span class="tz-name">Asia/Singapore</span>
+                        </li>
+                        <li data-tz="Asia/Tokyo">
+                            <span class="tz-name">Asia/Tokyo</span>
+                        </li>
+                        <li data-tz="UTC">
+                            <span class="tz-name">UTC</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Slider campana en el centro -->
             <div class="alarm-card">
                 <div class="slider-container alarm">
                     <input type="range" min="1" max="60" value="30" id="alarm_slider" aria-label="Alarm time in minutes">
                 </div>
             </div>
-            <button class="btn-icon-only btn-calendar" id="exportButton" onclick="exportToOrg()" aria-label="Export to Orgzly"><span>30 min</span></button>
+
+            <!-- Botón exportar a la derecha -->
+            <div class="alarm-actions">
+                <button class="btn-icon-only btn-calendar" id="exportButton" onclick="exportToOrg()" aria-label="Export to Orgzly">
+                    <span>30 min</span>
+                </button>
+            </div>
         </div>
+
         <div id="schedule-container"></div>
     </div>
+
     <!-- Flatpickr JS -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            try {
-                // Verificar si flatpickr está disponible
-                if (typeof flatpickr !== 'undefined') {
-                    flatpickr("#receiptDate", {
-                        enableTime: true,
-                        dateFormat: "Y-m-d H:i",
-                        altInput: true,
-                        altFormat: "M j, Y h:i K",
-                    });
-                } else {
-                    // El script de Flatpickr no cargó
-                    throw new Error("Flatpickr library not found.");
-                }
-            } catch (error) {
-                console.warn(error.message, "Falling back to native date/time picker. The UI may not look as intended, but functionality is preserved.");
-                // No se necesita ninguna acción, el navegador usará el input datetime-local por defecto
-            }
-        });
-
         let totalAmount = 0;
         let effectiveAmount = 0;
         let cachedTimestamps = null;
@@ -639,6 +889,11 @@
         const alarmSection = document.querySelector('.alarm-section');
         const alarmSlider = document.getElementById('alarm_slider');
         const exportButton = document.getElementById('exportButton');
+        const timezoneButton = document.getElementById('timezoneButton');
+        const timezoneMenu = document.getElementById('timezoneMenu');
+
+        // "local" = huso del navegador; el resto son IANA
+        let currentDisplayTimeZone = 'local';
 
         function debounce(func, wait) {
             let timeout;
@@ -650,6 +905,12 @@
                 clearTimeout(timeout);
                 timeout = setTimeout(later, wait);
             };
+        }
+
+        function cryptoRandom() {
+            const arr = new Uint32Array(1);
+            window.crypto.getRandomValues(arr);
+            return arr[0] / 0xFFFFFFFF;
         }
 
         function validateInputs() {
@@ -701,14 +962,24 @@
         });
 
         function addRandomTime(baseDate, minHours = 0, maxHours = 0, minMinutes = 0, maxMinutes = 0) {
-            const randomHours = minHours + Math.random() * (maxHours - minHours);
-            const randomMinutes = minMinutes + Math.random() * (maxMinutes - minMinutes);
+            const randomHours = minHours + cryptoRandom() * (maxHours - minHours);
+            const randomMinutes = minMinutes + cryptoRandom() * (maxMinutes - minMinutes);
             const delayInMs = (randomHours * 3600 + randomMinutes * 60) * 1000;
             return new Date(baseDate.getTime() + delayInMs);
         }
 
         function formatDateTime(date) {
-            const options = { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true };
+            const options = { 
+                weekday: 'short', 
+                month: 'short', 
+                day: 'numeric', 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                hour12: true 
+            };
+            if (currentDisplayTimeZone !== 'local') {
+                options.timeZone = currentDisplayTimeZone;
+            }
             return new Intl.DateTimeFormat('en-US', options).format(date);
         }
 
@@ -768,31 +1039,31 @@
                 return lastTime;
             });
             
-            // LENTO-RAPIDO-LENTO: Pausa Larga 1 (8-36 horas)
+            // Pausa Larga 1 (8-36 horas)
             lastTime = ensureUniqueTime(lastTime, 8, 36, 0, 0);
 
-            // RÁFAGA RÁPIDA (Fases 4 y 5)
+            // Ráfaga rápida (Fases 4 y 5)
             const numIntents = parseInt(document.getElementById('num_intent_select')?.value || 2);
-             timestamps.p4_intent = Array.from({ length: numIntents }, () => {
-                lastTime = ensureUniqueTime(lastTime, 0, 0, 3, 8); // Intervalo corto
+            timestamps.p4_intent = Array.from({ length: numIntents }, () => {
+                lastTime = ensureUniqueTime(lastTime, 0, 0, 3, 8);
                 return lastTime;
             });
 
-            timestamps.p5_payy = ensureUniqueTime(lastTime, 0, 0, 3, 8); // Intervalo corto
+            timestamps.p5_payy = ensureUniqueTime(lastTime, 0, 0, 3, 8);
             lastTime = timestamps.p5_payy;
 
             const numCrosspays = parseInt(document.getElementById('num_crosspay_select')?.value || 3);
             timestamps.p5_crosspay = Array.from({ length: numCrosspays }, () => {
-                lastTime = ensureUniqueTime(lastTime, 0, 0, 3, 8); // Intervalo corto
+                lastTime = ensureUniqueTime(lastTime, 0, 0, 3, 8);
                 return lastTime;
             });
 
-            // LENTO-RAPIDO-LENTO: Pausa Larga 2 (12-48 horas)
+            // Pausa Larga 2 (12-48 horas)
             lastTime = ensureUniqueTime(lastTime, 12, 48, 0, 0);
 
-            // FASE FINAL (Fase 6)
+            // Fase final (Consolidación y Cold)
             timestamps.p6_consol = [];
-            timestamps.p6_consol[0] = lastTime; // Inicia inmediatamente después de la pausa larga
+            timestamps.p6_consol[0] = lastTime;
             timestamps.p6_consol[1] = ensureUniqueTime(timestamps.p6_consol[0], 0, 0, 10, 20);
             
             timestamps.p6_cold = [];
@@ -812,7 +1083,7 @@
             }
             let splits = [];
             for (let i = 0; i < numOperations - 1; i++) {
-                splits.push(Math.random() * remainderPercent);
+                splits.push(cryptoRandom() * remainderPercent);
             }
             splits.push(0, remainderPercent);
             splits.sort((a, b) => a - b);
@@ -827,7 +1098,7 @@
             const lastPercentage = remainderPercent - currentSum;
             percentages.push(parseFloat(lastPercentage.toFixed(2)));
             for (let i = percentages.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
+                const j = Math.floor(cryptoRandom() * (i + 1));
                 [percentages[i], percentages[j]] = [percentages[j], percentages[i]];
             }
             return percentages;
@@ -862,9 +1133,9 @@
             }
         }
 
-
         function generateSchedule() {
             cachedTimestamps = null;
+
             const amountElement = document.getElementById('totalAmount');
             const inputElement = document.getElementById('receiptDate');
 
@@ -1003,15 +1274,57 @@
                 <div class="phase-card" id="phase-1-card">
                     <table class="phase-table"><tbody>
                         <tr class="phase-header phase-1"><th colspan="2">Phase 1 – Secure Accumulation</th></tr>
-                        <tr><td class="col-description"><strong>Funds received in B1</strong><br><div class="text-content"><span class="calculated-value p1">$<span id="base_amount">0.00</span></span></div><span class="notes">Starting point of the schedule.</span></td><td class="col-time" id="base_time"></td></tr>
-                        <tr><td class="col-description"><strong>B1 <span class="phase1-arrow">→</span> Railgun [Shield]</strong><br><div class="text-content"><span class="calculated-value p1">$<span id="shield_amount">0.00</span></span></div><span class="notes">Move funds to the privacy pool.</span></td><td class="col-time" id="shield_time"></td></tr>
+                        <tr>
+                            <td class="col-description">
+                                <strong>Funds received in B1</strong><br>
+                                <div class="text-content">
+                                    <span class="calculated-value p1">$<span id="base_amount">0.00</span></span>
+                                </div>
+                                <span class="notes">Starting point of the schedule.</span>
+                            </td>
+                            <td class="col-time" id="base_time"></td>
+                        </tr>
+                        <tr>
+                            <td class="col-description">
+                                <strong>B1 <span class="phase1-arrow">→</span> Railgun [Shield]</strong><br>
+                                <div class="text-content">
+                                    <span class="calculated-value p1">$<span id="shield_amount">0.00</span></span>
+                                </div>
+                                <span class="notes">Move funds to the privacy pool.</span>
+                            </td>
+                            <td class="col-time" id="shield_time"></td>
+                        </tr>
                     </tbody></table>
                 </div>
                 <div class="phase-card" id="phase-2-card">
                     <table class="phase-table"><tbody>
                         <tr class="phase-header phase-2"><th colspan="2">Phase 2 - Staging & Allocation</th></tr>
-                        <tr><td><div class="flex-container"><div class="text-content"><strong>Funds retained in Railgun</strong><br><span class="calculated-value p2">$<span id="non_distributed_amount">0.00</span></span><span class="notes">Leave 1-10% in Railgun for privacy.</span></div><div class="range-wrapper p2"><input type="range" min="1" max="10" value="5" id="non_distributed_slider" class="p2"><div class="slider-bubble"></div></div></div></td><td class="col-time"></td></tr>
-                        <tr><td class="col-description"><strong>Distributable Funds</strong><br><div class="text-content"><span class="calculated-value p2">$<span id="distributable_amount">0.00</span></span></div><span class="notes">Base amount for next phases.</span></td><td class="col-time"></td></tr>
+                        <tr>
+                            <td>
+                                <div class="flex-container">
+                                    <div class="text-content">
+                                        <strong>Funds retained in Railgun</strong><br>
+                                        <span class="calculated-value p2">$<span id="non_distributed_amount">0.00</span></span>
+                                        <span class="notes">Leave 1-10% in Railgun for privacy.</span>
+                                    </div>
+                                    <div class="range-wrapper p2">
+                                        <input type="range" min="1" max="10" value="5" id="non_distributed_slider" class="p2">
+                                        <div class="slider-bubble"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="col-time"></td>
+                        </tr>
+                        <tr>
+                            <td class="col-description">
+                                <strong>Distributable Funds</strong><br>
+                                <div class="text-content">
+                                    <span class="calculated-value p2">$<span id="distributable_amount">0.00</span></span>
+                                </div>
+                                <span class="notes">Base amount for next phases.</span>
+                            </td>
+                            <td class="col-time"></td>
+                        </tr>
                     </tbody></table>
                 </div>
                 <div class="phase-card" id="phase-3-card">
@@ -1027,7 +1340,7 @@
                     </tbody></table>
                 </div>
                 <div class="phase-card" id="phase-5-card">
-                     <table class="phase-table"><tbody>
+                    <table class="phase-table"><tbody>
                         <tr class="phase-header phase-5"><th colspan="2">Phase 5 – Private Exits</th></tr>
                         ${crosspayRows}
                     </tbody></table>
@@ -1035,18 +1348,63 @@
                 <div class="phase-card" id="phase-6-card">
                     <table class="phase-table"><tbody>
                         <tr class="phase-header phase-6"><th colspan="2">Phase 6 – Consolidation & Cold Storage</th></tr>
-                        <tr><td><div class="flex-container"><div class="text-content"><strong>B3 <span class="phase6-arrow">→</span> Barcelona <span class="parenthesis">(1/2)</span></strong><br><span class="calculated-value p6">$<span id="consol1_amount">0.00</span></span><span class="notes">Move funds from B3 to Savings Wallet.</span></div><div class="range-wrapper p6"><input type="range" min="0" max="100" value="50" id="consolidation_slider" class="p6"><div class="slider-bubble"></div></div></div></td><td class="col-time" id="consol1_time"></td></tr>
-                        <tr><td class="col-description"><strong>B3 <span class="phase6-arrow">→</span> Barcelona <span class="parenthesis">(2/2)</span> <span class="percent-border p6"><span id="consolidation2_percent">50.00</span>%</span></strong><br><div class="text-content"><span class="calculated-value p6">$<span id="consol2_amount">0.00</span></span></div><span class="notes">Second batch to Savings Wallet.</span></td><td class="col-time" id="consol2_time"></td></tr>
-                        <tr class="highlight-row"><td><div class="flex-container"><div class="text-content"><strong>Savings <span class="phase6-arrow">→</span> Cold Wallet <span class="parenthesis">(1/2)</span></strong><br><span class="calculated-value p6">$<span id="cold1_amount">0.00</span></span><span class="notes">First movement to cold storage.</span></div><div class="range-wrapper p6"><input type="range" min="0" max="100" value="50" id="cold_slider" class="p6"><div class="slider-bubble"></div></div></div></td><td class="col-time" id="cold1_time"></td></tr>
-                        <tr class="highlight-row"><td class="col-description"><strong>Savings <span class="phase6-arrow">→</span> Cold Wallet <span class="parenthesis">(2/2)</span> <span class="percent-border p6"><span id="cold2_percent">50.00</span>%</span></strong><br><div class="text-content"><span class="calculated-value p6">$<span id="cold2_amount">0.00</span></span></div><span class="notes">Final movement to cold storage.</span></td><td class="col-time" id="cold2_time"></td></tr>
+                        <tr>
+                            <td>
+                                <div class="flex-container">
+                                    <div class="text-content">
+                                        <strong>B3 <span class="phase6-arrow">→</span> Barcelona <span class="parenthesis">(1/2)</span></strong><br>
+                                        <span class="calculated-value p6">$<span id="consol1_amount">0.00</span></span>
+                                        <span class="notes">Move funds from B3 to Savings Wallet.</span>
+                                    </div>
+                                    <div class="range-wrapper p6">
+                                        <input type="range" min="0" max="100" value="50" id="consolidation_slider" class="p6">
+                                        <div class="slider-bubble"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="col-time" id="consol1_time"></td>
+                        </tr>
+                        <tr>
+                            <td class="col-description">
+                                <strong>B3 <span class="phase6-arrow">→</span> Barcelona <span class="parenthesis">(2/2)</span> <span class="percent-border p6"><span id="consolidation2_percent">50.00</span>%</span></strong><br>
+                                <div class="text-content">
+                                    <span class="calculated-value p6">$<span id="consol2_amount">0.00</span></span>
+                                </div>
+                                <span class="notes">Second batch to Savings Wallet.</span>
+                            </td>
+                            <td class="col-time" id="consol2_time"></td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td>
+                                <div class="flex-container">
+                                    <div class="text-content">
+                                        <strong>Savings <span class="phase6-arrow">→</span> Cold Wallet <span class="parenthesis">(1/2)</span></strong><br>
+                                        <span class="calculated-value p6">$<span id="cold1_amount">0.00</span></span>
+                                        <span class="notes">First movement to cold storage.</span>
+                                    </div>
+                                    <div class="range-wrapper p6">
+                                        <input type="range" min="0" max="100" value="50" id="cold_slider" class="p6">
+                                        <div class="slider-bubble"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="col-time" id="cold1_time"></td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td class="col-description">
+                                <strong>Savings <span class="phase6-arrow">→</span> Cold Wallet <span class="parenthesis">(2/2)</span> <span class="percent-border p6"><span id="cold2_percent">50.00</span>%</span></strong><br>
+                                <div class="text-content">
+                                    <span class="calculated-value p6">$<span id="cold2_amount">0.00</span></span>
+                                </div>
+                                <span class="notes">Final movement to cold storage.</span>
+                            </td>
+                            <td class="col-time" id="cold2_time"></td>
+                        </tr>
                     </tbody></table>
                 </div>
             `;
         }
         
-        // --- START: REFACTORED SLIDER LOGIC ---
-
-        // Helper to add random decimal "jitter" to slider values for privacy
         function getJitteredSliderValue(sliderId) {
             let sliderValue = parseFloat(document.getElementById(sliderId).value);
             const slider = document.getElementById(sliderId);
@@ -1054,17 +1412,13 @@
             const sliderMax = parseFloat(slider.max);
 
             if (sliderValue > 0 && sliderValue < sliderMax) {
-                sliderValue += Math.random(); 
+                sliderValue += cryptoRandom();
                 sliderValue = Math.min(sliderValue, sliderMax);
             }
             return sliderValue;
         }
 
-        // Updates all values from top to bottom. Called once on generation.
-        function updateAllValues() {
-            const timestamps = getScheduleTimestamps(new Date(dateInput.value));
-            
-            // Set all timestamps across all phases
+        function applyFormattedTimes(timestamps) {
             document.getElementById('base_time').textContent = formatDateTime(timestamps.baseDate);
             document.getElementById('shield_time').textContent = formatDateTime(timestamps.p1_shield);
 
@@ -1086,23 +1440,29 @@
             document.getElementById('consol2_time').textContent = formatDateTime(timestamps.p6_consol[1]);
             document.getElementById('cold1_time').textContent = formatDateTime(timestamps.p6_cold[0]);
             document.getElementById('cold2_time').textContent = formatDateTime(timestamps.p6_cold[1]);
+        }
+
+        function updateAllValues() {
+            const timestamps = getScheduleTimestamps(new Date(dateInput.value));
+            applyFormattedTimes(timestamps);
             
-            // Set static Phase 1 amounts
             document.getElementById('base_amount').textContent = formatAmount(totalAmount);
             document.getElementById('shield_amount').textContent = formatAmount(totalAmount);
             
-            // Kick off the cascade of amount calculations
             updatePhase2(); 
         }
+
+        function updateAllTimesOnly() {
+            if (!dateInput.value || !cachedTimestamps) return;
+            applyFormattedTimes(cachedTimestamps);
+        }
         
-        // Phase 2: The master controller, as it defines effectiveAmount
         function updatePhase2() {
             let nonDistributedPercent = getJitteredSliderValue('non_distributed_slider');
             effectiveAmount = totalAmount * (1 - nonDistributedPercent / 100);
             document.getElementById('distributable_amount').textContent = formatAmount(effectiveAmount);
             document.getElementById('non_distributed_amount').textContent = formatAmount(totalAmount * nonDistributedPercent / 100);
             
-            // Cascade updates to all dependent phases
             updatePhase3();
             updatePhase4();
             updatePhase5();
@@ -1110,7 +1470,6 @@
             updatePhase6Cold();
         }
 
-        // Phase 3: Self-contained update
         function updatePhase3() {
             const numUnshields = parseInt(document.getElementById('num_unshield_select').value);
             let unshield1Percent = getJitteredSliderValue('unshield_slider');
@@ -1125,7 +1484,6 @@
             }
         }
 
-        // Phase 4: Self-contained update
         function updatePhase4() {
             const numIntents = parseInt(document.getElementById('num_intent_select').value);
             let intent1Percent = getJitteredSliderValue('intent_slider');
@@ -1140,7 +1498,6 @@
             }
         }
         
-        // Phase 5: Self-contained update
         function updatePhase5() {
             const numCrosspays = parseInt(document.getElementById('num_crosspay_select').value);
             let payyPercent = getJitteredSliderValue('payy_slider');
@@ -1154,15 +1511,13 @@
             }
         }
 
-        // Phase 6 (Part 1 - Consolidation): Self-contained update
         function updatePhase6Consolidation() {
-             let consol1Percent = getJitteredSliderValue('consolidation_slider');
+            let consol1Percent = getJitteredSliderValue('consolidation_slider');
             document.getElementById('consol1_amount').textContent = formatAmount(effectiveAmount * consol1Percent / 100);
             document.getElementById('consol2_amount').textContent = formatAmount(effectiveAmount * (100 - consol1Percent) / 100);
             document.getElementById('consolidation2_percent').textContent = (100 - consol1Percent).toFixed(2);
         }
 
-        // Phase 6 (Part 2 - Cold Storage): Self-contained update
         function updatePhase6Cold() {
             let cold1Percent = getJitteredSliderValue('cold_slider');
             document.getElementById('cold1_amount').textContent = formatAmount(effectiveAmount * cold1Percent / 100);
@@ -1170,14 +1525,11 @@
             document.getElementById('cold2_percent').textContent = (100 - cold1Percent).toFixed(2);
         }
 
-        // --- END: REFACTORED SLIDER LOGIC ---
-        
         function initializeCustomSelects() {
             const containers = document.querySelectorAll('.custom-select-container');
 
             containers.forEach(container => {
                 const originalSelect = container.querySelector('select');
-                // Si ya está inicializado (tiene un .select-selected), no hacer nada.
                 if (!originalSelect || container.querySelector('.select-selected')) return;
 
                 const selectedDiv = document.createElement('DIV');
@@ -1195,7 +1547,7 @@
 
                 const optionsList = document.createElement('DIV');
                 optionsList.setAttribute('class', 'select-items select-hide');
-                 if (phaseClass) optionsList.classList.add(phaseClass);
+                if (phaseClass) optionsList.classList.add(phaseClass);
                 
                 Array.from(originalSelect.options).forEach((option, index) => {
                     const optionDiv = document.createElement('DIV');
@@ -1213,7 +1565,7 @@
                         siblings.forEach(sib => sib.classList.remove("same-as-selected"));
                         this.classList.add("same-as-selected");
                         
-                        selectedDiv.click(); // Cierra el dropdown
+                        selectedDiv.click();
                         generateSchedule(); 
                     });
                     optionsList.appendChild(optionDiv);
@@ -1246,7 +1598,12 @@
             });
         }
 
-        document.addEventListener("click", () => closeAllSelect(null));
+        document.addEventListener("click", () => {
+            closeAllSelect(null);
+            if (!timezoneMenu.classList.contains('select-hide')) {
+                timezoneMenu.classList.add('select-hide');
+            }
+        });
 
         function attachAllListeners() {
             document.querySelectorAll('input[type="range"]').forEach(slider => {
@@ -1257,33 +1614,78 @@
                     let baseId = slider.id.replace('_slider', '');
                     
                     switch(baseId) {
-                        case 'non_distributed': // Phase 2
-                            document.querySelectorAll('#phase-2-card, #phase-3-card, #phase-4-card, #phase-5-card, #phase-6-card').forEach(card => {
-                                elementsToToggle.push(...card.querySelectorAll('.calculated-value, .percent-border'));
-                            });
+                        case 'non_distributed':
+                            document
+                                .querySelectorAll('#phase-2-card, #phase-3-card, #phase-4-card, #phase-5-card, #phase-6-card')
+                                .forEach(card => {
+                                    elementsToToggle.push(...card.querySelectorAll('.calculated-value, .percent-border'));
+                                });
                             break;
-                        case 'unshield': // Phase 3
-                             elementsToToggle.push(...document.querySelectorAll(`[data-group="unshield"] .calculated-value, [data-group="unshield"] .percent-border, [data-group="unshield"] .phase3-arrow`));
-                             const unshieldSelect = document.getElementById(`num_unshield_select`);
-                             if (unshieldSelect) elementsToToggle.push(unshieldSelect.parentNode.querySelector('.select-selected'));
+                        case 'unshield':
+                            elementsToToggle.push(
+                                ...document.querySelectorAll(
+                                    '[data-group="unshield"] .calculated-value, ' +
+                                    '[data-group="unshield"] .percent-border, ' +
+                                    '[data-group="unshield"] .phase3-arrow'
+                                )
+                            );
+                            {
+                                const unshieldSelect = document.getElementById('num_unshield_select');
+                                if (unshieldSelect) {
+                                    const custom = unshieldSelect.parentNode.querySelector('.select-selected');
+                                    if (custom) elementsToToggle.push(custom);
+                                }
+                            }
                             break;
-                        case 'intent': // Phase 4
-                             elementsToToggle.push(...document.querySelectorAll(`[data-group="intent"] .calculated-value, [data-group="intent"] .percent-border, [data-group="intent"] .phase4-arrow`));
-                             const intentSelect = document.getElementById(`num_intent_select`);
-                             if (intentSelect) elementsToToggle.push(intentSelect.parentNode.querySelector('.select-selected'));
+                        case 'intent':
+                            elementsToToggle.push(
+                                ...document.querySelectorAll(
+                                    '[data-group="intent"] .calculated-value, ' +
+                                    '[data-group="intent"] .percent-border, ' +
+                                    '[data-group="intent"] .phase4-arrow'
+                                )
+                            );
+                            {
+                                const intentSelect = document.getElementById('num_intent_select');
+                                if (intentSelect) {
+                                    const custom = intentSelect.parentNode.querySelector('.select-selected');
+                                    if (custom) elementsToToggle.push(custom);
+                                }
+                            }
                             break;
-                        case 'payy': // Phase 5
-                             const crosspayGroup = 'crosspay';
-                             elementsToToggle.push(...document.querySelectorAll(`[data-group="${crosspayGroup}"] .calculated-value, [data-group="${crosspayGroup}"] .percent-border, [data-group="${crosspayGroup}"] .phase5-arrow`));
-                             const crosspaySelect = document.getElementById(`num_crosspay_select`);
-                             if (crosspaySelect) elementsToToggle.push(crosspaySelect.parentNode.querySelector('.select-selected'));
+                        case 'payy':
+                            {
+                                const crosspayGroup = 'crosspay';
+                                elementsToToggle.push(
+                                    ...document.querySelectorAll(
+                                        `[data-group="${crosspayGroup}"] .calculated-value, ` +
+                                        `[data-group="${crosspayGroup}"] .percent-border, ` +
+                                        `[data-group="${crosspayGroup}"] .phase5-arrow`
+                                    )
+                                );
+                                const crosspaySelect = document.getElementById('num_crosspay_select');
+                                if (crosspaySelect) {
+                                    const custom = crosspaySelect.parentNode.querySelector('.select-selected');
+                                    if (custom) elementsToToggle.push(custom);
+                                }
+                            }
                             break;
                         case 'consolidation':
                         case 'cold':
-                            const parentRow = slider.closest('tr');
-                            elementsToToggle.push(...parentRow.querySelectorAll('.calculated-value, .phase6-arrow'));
-                            if (parentRow.nextElementSibling) {
-                                elementsToToggle.push(...parentRow.nextElementSibling.querySelectorAll('.calculated-value, .percent-border, .phase6-arrow'));
+                            {
+                                const parentRow = slider.closest('tr');
+                                if (parentRow) {
+                                    elementsToToggle.push(
+                                        ...parentRow.querySelectorAll('.calculated-value, .phase6-arrow')
+                                    );
+                                    if (parentRow.nextElementSibling) {
+                                        elementsToToggle.push(
+                                            ...parentRow.nextElementSibling.querySelectorAll(
+                                                '.calculated-value, .percent-border, .phase6-arrow'
+                                            )
+                                        );
+                                    }
+                                }
                             }
                             break;
                         case 'alarm':
@@ -1301,31 +1703,28 @@
                         updateAlarmText(slider);
                         return;
                     }
+
                     updateSliderBubble(slider);
 
-                    let updateFunction;
-                    switch(slider.id) {
+                    switch (slider.id) {
                         case 'non_distributed_slider':
-                            updateFunction = updatePhase2;
+                            updatePhase2();
                             break;
                         case 'unshield_slider':
-                            updateFunction = updatePhase3;
+                            updatePhase3();
                             break;
                         case 'intent_slider':
-                            updateFunction = updatePhase4;
+                            updatePhase4();
                             break;
                         case 'payy_slider':
-                            updateFunction = updatePhase5;
+                            updatePhase5();
                             break;
                         case 'consolidation_slider':
-                            updateFunction = updatePhase6Consolidation;
+                            updatePhase6Consolidation();
                             break;
                         case 'cold_slider':
-                            updateFunction = updatePhase6Cold;
+                            updatePhase6Cold();
                             break;
-                    }
-                    if (updateFunction) {
-                        debounce(updateFunction, 50)();
                     }
                 });
 
@@ -1344,16 +1743,21 @@
             const bubble = slider.nextElementSibling;
             if (!bubble || !bubble.classList.contains('slider-bubble')) return;
             const currentValue = parseFloat(slider.value);
-            bubble.textContent = `${currentValue.toFixed(0)}%`; // Show integer in bubble for cleanliness
+            bubble.textContent = `${currentValue.toFixed(0)}%`;
             const min = parseFloat(slider.min);
             const max = parseFloat(slider.max);
             const progress = (max - min > 0) ? (currentValue - min) / (max - min) : 0;
             const sliderWidth = slider.offsetWidth;
-            const thumbWidth = 38; 
+            const thumbWidth = slider.id === 'alarm_slider' ? 20 : 38;
             
             const bubbleOffset = progress * (sliderWidth - thumbWidth) + (thumbWidth / 2);
 
             bubble.style.left = `${bubbleOffset}px`;
+        }
+
+        function getText(id) {
+            const el = document.getElementById(id);
+            return el ? el.textContent.trim() : null;
         }
 
         function exportToOrg() {
@@ -1363,63 +1767,133 @@
             const baseDate = new Date(inputElement.value);
             const timestamps = getScheduleTimestamps(baseDate);
             const alarmMinutes = Math.round(parseFloat(document.getElementById('alarm_slider').value));
-            
-            // Re-run getJitteredSliderValue to get the exact values used for the final display
-             function getJitteredSliderValue(sliderId) {
-                let sliderValue = parseFloat(document.getElementById(sliderId).value);
-                const slider = document.getElementById(sliderId);
-                if (!slider) return 0;
-                const sliderMax = parseFloat(slider.max);
-                if (sliderValue > 0 && sliderValue < sliderMax) {
-                    sliderValue += Math.random();
-                    sliderValue = Math.min(sliderValue, sliderMax);
-                }
-                return sliderValue;
+
+            const events = [];
+
+            const getAmount = (id) => {
+                const txt = getText(id);
+                return txt ?? "0.00";
+            };
+
+            const getPercent = (id) => {
+                const txt = getText(id);
+                return txt ?? null;
+            };
+
+            // Phase 1
+            events.push({
+                phase: 'Phase 1 – Secure Accumulation',
+                title: 'Funds received in B1',
+                date: timestamps.baseDate,
+                amount: getAmount('base_amount'),
+                percent: '100.00',
+                note: 'Starting point.'
+            });
+
+            events.push({
+                phase: 'Phase 1 – Secure Accumulation',
+                title: 'B1 → Railgun [Shield]',
+                date: timestamps.p1_shield,
+                amount: getAmount('shield_amount'),
+                percent: '100.00',
+                note: 'Move to privacy pool.'
+            });
+
+            // Phase 2
+            events.push({
+                phase: 'Phase 2 – Staging & Allocation',
+                title: 'Funds retained in Railgun',
+                date: null,
+                amount: getAmount('non_distributed_amount'),
+                percent: null,
+                note: 'Enhance privacy.'
+            });
+
+            // Phase 3 – Unshielding
+            const numUnshields = parseInt(document.getElementById('num_unshield_select').value, 10);
+            for (let i = 0; i < numUnshields; i++) {
+                const idx = i + 1;
+                events.push({
+                    phase: 'Phase 3 – Unshielding',
+                    title: `Railgun → B2 [Unshield] (${idx}/${numUnshields})`,
+                    date: timestamps.p3_unshield[i],
+                    amount: getAmount(`unshield${idx}_amount`),
+                    percent: getPercent(`unshield${idx}_percent`),
+                    note: 'Withdrawal from pool.'
+                });
             }
 
-            const nonDistributedPercent = getJitteredSliderValue('non_distributed_slider');
-            const unshield1Percent = getJitteredSliderValue('unshield_slider');
-            const intent1Percent = getJitteredSliderValue('intent_slider');
-            let payyPercent = getJitteredSliderValue('payy_slider');
-            let consol1Percent = getJitteredSliderValue('consolidation_slider');
-            let cold1Percent = getJitteredSliderValue('cold_slider');
-            
-            const numUnshields = parseInt(document.getElementById('num_unshield_select').value);
-            const unshieldPercents = [unshield1Percent, ...generateRandomPercentages(100 - unshield1Percent, numUnshields - 1)];
-            
-            const numIntents = parseInt(document.getElementById('num_intent_select').value);
-            const intentPercents = [intent1Percent, ...generateRandomPercentages(100 - intent1Percent, numIntents - 1)];
-            
-            const numCrosspays = parseInt(document.getElementById('num_crosspay_select').value);
-            const crosspayPercents = generateRandomPercentages(100 - payyPercent, numCrosspays);
-            
-            const effectiveAmount = totalAmount * (1 - nonDistributedPercent / 100);
+            // Phase 4 – Conversion
+            const numIntents = parseInt(document.getElementById('num_intent_select').value, 10);
+            for (let i = 0; i < numIntents; i++) {
+                const idx = i + 1;
+                events.push({
+                    phase: 'Phase 4 – Conversion',
+                    title: `B2 → Zashi In (${idx}/${numIntents})`,
+                    date: timestamps.p4_intent[i],
+                    amount: getAmount(`intent${idx}_amount`),
+                    percent: getPercent(`intent${idx}_percent`),
+                    note: 'USDC→ZEC conversion.'
+                });
+            }
 
-            const events = [
-                { phase: 'Phase 1 – Secure Accumulation', title: 'Funds received in B1', date: timestamps.baseDate, amount: formatAmount(totalAmount), percent: 100, note: 'Starting point.' },
-                { phase: 'Phase 1 – Secure Accumulation', title: 'B1 → Railgun [Shield]', date: timestamps.p1_shield, amount: formatAmount(totalAmount), percent: 100, note: 'Move to privacy pool.' },
-                { phase: 'Phase 2 – Staging & Allocation', title: 'Funds retained', date: null, amount: formatAmount(totalAmount * nonDistributedPercent / 100), percent: nonDistributedPercent.toFixed(2), note: 'Enhance privacy.' }
-            ];
+            // Phase 5 – Private Exits
+            events.push({
+                phase: 'Phase 5 – Private Exits',
+                title: 'Zashi Out → Milano',
+                date: timestamps.p5_payy,
+                amount: getAmount('payy_amount'),
+                percent: null,
+                note: 'Exit for Spending.'
+            });
 
-            unshieldPercents.forEach((p, i) => events.push({
-                phase: 'Phase 3 – Unshielding', title: `Railgun → B2 [Unshield] (${i+1}/${numUnshields})`, date: timestamps.p3_unshield[i], amount: formatAmount(effectiveAmount * p / 100), percent: p.toFixed(2), note: 'Withdrawal from pool.'
-            }));
+            const numCrosspays = parseInt(document.getElementById('num_crosspay_select').value, 10);
+            for (let i = 0; i < numCrosspays; i++) {
+                const idx = i + 1;
+                events.push({
+                    phase: 'Phase 5 – Private Exits',
+                    title: `Zashi Out → B3 (${idx}/${numCrosspays})`,
+                    date: timestamps.p5_crosspay[i],
+                    amount: getAmount(`savings${idx}_amount`),
+                    percent: getPercent(`savings${idx}_percent`),
+                    note: 'Exit for Savings.'
+                });
+            }
 
-            intentPercents.forEach((p, i) => events.push({
-                phase: 'Phase 4 – Conversion', title: `B2 → Zashi In (${i+1}/${numIntents})`, date: timestamps.p4_intent[i], amount: formatAmount(effectiveAmount * p / 100), percent: p.toFixed(2), note: 'USDC→ZEC conversion.'
-            }));
-            
-            events.push({ phase: 'Phase 5 – Private Exits', title: 'Zashi Out → Milano', date: timestamps.p5_payy, amount: formatAmount(effectiveAmount * payyPercent / 100), percent: payyPercent.toFixed(2), note: 'Exit for Spending.' });
-
-            crosspayPercents.forEach((p, i) => events.push({
-                phase: 'Phase 5 – Private Exits', title: `Zashi Out → B3 (${i+1}/${numCrosspays})`, date: timestamps.p5_crosspay[i], amount: formatAmount(effectiveAmount * p / 100), percent: p.toFixed(2), note: 'Exit for Savings.'
-            }));
-
+            // Phase 6 – Consolidation & Cold Storage
             events.push(
-                { phase: 'Phase 6 – Consolidation & Cold Storage', title: 'B3 → Barcelona (1/2)', date: timestamps.p6_consol[0], amount: formatAmount(effectiveAmount * consol1Percent / 100), percent: consol1Percent.toFixed(2), note: 'Move to Savings Wallet.' },
-                { phase: 'Phase 6 – Consolidation & Cold Storage', title: 'B3 → Barcelona (2/2)', date: timestamps.p6_consol[1], amount: formatAmount(effectiveAmount * (100 - consol1Percent) / 100), percent: (100 - consol1Percent).toFixed(2), note: 'Second batch.' },
-                { phase: 'Phase 6 – Consolidation & Cold Storage', title: 'Savings → Cold (1/2)', date: timestamps.p6_cold[0], amount: formatAmount(effectiveAmount * cold1Percent / 100), percent: cold1Percent.toFixed(2), note: 'To cold storage.' },
-                { phase: 'Phase 6 – Consolidation & Cold Storage', title: 'Savings → Cold (2/2)', date: timestamps.p6_cold[1], amount: formatAmount(effectiveAmount * (100 - cold1Percent) / 100), percent: (100 - cold1Percent).toFixed(2), note: 'Final movement.' }
+                {
+                    phase: 'Phase 6 – Consolidation & Cold Storage',
+                    title: 'B3 → Barcelona (1/2)',
+                    date: timestamps.p6_consol[0],
+                    amount: getAmount('consol1_amount'),
+                    percent: null,
+                    note: 'Move to Savings Wallet.'
+                },
+                {
+                    phase: 'Phase 6 – Consolidation & Cold Storage',
+                    title: 'B3 → Barcelona (2/2)',
+                    date: timestamps.p6_consol[1],
+                    amount: getAmount('consol2_amount'),
+                    percent: getPercent('consolidation2_percent'),
+                    note: 'Second batch.'
+                },
+                {
+                    phase: 'Phase 6 – Consolidation & Cold Storage',
+                    title: 'Savings → Cold (1/2)',
+                    date: timestamps.p6_cold[0],
+                    amount: getAmount('cold1_amount'),
+                    percent: null,
+                    note: 'To cold storage.'
+                },
+                {
+                    phase: 'Phase 6 – Consolidation & Cold Storage',
+                    title: 'Savings → Cold (2/2)',
+                    date: timestamps.p6_cold[1],
+                    amount: getAmount('cold2_amount'),
+                    percent: getPercent('cold2_percent'),
+                    note: 'Final movement.'
+                }
             );
 
             let orgString = '#+TITLE: Privacy Schedule\n\n';
@@ -1433,8 +1907,15 @@
                 if (event.date) {
                     orgString += `  SCHEDULED: ${formatOrgDate(event.date, alarmMinutes)}\n`;
                 }
-                orgString += `:PROPERTIES:\n:AMOUNT: $${event.amount}\n:PERCENT: ${event.percent}%\n:END:\n\n`;
-                orgString += `${event.note}\n\n`;
+                orgString += `:PROPERTIES:\n`;
+                orgString += `:AMOUNT: $${event.amount}\n`;
+                if (event.percent !== null) {
+                    orgString += `:PERCENT: ${event.percent}%\n`;
+                }
+                orgString += `:END:\n\n`;
+                if (event.note) {
+                    orgString += `${event.note}\n\n`;
+                }
             });
 
             const blob = new Blob([orgString], { type: 'text/plain;charset=utf-8' });
@@ -1445,6 +1926,59 @@
             link.click();
             document.body.removeChild(link);
         }
+
+        function getTimezoneLabel(tz) {
+            if (tz === 'local') return 'Local time';
+            return `${tz} time`;
+        }
+
+        function initializeTimezoneUI() {
+            if (!timezoneButton || !timezoneMenu) return;
+
+            timezoneButton.querySelector('.label').textContent = getTimezoneLabel('local');
+
+            timezoneButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                timezoneMenu.classList.toggle('select-hide');
+            });
+
+            timezoneMenu.querySelectorAll('li[data-tz]').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const tz = item.getAttribute('data-tz');
+                    currentDisplayTimeZone = tz;
+
+                    timezoneMenu.querySelectorAll('li[data-tz]').forEach(li => li.classList.remove('active'));
+                    item.classList.add('active');
+
+                    timezoneButton.querySelector('.label').textContent = getTimezoneLabel(tz);
+                    timezoneMenu.classList.add('select-hide');
+
+                    if (scheduleContainer.innerHTML.trim()) {
+                        updateAllTimesOnly();
+                    }
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                if (typeof flatpickr !== 'undefined') {
+                    flatpickr("#receiptDate", {
+                        enableTime: true,
+                        dateFormat: "Y-m-d H:i",
+                        altInput: true,
+                        altFormat: "M j, Y h:i K",
+                    });
+                } else {
+                    throw new Error("Flatpickr library not found.");
+                }
+            } catch (error) {
+                console.warn(error.message, "Falling back to native date/time picker. The UI may not look as intended, but functionality is preserved.");
+            }
+
+            initializeTimezoneUI();
+        });
 
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
