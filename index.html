@@ -811,6 +811,22 @@
             .phase1-arrow, .phase2-arrow, .phase3-arrow, .phase4-arrow, .phase5-arrow, .phase6-arrow { 
                 font-size: 1.2em; 
             }
+
+            /* --- CORRECCIÓN ESPECÍFICA PARA FLATPICKR EN MÓVIL --- */
+        /* Al usar .input-wrapper.date aseguramos que solo afecte al calendario */
+        .input-wrapper.date input.flatpickr-input {
+            width: 240px !important;
+            min-width: 240px !important;
+            max-width: 240px !important;
+        }
+
+        .input-wrapper.date {
+            width: 100% !important;
+            justify-content: center !important;
+        }
+
+
+
         }
     </style>
 </head>
