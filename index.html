@@ -698,7 +698,7 @@
 
         
        
-        /* --- ESTILOS MÓVILES PERFECTOS (VERSIÓN FINAL) --- */
+                /* --- ESTILOS MÓVILES FINAL (CORREGIDO DE VERDAD) --- */
         @media (max-width: 600px) {
             body { 
                 padding: 10px; 
@@ -706,66 +706,74 @@
             }
 
             /* 1. CONTENEDORES DE FILA */
-            /* Forzamos a que todas las filas sean Flexbox idénticos */
+            /* CAMBIO CLAVE: Usamos 'fit-content' en lugar de '100%' */
+            /* Esto obliga al contenedor a medir exactamente 340px (280+10+50) */
+            /* Así la posición absoluta de la X siempre es relativa a este grupo compacto */
             .input-wrapper, 
             .timezone-wrapper,
             .alarm-group-wrapper {
                 display: flex !important;
                 flex-direction: row !important;
-                justify-content: center !important; /* Centra el grupo [Input+Boton] en la pantalla */
+                justify-content: center !important;
                 align-items: center !important;
-                width: 100% !important;
-                gap: 10px !important; /* ESPACIO UNIFICADO: 10px para todos */
+                width: fit-content !important; /* <--- EL SECRETO */
+                margin-left: auto !important;  /* Para centrar el bloque fit-content */
+                margin-right: auto !important; /* Para centrar el bloque fit-content */
+                gap: 10px !important;
                 margin-bottom: 5px !important;
+                position: relative; /* Referencia segura */
             }
 
             /* 2. ELEMENTOS IZQUIERDOS (LOS GRANDES) */
-            /* Usamos 'flex: 0 0 280px' para prohibir que se estiren o encojan */
             input[type="text"]#totalAmount,
             input[type="datetime-local"],
             input.flatpickr-input,
             .timezone-button,
             .alarm-card {
                 width: 280px !important;
-                flex: 0 0 280px !important; /* Geometría estricta */
+                flex: 0 0 280px !important;
                 height: 50px !important;
-                margin: 0 !important; /* Eliminamos márgenes fantasma */
+                margin: 0 !important;
                 box-sizing: border-box !important;
             }
 
-            /* Corrección específica para asegurar que el input visible del calendario obedezca */
             .input-wrapper.date input {
                 margin: 0 !important;
                 width: 280px !important;
             }
 
             /* 3. ELEMENTOS DERECHOS (LOS PEQUEÑOS) */
-            /* Botones, Espaciadores y el contenedor del botón de exportar */
             .btn-icon-only,
             .mobile-spacer,
             .alarm-actions {
                 width: 50px !important;
-                flex: 0 0 50px !important; /* Geometría estricta */
+                flex: 0 0 50px !important;
                 height: 50px !important;
                 margin: 0 !important;
                 padding: 0 !important;
                 display: flex !important;
                 justify-content: center;
                 align-items: center;
-                visibility: visible; /* Aseguramos que el espaciador ocupe espacio */
             }
 
-            /* El espaciador debe ser invisible pero ocupar espacio físico */
             .mobile-spacer {
                 visibility: hidden;
             }
-            
-            /* Ajuste para el botón dentro de su contenedor en la fila de alarma */
+
             .alarm-actions .btn-icon-only {
                 width: 50px !important;
             }
 
-            /* 4. AJUSTES DE ESTRUCTURA GENERAL */
+            /* 4. POSICIÓN EXACTA DE LA "X" */
+            /* Ahora que el contenedor mide lo justo, la matemática no falla */
+            /* 50px (espaciador) + 10px (gap) + 5px (margen interno deseado) = 65px */
+            .reset-button {
+                right: 65px !important; 
+                top: 50% !important;
+                transform: translateY(-50%) !important;
+            }
+
+            /* 5. ESTRUCTURA GENERAL */
             .input-section, 
             .alarm-section { 
                 flex-direction: column !important; 
@@ -774,50 +782,29 @@
                 align-items: center !important;
             }
 
-            /* Posición de la X para borrar (dentro del input de 280px) */
-            .reset-button {
-                right: 75px !important; /* 50px del botón + 10px gap + 15px margen interno */
-            }
-
-            /* Slider de alarma ocupa todo su contenedor */
             input[type="range"]#alarm_slider {
                 width: 100%;
             }
             
-            /* Padding interno de la tarjeta de alarma */
             .alarm-card {
                 padding: 0 10px;
                 display: flex;
                 align-items: center;
             }
 
-            /* --- ESTILOS DE TABLA (Sin cambios) --- */
+            /* ESTILOS DE TABLA (Sin cambios) */
             .phase-table td { 
-                display: block; 
-                width: 100%; 
-                box-sizing: border-box; 
-                padding: 10px 15px; 
-                border-bottom: none; 
-                text-align: left !important;
+                display: block; width: 100%; box-sizing: border-box; 
+                padding: 10px 15px; border-bottom: none; text-align: left !important;
             }
             #phase-5-card .highlight-row:not(:last-child) td,
-            #phase-6-card .highlight-row:not(:last-child) td {
-                border-bottom-color: transparent;
-            }
-            #phase-5-card .highlight-row + tr > td:first-child {
-                border-top: 1px solid var(--phase5-darker);
-            }
-            #phase-6-card .highlight-row + tr > td:first-child {
-                border-top: 1px solid var(--phase6-darker);
-            }
-            .flex-container { 
-                flex-direction: row; 
-                align-items: center;
-            }
-            .phase1-arrow, .phase2-arrow, .phase3-arrow, .phase4-arrow, .phase5-arrow, .phase6-arrow { 
-                font-size: 1.2em; 
-            }
+            #phase-6-card .highlight-row:not(:last-child) td { border-bottom-color: transparent; }
+            #phase-5-card .highlight-row + tr > td:first-child { border-top: 1px solid var(--phase5-darker); }
+            #phase-6-card .highlight-row + tr > td:first-child { border-top: 1px solid var(--phase6-darker); }
+            .flex-container { flex-direction: row; align-items: center; }
+            .phase1-arrow, .phase2-arrow, .phase3-arrow, .phase4-arrow, .phase5-arrow, .phase6-arrow { font-size: 1.2em; }
         }
+
     </style>
 </head>
 <body>
