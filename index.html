@@ -697,6 +697,7 @@
         }
 
         
+       
         /* --- ESTILOS MÓVILES ESPECÍFICOS (CORREGIDO) --- */
         @media (max-width: 600px) {
             body { 
@@ -718,11 +719,12 @@
             .alarm-section { 
                 flex-direction: column !important; 
                 width: 100% !important;
-                gap: 10px;
+                gap: 15px;
                 align-items: center !important;
             }
             
             /* FILAS INDIVIDUALES (WRAPPERS) FORZADAS A FLEX ROW */
+            /* Esto mantiene los botones (lupa, exportar) al lado de los inputs */
             .input-wrapper, 
             .timezone-wrapper,
             .alarm-group-wrapper {
@@ -730,41 +732,49 @@
                 flex-direction: row !important;
                 align-items: center;
                 justify-content: center;
-                width: auto !important; 
-                gap: 10px; /* Espacio estricto entre input y botón */
+                width: 100% !important; 
+                gap: 5px; 
+                position: relative;
             }
 
-            /* --- CORRECCIÓN 1: ANCHOS UNIFICADOS --- */
-            /* Todos los inputs principales miden exactamente lo mismo (240px) */
+            /* --- CORRECCIÓN CLAVE: ANCHOS UNIFICADOS A 280PX --- */
+            /* 1. Apuntamos al ID de monto (#totalAmount) */
+            /* 2. Apuntamos al input original de fecha (datetime-local) */
+            /* 3. Apuntamos al input VISIBLE de flatpickr (input.flatpickr-input) */
+            /* 4. Apuntamos a los botones grandes (timezone, alarm) */
             input[type="text"]#totalAmount,
             input[type="datetime-local"],
             input.flatpickr-input,
             .timezone-button,
             .alarm-card {
-                width: 240px !important; /* Ancho unificado un poco más amplio */
-                max-width: 240px !important;
+                width: 280px !important; /* Ancho fijo igual para todos */
+                min-width: 280px !important;
+                max-width: 280px !important;
                 flex-shrink: 0;
-                box-sizing: border-box;
+                box-sizing: border-box !important;
             }
 
-            /* Todos los elementos de acción (botones y espaciadores) */
+            /* Refuerzo para el contenedor de fecha */
+            .input-wrapper.date input {
+                width: 280px !important;
+            }
+
+            /* Botones pequeños laterales (íconos) */
             .btn-icon-only,
             .mobile-spacer {
                 width: 50px !important; 
                 flex-shrink: 0;
             }
 
-            /* --- CORRECCIÓN 2: POSICIÓN DE LA "X" --- */
-            /* Cálculo: 50px (espaciador) + 10px (gap) + 5px (margen interno deseado) 
-               = 65px desde la derecha del contenedor padre 
-            */
+            /* Posición de la "X" para borrar monto */
+            /* La ponemos a 55px desde la derecha para que no choque con el espaciador invisible */
             .reset-button {
-                right: 65px !important;
+                right: 55px !important;
             }
             
-            /* Ajuste específico para input date */
+            /* Ajuste específico para input date wrapper */
             .input-wrapper.date {
-                width: auto !important;
+                width: 100% !important;
             }
 
             /* Ajuste para la sección de alarma */
@@ -780,7 +790,7 @@
                 width: 100%;
             }
 
-            /* Tablas de fases */
+            /* --- ESTILOS DE TABLA PARA MÓVIL (STACKED) --- */
             .phase-table td { 
                 display: block; 
                 width: 100%; 
@@ -811,22 +821,6 @@
             .phase1-arrow, .phase2-arrow, .phase3-arrow, .phase4-arrow, .phase5-arrow, .phase6-arrow { 
                 font-size: 1.2em; 
             }
-
-            /* --- CORRECCIÓN ESPECÍFICA PARA FLATPICKR EN MÓVIL --- */
-        /* Al usar .input-wrapper.date aseguramos que solo afecte al calendario */
-        .input-wrapper.date input.flatpickr-input {
-            width: 240px !important;
-            min-width: 240px !important;
-            max-width: 240px !important;
-        }
-
-        .input-wrapper.date {
-            width: 100% !important;
-            justify-content: center !important;
-        }
-
-
-
         }
     </style>
 </head>
