@@ -698,23 +698,74 @@
 
         
        
-        /* --- ESTILOS MÓVILES ESPECÍFICOS (CORREGIDO) --- */
+        /* --- ESTILOS MÓVILES PERFECTOS (VERSIÓN FINAL) --- */
         @media (max-width: 600px) {
             body { 
                 padding: 10px; 
                 padding-bottom: calc(10px + env(safe-area-inset-bottom)); 
             }
 
-            /* Activamos los espaciadores para equilibrar filas */
-            .mobile-spacer {
-                display: block;
-                width: 50px;
-                height: 50px;
-                visibility: hidden;
-                flex-shrink: 0;
+            /* 1. CONTENEDORES DE FILA */
+            /* Forzamos a que todas las filas sean Flexbox idénticos */
+            .input-wrapper, 
+            .timezone-wrapper,
+            .alarm-group-wrapper {
+                display: flex !important;
+                flex-direction: row !important;
+                justify-content: center !important; /* Centra el grupo [Input+Boton] en la pantalla */
+                align-items: center !important;
+                width: 100% !important;
+                gap: 10px !important; /* ESPACIO UNIFICADO: 10px para todos */
+                margin-bottom: 5px !important;
             }
 
-            /* CONTENEDORES PRINCIPALES EN COLUMNA Y CENTRADOS */
+            /* 2. ELEMENTOS IZQUIERDOS (LOS GRANDES) */
+            /* Usamos 'flex: 0 0 280px' para prohibir que se estiren o encojan */
+            input[type="text"]#totalAmount,
+            input[type="datetime-local"],
+            input.flatpickr-input,
+            .timezone-button,
+            .alarm-card {
+                width: 280px !important;
+                flex: 0 0 280px !important; /* Geometría estricta */
+                height: 50px !important;
+                margin: 0 !important; /* Eliminamos márgenes fantasma */
+                box-sizing: border-box !important;
+            }
+
+            /* Corrección específica para asegurar que el input visible del calendario obedezca */
+            .input-wrapper.date input {
+                margin: 0 !important;
+                width: 280px !important;
+            }
+
+            /* 3. ELEMENTOS DERECHOS (LOS PEQUEÑOS) */
+            /* Botones, Espaciadores y el contenedor del botón de exportar */
+            .btn-icon-only,
+            .mobile-spacer,
+            .alarm-actions {
+                width: 50px !important;
+                flex: 0 0 50px !important; /* Geometría estricta */
+                height: 50px !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                display: flex !important;
+                justify-content: center;
+                align-items: center;
+                visibility: visible; /* Aseguramos que el espaciador ocupe espacio */
+            }
+
+            /* El espaciador debe ser invisible pero ocupar espacio físico */
+            .mobile-spacer {
+                visibility: hidden;
+            }
+            
+            /* Ajuste para el botón dentro de su contenedor en la fila de alarma */
+            .alarm-actions .btn-icon-only {
+                width: 50px !important;
+            }
+
+            /* 4. AJUSTES DE ESTRUCTURA GENERAL */
             .input-section, 
             .alarm-section { 
                 flex-direction: column !important; 
@@ -722,75 +773,25 @@
                 gap: 15px;
                 align-items: center !important;
             }
-            
-            /* FILAS INDIVIDUALES (WRAPPERS) FORZADAS A FLEX ROW */
-            /* Esto mantiene los botones (lupa, exportar) al lado de los inputs */
-            .input-wrapper, 
-            .timezone-wrapper,
-            .alarm-group-wrapper {
-                display: flex !important;
-                flex-direction: row !important;
-                align-items: center;
-                justify-content: center;
-                width: 100% !important; 
-                gap: 5px; 
-                position: relative;
-            }
 
-            /* --- CORRECCIÓN CLAVE: ANCHOS UNIFICADOS A 280PX --- */
-            /* 1. Apuntamos al ID de monto (#totalAmount) */
-            /* 2. Apuntamos al input original de fecha (datetime-local) */
-            /* 3. Apuntamos al input VISIBLE de flatpickr (input.flatpickr-input) */
-            /* 4. Apuntamos a los botones grandes (timezone, alarm) */
-            input[type="text"]#totalAmount,
-            input[type="datetime-local"],
-            input.flatpickr-input,
-            .timezone-button,
-            .alarm-card {
-                width: 280px !important; /* Ancho fijo igual para todos */
-                min-width: 280px !important;
-                max-width: 280px !important;
-                flex-shrink: 0;
-                box-sizing: border-box !important;
-            }
-
-            /* Refuerzo para el contenedor de fecha */
-            .input-wrapper.date input {
-                width: 280px !important;
-            }
-
-            /* Botones pequeños laterales (íconos) */
-            .btn-icon-only,
-            .mobile-spacer {
-                width: 50px !important; 
-                flex-shrink: 0;
-            }
-
-            /* Posición de la "X" para borrar monto */
-            /* La ponemos a 55px desde la derecha para que no choque con el espaciador invisible */
+            /* Posición de la X para borrar (dentro del input de 280px) */
             .reset-button {
-                right: 55px !important;
-            }
-            
-            /* Ajuste específico para input date wrapper */
-            .input-wrapper.date {
-                width: 100% !important;
+                right: 75px !important; /* 50px del botón + 10px gap + 15px margen interno */
             }
 
-            /* Ajuste para la sección de alarma */
-            .alarm-group-wrapper {
-                display: flex !important; 
-            }
-            
-            .alarm-card {
-                padding: 0 10px;
-            }
-            
+            /* Slider de alarma ocupa todo su contenedor */
             input[type="range"]#alarm_slider {
                 width: 100%;
             }
+            
+            /* Padding interno de la tarjeta de alarma */
+            .alarm-card {
+                padding: 0 10px;
+                display: flex;
+                align-items: center;
+            }
 
-            /* --- ESTILOS DE TABLA PARA MÓVIL (STACKED) --- */
+            /* --- ESTILOS DE TABLA (Sin cambios) --- */
             .phase-table td { 
                 display: block; 
                 width: 100%; 
@@ -799,25 +800,20 @@
                 border-bottom: none; 
                 text-align: left !important;
             }
-
             #phase-5-card .highlight-row:not(:last-child) td,
             #phase-6-card .highlight-row:not(:last-child) td {
                 border-bottom-color: transparent;
             }
-
             #phase-5-card .highlight-row + tr > td:first-child {
                 border-top: 1px solid var(--phase5-darker);
             }
-
             #phase-6-card .highlight-row + tr > td:first-child {
                 border-top: 1px solid var(--phase6-darker);
             }
-
             .flex-container { 
                 flex-direction: row; 
                 align-items: center;
             }
-            
             .phase1-arrow, .phase2-arrow, .phase3-arrow, .phase4-arrow, .phase5-arrow, .phase6-arrow { 
                 font-size: 1.2em; 
             }
