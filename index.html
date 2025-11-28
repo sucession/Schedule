@@ -8,813 +8,613 @@
     <meta name="theme-color" content="#1a1a1a">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- Flatpickr CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
     <style>
-        :root {
-            /* Paleta de colores "Stealth & Signal" */
-            --bg-color: #121212;
-            --surface-color: #1e1e1e; 
-            --primary-text: #e1e1e1;
-            --secondary-text: #b3b3b3;
-            --border-color: #333333;
-            --row-alt-color: #2c2c2c;
-            --button-primary-bg: #2196F3;
-            --button-primary-bg-hover: #1976D2;
-            --button-calendar-bg: #ffc107;
-            --button-calendar-bg-hover: #e0a800;
-            --dropdown-card-bg: #404040;
+    :root {
+        /* Paleta de colores "Stealth & Signal" */
+        --bg-color: #121212;
+        --surface-color: #1e1e1e; 
+        --primary-text: #e1e1e1;
+        --secondary-text: #b3b3b3;
+        --border-color: #333333;
+        --row-alt-color: #2c2c2c;
+        --button-primary-bg: #2196F3;
+        --button-primary-bg-hover: #1976D2;
+        --button-calendar-bg: #ffc107;
+        --button-calendar-bg-hover: #e0a800;
+        --dropdown-card-bg: #404040;
 
-            /* "Stealth & Signal" Palette v3 */
-            --phase1-color: #3F51B5; 
-            --phase2-color: #009688; 
-            --phase3-color: #673AB7; 
-            --phase4-color: #E67E22; 
-            --phase5-color: #E53935; 
-            --phase6-color: #4CAF50; 
+        /* "Stealth & Signal" Palette v3 */
+        --phase1-color: #3F51B5; 
+        --phase2-color: #009688; 
+        --phase3-color: #673AB7; 
+        --phase4-color: #E67E22; 
+        --phase5-color: #E53935; 
+        --phase6-color: #4CAF50; 
+        --phase0-color: #607D8B;
 
-            /* Tonos más oscuros para fondos */
-            --phase1-darker: #303F9F;
-            --phase2-darker: #00796B;
-            --phase3-darker: #512DA8;
-            --phase4-darker: #D35400;
-            --phase5-darker: #B71C1C;
-            --phase6-darker: #388E3C;
+        /* Tonos más oscuros */
+        --phase1-darker: #303F9F;
+        --phase2-darker: #00796B;
+        --phase3-darker: #512DA8;
+        --phase4-darker: #D35400;
+        --phase5-darker: #B71C1C;
+        --phase6-darker: #388E3C;
 
-            /* Variables RGB para fondos sutiles */
-            --phase5-rgb: 229, 57, 53;
-            --phase6-rgb: 76, 175, 80;
-        }
+        /* Variables RGB */
+        --phase5-rgb: 229, 57, 53;
+        --phase6-rgb: 76, 175, 80;
+    }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--primary-text);
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
-            padding-bottom: calc(20px + env(safe-area-inset-bottom));
-        }
+    /* ========================================= */
+    /* === 1. ASIGNACIÓN ESTRICTA DE COLOR === */
+    /* ========================================= */
+    .b1, .b2, .b3, .swap-badge { --glow-color: var(--phase0-color); }
+    .p1, .phase1-arrow { --glow-color: var(--phase1-color); }
+    .p2, .phase2-arrow { --glow-color: var(--phase2-color); }
+    .p3, .phase3-arrow { --glow-color: var(--phase3-color); }
+    .p4, .phase4-arrow { --glow-color: var(--phase4-color); }
+    .p5, .phase5-arrow { --glow-color: var(--phase5-color); }
+    .p6, .phase6-arrow { --glow-color: var(--phase6-color); }
 
-        .container { 
-            max-width: 800px; 
-            margin: 20px auto; 
-        }
+    body {
+        font-family: 'Inter', sans-serif;
+        background-color: var(--bg-color);
+        color: var(--primary-text);
+        line-height: 1.6;
+        margin: 0;
+        padding: 20px;
+        box-sizing: border-box;
+        padding-bottom: calc(20px + env(safe-area-inset-bottom));
+    }
 
-        /* ───── INPUT TOP ROW (Amount | Date | botón reloj) ───── */
+    .container { 
+        max-width: 800px; 
+        margin: 20px auto; 
+    }
 
-        .input-section { 
+    /* ───── INPUT TOP ROW ───── */
+    .input-section { 
+        display: flex; flex-direction: row; gap: 10px; 
+        justify-content: center; align-items: center;
+        margin-bottom: 10px; 
+        width: 540px; /* ALINEACIÓN PERFECTA */
+        margin-left: auto; margin-right: auto;
+    }
+
+    .input-wrapper { position: relative; width: 200px; }
+    .input-wrapper.date { width: 330px; display: flex; align-items: center; gap: 10px; }
+
+    input[type="datetime-local"], input[type="text"] {
+        padding: 12px; border: 1px solid var(--border-color); 
+        background-color: var(--surface-color); color: var(--primary-text); 
+        color-scheme: dark; border-radius: 8px; font-size: 1em;
+        box-sizing: border-box; height: 50px; font-family: 'Inter', sans-serif;
+        transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+
+    input[type="datetime-local"] { width: 270px; /* ALINEACIÓN PERFECTA */ }
+    input[type="text"]#totalAmount { width: 200px; padding-right: 30px; }
+    input[type="datetime-local"]:focus, input[type="text"]:focus {
+        border-color: var(--button-primary-bg);
+        box-shadow: 0 0 8px var(--button-primary-bg); outline: none;
+    }
+
+    .reset-button {
+        display: none; position: absolute; right: 5px; top: 50%;
+        transform: translateY(-50%); background: none; border: none;
+        color: var(--primary-text); font-size: 1.2em; cursor: pointer;
+        padding: 0 5px; transition: text-shadow 0.3s ease;
+    }
+    .reset-button.visible { display: block; }
+    .reset-button:hover { text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); background: none; }
+    
+    .reset-button:active {
+        transform: translateY(-50%) scale(0.9) !important;
+    }
+
+    /* ───── ALARM + TIMEZONE ───── */
+    .alarm-section {
+        display: none; flex-direction: row; align-items: center;
+        justify-content: flex-start; 
+        gap: 10px; /* GAP UNIFICADO */
+        padding: 5px 0;
+        border-radius: 8px; margin-bottom: 20px; 
+        width: 540px; /* ALINEACIÓN PERFECTA */
+        margin-left: auto; margin-right: auto;
+    }
+
+    .timezone-wrapper { position: relative; width: 200px; flex-shrink: 0; }
+    .timezone-button, .network-button {
+        background-color: var(--surface-color); color: var(--primary-text);
+        border: 1px solid var(--border-color); border-radius: 8px;
+        height: 50px; padding: 0 14px; font-size: 0.9em; font-weight: 500;
+        cursor: pointer; display: flex; align-items: center;
+        justify-content: space-between; white-space: nowrap; width: 100%;        
+        box-shadow: none; font-family: 'Inter', sans-serif;
+    }
+    .timezone-button span.chevron, .network-button span.chevron { font-size: 0.8em; margin-left: 8px; opacity: 0.8; }
+
+    .timezone-menu, .network-menu {
+        position: absolute; top: calc(100% + 6px); left: 0; width: 280px; 
+        background-color: var(--surface-color); border-radius: 10px;
+        border: 1px solid var(--border-color); box-shadow: 0 10px 25px rgba(0,0,0,0.45);
+        z-index: 120; overflow-y: auto; max-height: 260px;
+    }
+    .network-menu { width: 100%; min-width: 220px; }
+    .timezone-menu.select-hide, .network-menu.select-hide { display: none; }
+    .timezone-menu-header {
+        padding: 8px 14px; font-size: 0.8em; letter-spacing: 0.08em;
+        text-transform: uppercase; color: var(--secondary-text);
+        border-bottom: 1px solid var(--border-color);
+    }
+    .timezone-menu ul, .network-menu ul { list-style: none; margin: 0; padding: 4px 0 6px 0; }
+    .timezone-menu li, .network-menu li {
+        display: flex; align-items: center; padding: 6px 14px;
+        font-size: 0.85em; cursor: pointer; transition: background-color 0.15s ease;
+    }
+    .timezone-menu li:hover, .network-menu li:hover { background-color: #2c2c2c; }
+    .timezone-menu li.active, .network-menu li.active { background-color: rgba(255, 255, 255, 0.06); }
+    .checkmark { margin-left: auto; color: var(--phase6-color); font-weight: bold; display: none; }
+    .network-menu li.active .checkmark { display: block; }
+    
+    .alarm-group-wrapper {
+        display: flex !important;
+        width: 330px !important; /* IGUAL QUE DATE WRAPPER */
+        gap: 10px !important;
+        align-items: center;
+    }
+    .alarm-card {
+        background-color: var(--surface-color); border: 1px solid var(--border-color);
+        border-radius: 8px; padding: 5px 10px; display: flex; align-items: center; gap: 10px;
+        width: 240px; flex-shrink: 0; height: 50px; box-sizing: border-box; margin: 0 !important;
+    }
+    .slider-container.alarm { padding: 0; width: 100%; display: flex; align-items: center; justify-content: center; }
+    .alarm-actions { 
+        display: flex; 
+        align-items: center; 
+        justify-content: flex-end; 
+        flex-shrink: 0; 
+        
+        /* --- CÓDIGO NUEVO PARA MOVERLO MANUALMENTE --- */
+        position: relative; 
+        right: 1px; /* Aumenta este número para moverlo más a la IZQUIERDA */
+        /* --------------------------------------------- */
+    }
+
+    /* ───── FINANCIAL PANEL ───── */
+    #financial-panel { display: none; margin-bottom: 25px; animation: fadeIn 0.5s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .fin-control-bar { display: flex; gap: 15px; margin-bottom: 10px; justify-content: center; }
+
+    .fin-metrics-card {
+        background-color: var(--surface-color); border: 1px solid var(--border-color);
+        border-radius: 12px; padding: 15px 20px; display: flex;
+        justify-content: space-between; align-items: stretch;
+        font-size: 0.95em; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .fin-group { 
+        display: flex; flex-direction: column; gap: 5px; 
+        min-width: 100px; justify-content: center; align-items: center; flex: 1;
+    }
+    .fin-group.detailed { justify-content: flex-start; }
+
+    .fin-details-wrapper {
+        display: flex; flex-direction: column; width: 100%;
+        justify-content: space-between; margin-bottom: 5px;
+    }
+
+    .fin-details-wrapper.fees-col { justify-content: space-between; }
+    .fin-item { display: flex; flex-direction: column; line-height: 1.2; margin-bottom: 0; align-items: center; }
+    
+    .fin-item.small { 
+        font-size: 0.85em; opacity: 0.9; flex-direction: row; justify-content: space-between; gap: 15px; width: 100%;
+    }
+    
+    .fin-label { font-size: 0.75em; color: var(--secondary-text); text-transform: uppercase; letter-spacing: 0.5px; text-align: center;}
+    .fin-label-left { font-size: 0.85em; color: var(--secondary-text); text-transform: none; white-space: nowrap; }
+    
+    .fin-value { font-weight: 600; color: white; text-align: center; }
+    
+    /* PALETA FINANCIAL */
+    .fin-value.cost-small { color: #E6D5AC; font-weight: 400; text-align: right; font-size: 1em; }
+    .fin-value.cost { color: #FFE082; font-size: 1.15em; font-weight: 600; line-height: 1.2; } 
+    #pct_total_gas, #pct_total_fees { color: #FFE082; font-size: 0.98em; font-weight: 500; }
+    .fin-pct { display: block; font-weight: 500; margin-top: 3px; opacity: 1; line-height: 1.1; }
+    .fin-value.total-cost { color: #FFCA28; font-size: 1.35em; font-weight: 600; line-height: 1; } 
+    #pct_tx_cost { color: #FFCA28; font-size: 1.15em !important; font-weight: 500; margin-top: 5px; }
+    .fin-value.net { color: #00E676; font-size: 2em; font-weight: 600; text-shadow: 0 0 10px rgba(0, 230, 118, 0.3); margin-top: 0; line-height: 1; }
+    #fin_gross { font-size: 1.5em !important; font-weight: 600 !important; }
+
+    .fin-title-unified {
+        color: var(--secondary-text); font-weight: 500; font-size: 0.75em; 
+        text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; display: block; text-align: center;
+    }
+
+    .fin-divider { width: 1px; background-color: #555; align-self: stretch; margin: 0 15px; opacity: 0.6; }
+    #balance-group .fin-separator-h { background-color: rgba(255, 255, 255, 0.2) !important; opacity: 0.7 !important; }
+    .fin-separator-h { background-color: var(--border-color); opacity: 0.5; height: 1px; width: 100%; margin: 0 0 8px 0; }
+    .val-stack { display: flex; flex-direction: column; align-items: center; width: 100%; }
+    .val-group { display: flex; flex-direction: column; align-items: center; }
+    .balance-col .val-group { align-items: center; }
+
+    #balance-group {
+        background-color: #262626; border-radius: 12px; padding: 15px;              
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); border: 1px solid rgba(255, 255, 255, 0.08); 
+        box-sizing: border-box; width: 100%; position: relative; z-index: 5;
+    }
+
+    /* ───── BOTONES ───── */
+    button {
+        background-color: var(--button-primary-bg); color: white; border: none;
+        border-radius: 8px; cursor: pointer;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.1s ease;
+        height: 50px; padding: 0 15px;
+        display: flex; justify-content: center; align-items: center; font-weight: 500;
+    }
+    button:not(:disabled):active { transform: scale(0.97); }
+    button:not(.reset-button, .btn-calendar, .timezone-button, .network-button):not(:disabled):hover { 
+        background-color: var(--button-primary-bg-hover); box-shadow: 0 0 8px var(--button-primary-bg);
+    }
+    button:disabled { background-color: var(--surface-color); cursor: not-allowed; }
+    button:disabled .button-icon { fill: var(--secondary-text); }
+    .button-icon { width: 24px; height: 24px; fill: white; }
+    .btn-icon-only { width: 50px; height: 50px; }
+    
+    .btn-calendar { 
+        background-color: var(--button-calendar-bg); font-size: 14px; color: white; font-weight: bold;
+        padding: 0; /* SIN PADDING */
+        width: 100%; /* OCUPA TODO EL CONTENEDOR DE 80PX */
+        display: flex; justify-content: center; align-items: center;
+        white-space: nowrap;
+        transition: background-color 0.2s, box-shadow 0.2s, text-shadow 0.2s;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+    .btn-calendar:not(:disabled):hover,
+    .btn-calendar.active { 
+        background-color: var(--button-calendar-bg-hover); 
+        box-shadow: 0 0 6px var(--button-calendar-bg-hover); text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+    }
+    .btn-icon-only.btn-calendar { padding: 0; width: 50px; overflow: hidden; }
+
+    /* ───── PHASE CARDS ───── */
+    .phase-card {
+        background-color: var(--surface-color); border-radius: 12px; margin-bottom: 25px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); overflow: hidden;
+    }
+    .phase-table { width: 100%; border-collapse: collapse; }
+    .phase-table td { padding: 14px 18px; text-align: left; border-bottom: 1px solid var(--border-color); vertical-align: middle; }
+    .phase-table tr:last-child td { border-bottom: none; }
+    .phase-table tr:not(.highlight-row):nth-child(even) { background-color: var(--row-alt-color); }
+    .phase-header th {
+        color: white; text-align: center; font-size: 1.2em; font-weight: 700; letter-spacing: 1px;
+        padding: 12px 15px; background-color: var(--surface-color) !important;
+    }
+    .phase-0 th { background-color: var(--phase0-color) !important; }
+    .phase-1 th { background-color: var(--phase1-color) !important; }
+    .phase-2 th { background-color: var(--phase2-color) !important; }
+    .phase-3 th { background-color: var(--phase3-color) !important; }
+    .phase-4 th { background-color: var(--phase4-color) !important; }
+    .phase-5 th { background-color: var(--phase5-color) !important; }
+    .phase-6 th { background-color: var(--phase6-color) !important; }
+
+    .col-description { width: 75%; }
+    .col-time { width: 25%; text-align: right; white-space: nowrap; }
+    .notes { font-size: 0.9em; color: var(--secondary-text); display: block; margin-top: 4px; }
+    .parenthesis { font-size: 0.80em; }
+    .gas-badge {
+        display: inline-block; padding: 4px 8px; border-radius: 4px; 
+        font-size: 0.9em; font-weight: bold; color: white; margin-bottom: 4px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2); background-color: var(--phase0-color);
+        transition: box-shadow 0.3s ease, transform 0.3s ease;
+    }
+    
+    /* NEW: SWAP BADGE */
+    .swap-badge {
+        display: inline-block; padding: 4px 8px; border-radius: 4px;
+        font-size: 0.9em; font-weight: 500; 
+        color: rgba(255,255,255,0.9);
+        background-color: var(--phase0-color);
+        filter: brightness(0.85); /* Slightly darker to distinguish from amount */
+        margin-left: 8px; margin-bottom: 4px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    
+    #phase-5-card .highlight-row td { background-color: rgba(var(--phase5-rgb), 0.1) !important; }
+    #phase-6-card .highlight-row td { background-color: rgba(var(--phase6-rgb), 0.1) !important; }
+    #phase-5-card .highlight-row:not(:last-child) td { border-bottom-color: var(--phase5-darker); }
+    #phase-6-card .highlight-row:not(:last-child) td { border-bottom-color: var(--phase6-darker); }
+
+    .calculated-value {
+        display: inline-block; border-radius: 6px; font-size: 0.9em; font-weight: bold; color: white;
+        padding: 2px 8px; min-width: 40px; text-align: center;
+        transition: box-shadow 0.3s ease, text-shadow 0.3s ease;
+    }
+    .calculated-value.p1 { background-color: var(--phase1-darker); }
+    .calculated-value.p1.active { box-shadow: 0 0 5px var(--phase1-color); text-shadow: 0 0 5px rgba(255,255,255,0.8); }
+    .calculated-value.p2 { background-color: var(--phase2-darker); }
+    .calculated-value.p2.active { box-shadow: 0 0 5px var(--phase2-color); text-shadow: 0 0 5px rgba(255,255,255,0.8); }
+    .calculated-value.p3 { background-color: var(--phase3-darker); }
+    .calculated-value.p3.active { box-shadow: 0 0 5px var(--phase3-color); text-shadow: 0 0 5px rgba(255,255,255,0.8); }
+    .calculated-value.p4 { background-color: var(--phase4-darker); }
+    .calculated-value.p4.active { box-shadow: 0 0 5px var(--phase4-color); text-shadow: 0 0 5px rgba(255,255,255,0.8); }
+    .calculated-value.p5 { background-color: var(--phase5-darker); }
+    .calculated-value.p5.active { box-shadow: 0 0 5px var(--phase5-color); text-shadow: 0 0 5px rgba(255,255,255,0.8); }
+    .calculated-value.p6 { background-color: var(--phase6-darker); }
+    .calculated-value.p6.active { box-shadow: 0 0 5px var(--phase6-color); text-shadow: 0 0 5px rgba(255,255,255,0.8); }
+
+    .percent-border {
+        position: relative; display: inline-block; padding: 2px 6px; border-radius: 6px;
+        color: white; font-size: 0.85em; font-weight: bold; margin-left: 5px;
+        transition: text-shadow 0.3s ease, border 0.3s ease, box-shadow 0.3s ease;
+    }
+    .percent-border.p3 { border: 1px dashed var(--phase3-color); }
+    .percent-border.p3.active { border: 1px solid var(--phase3-color); box-shadow: 0 0 5px var(--phase3-color); text-shadow: 0 0 5px rgba(255,255,255,0.8); }
+    .percent-border.p4 { border: 1px dashed var(--phase4-color); }
+    .percent-border.p4.active { border: 1px solid var(--phase4-color); box-shadow: 0 0 5px var(--phase4-color); text-shadow: 0 0 5px rgba(255,255,255,0.8); }
+    .percent-border.p5 { border: 1px dashed var(--phase5-color); }
+    .percent-border.p5.active { border: 1px solid var(--phase5-color); box-shadow: 0 0 5px var(--phase5-color); text-shadow: 0 0 5px rgba(255,255,255,0.8); }
+    .percent-border.p6 { border: 1px dashed var(--phase6-color); }
+    .percent-border.p6.active { border: 1px solid var(--phase6-color); box-shadow: 0 0 5px var(--phase6-color); text-shadow: 0 0 5px rgba(255,255,255,0.8); }
+
+    .phase1-arrow { color: var(--phase1-color); font-size: 1.3em; transition: text-shadow 0.3s ease; }
+    .phase2-arrow { color: var(--phase2-color); font-size: 1.3em; transition: text-shadow 0.3s ease; }
+    .phase3-arrow { color: var(--phase3-color); font-size: 1.3em; transition: text-shadow 0.3s ease; }
+    .phase4-arrow { color: var(--phase4-color); font-size: 1.3em; transition: text-shadow 0.3s ease; }
+    .phase5-arrow { color: var(--phase5-color); font-size: 1.3em; transition: text-shadow 0.3s ease; }
+    .phase6-arrow { color: var(--phase6-color); font-size: 1.3em; transition: text-shadow 0.3s ease; }
+    .phase1-arrow.active { text-shadow: 0 0 10px var(--phase1-color), 0 0 20px rgba(255,255,255,0.5); }
+    .phase2-arrow.active { text-shadow: 0 0 10px var(--phase2-color), 0 0 20px rgba(255,255,255,0.5); }
+    .phase3-arrow.active { text-shadow: 0 0 10px var(--phase3-color), 0 0 20px rgba(255,255,255,0.5); }
+    .phase4-arrow.active { text-shadow: 0 0 10px var(--phase4-color), 0 0 20px rgba(255,255,255,0.5); }
+    .phase5-arrow.active { text-shadow: 0 0 10px var(--phase5-color), 0 0 20px rgba(255,255,255,0.5); }
+    .phase6-arrow.active { text-shadow: 0 0 10px var(--phase6-color), 0 0 20px rgba(255,255,255,0.5); }
+
+    .slider-group-container { display: flex; flex-direction: column; align-items: flex-end; gap: 25px; width: 150px; }
+    .range-wrapper { position: relative; flex-shrink: 0; height: 18px; display: flex; align-items: center; }
+    
+    .slider-bubble {
+        position: absolute; min-width: 38px; padding: 4px 6px; border-radius: 4px; 
+        color: white; font-size: 0.85em; font-weight: bold; text-align: center;
+        transform: translate(-50%, -50%); pointer-events: none; z-index: 10; top: 50%;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .p2 .slider-bubble { background-color: var(--phase2-color); }
+    .p3 .slider-bubble { background-color: var(--phase3-color); }
+    .p4 .slider-bubble { background-color: var(--phase4-color); }
+    .p5 .slider-bubble { background-color: var(--phase5-color); }
+    .p6 .slider-bubble { background-color: var(--phase6-color); }
+
+    input[type="range"] { 
+        -webkit-appearance: none; appearance: none; width: 150px; height: 8px; 
+        background: #444; border-radius: 5px; outline: none; position: relative; z-index: 5; margin: 0;
+    }
+    input[type="range"]::-webkit-slider-thumb { 
+        -webkit-appearance: none; width: 38px; height: 25px; background: transparent; border: 0; cursor: pointer; z-index: 6; 
+    }
+    input[type="range"]::-moz-range-thumb { 
+        width: 38px; height: 25px; background: transparent; border: none; cursor: pointer; z-index: 6; 
+    }
+    input[type="range"]#alarm_slider { width: 214px; }
+    input[type="range"]#alarm_slider::-webkit-slider-thumb { width: 20px; height: 20px; border-radius: 50%; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 16 16"><path fill="%23ffc107" d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/></svg>') no-repeat center; background-size: 20px 20px; }
+
+    .custom-select-container { position: relative; width: 140px; }
+    .select-selected {
+        background-color: var(--dropdown-card-bg); color: white; padding: 6px 10px;
+        border: 1px solid transparent; border-radius: 4px; cursor: pointer;
+        font-size: 0.9em; font-weight: bold; text-align: center; position: relative; user-select: none;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    .p3 .select-selected { border-color: var(--phase3-color); }
+    .p4 .select-selected { border-color: var(--phase4-color); }
+    .p5 .select-selected { border-color: var(--phase5-color); }
+    .p3 .select-selected.active { box-shadow: 0 2px 5px rgba(0,0,0,0.2), 0 0 8px var(--phase3-color); }
+    .p4 .select-selected.active { box-shadow: 0 2px 5px rgba(0,0,0,0.2), 0 0 8px var(--phase4-color); }
+    .p5 .select-selected.active { box-shadow: 0 2px 5px rgba(0,0,0,0.2), 0 0 8px var(--phase5-color); }
+    .select-selected::after {
+        position: absolute; content: ""; top: 50%; right: 10px; width: 0; height: 0;
+        border: 5px solid transparent; transform: translateY(-25%); transition: transform 0.2s;
+    }
+    .select-selected.select-arrow-active::after { transform: translateY(-75%) rotate(180deg); }
+    .select-items {
+        position: absolute; background-color: var(--surface-color); top: calc(100% + 5px); left: 0; right: 0;
+        z-index: 99; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    }
+    .select-hide { display: none; }
+    .select-items div { color: white; padding: 8px 16px; cursor: pointer; text-align: center; transition: background-color 0.2s; }
+    .p3 .select-items div:hover { background-color: var(--phase3-color); }
+    .p4 .select-items div:hover { background-color: var(--phase4-color); }
+    .p5 .select-items div:hover { background-color: var(--phase5-color); }
+    .same-as-selected { background-color: rgba(255, 255, 255, 0.1); }
+    .mobile-spacer { display: none; }
+    .flex-container { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+    .text-content { display: block; margin-top: 5px; width: auto; }
+    .fk-super { font-size: 0.7em; vertical-align: super; font-weight: normal; margin-left: 1px; }
+
+    /* ========================================= */
+    /* === SATELLITE BAR & ANIMATIONS (BASE) === */
+    /* ========================================= */
+    
+    @keyframes badgePulse {
+        0% { box-shadow: 0 0 5px var(--glow-color), 0 0 15px var(--glow-color); filter: brightness(1.2); }
+        100% { box-shadow: 0 2px 5px rgba(0,0,0,0.2); filter: brightness(1); }
+    }
+    @keyframes textPulse {
+        0% { text-shadow: 0 0 5px var(--glow-color), 0 0 10px var(--glow-color); filter: brightness(1.3); }
+        100% { text-shadow: none; filter: brightness(1); }
+    }
+    .glow-pulse { animation: badgePulse 0.8s ease-out; }
+    .text-glow-pulse { animation: textPulse 0.8s ease-out; display: inline-block; }
+
+    #satellite-bar {
+        position: fixed;
+        top: 0; left: 0; width: 100%;
+        background-color: rgba(18, 18, 18, 0.85);
+        backdrop-filter: blur(12px); 
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        z-index: 999;
+        transform: translateY(-100%); 
+        transition: transform 0.4s cubic-bezier(0.2, 0, 0, 1);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        padding: 0 15px; box-sizing: border-box;
+        height: 60px; display: flex; justify-content: center;
+    }
+    #satellite-bar.visible { transform: translateY(0); }
+    .sat-container { width: 100%; max-width: 800px; display: flex; justify-content: space-between; align-items: center; }
+    .sat-col { display: flex; flex-direction: column; justify-content: center; }
+    
+    #satNetworkBtn {
+        background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--primary-text); font-size: 0.85em; font-weight: 700;
+        padding: 6px 10px; border-radius: 6px; cursor: pointer; height: auto;
+        min-width: 60px; text-align: center;
+    }
+    .sat-stack { gap: 2px; }
+    .text-left { align-items: flex-start; }
+    .text-center { align-items: center; }
+    .sat-row { display: flex; gap: 6px; font-size: 0.8em; align-items: center; }
+    .sat-label { color: var(--secondary-text); text-transform: uppercase; font-size: 0.8em; letter-spacing: 0.5px; }
+    .sat-val-gold { color: #FFE082; font-weight: 600; }
+    .sat-val-amber { color: #FFCA28; font-weight: 700; font-size: 1em; line-height: 1; }
+    .sat-pct { color: #FFE082; font-size: 0.75em; opacity: 0.8; line-height: 1; }
+    .sat-val-green { color: #00E676; font-weight: 700; font-size: 1.2em; text-shadow: 0 0 10px rgba(0, 230, 118, 0.2); }
+
+    /* --- MEDIA QUERY ESCRITORIO --- */
+    @media (min-width: 601px) {
+        .network-selector-mobile { display: none; }
+        
+        .fin-details-wrapper { 
+            height: 135px !important; 
             display: flex; 
-            flex-direction: row;
-            gap: 10px; 
-            justify-content: center; 
-            align-items: center;
-            margin-bottom: 10px;
-            width: 550px; 
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .input-wrapper { 
-            position: relative; 
-            width: 200px; 
-        }
-
-        .input-wrapper.date { 
-            width: 330px; 
-            display: flex; 
-            align-items: center; 
-            gap: 10px; 
-        }
-
-        input[type="datetime-local"], input[type="text"] {
-            padding: 12px; 
-            border: 1px solid var(--border-color); 
-            background-color: var(--surface-color);
-            color: var(--primary-text); 
-            color-scheme: dark; 
-            border-radius: 8px; 
-            font-size: 1em;
-            box-sizing: border-box; 
-            height: 50px; 
-            font-family: 'Inter', sans-serif;
-            transition: box-shadow 0.3s ease, border-color 0.3s ease;
-        }
-
-        input[type="datetime-local"] { 
-            width: 280px; 
-        }
-
-        input[type="text"]#totalAmount { 
-            width: 200px; 
-            padding-right: 30px; 
-        }
-
-        input[type="datetime-local"]:focus, input[type="text"]:focus {
-            border-color: var(--button-primary-bg);
-            box-shadow: 0 0 8px var(--button-primary-bg);
-            outline: none;
-        }
-
-        .reset-button {
-            display: none;
-            position: absolute;
-            right: 5px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: var(--primary-text);
-            font-size: 1.2em;
-            cursor: pointer;
-            padding: 0 5px;
-            transition: text-shadow 0.3s ease;
-        }
-
-        .reset-button.visible { display: block; }
-
-        .reset-button:hover { 
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); 
-            background: none;
-        }
-
-        /* ───── SECCIÓN ALARM + TIMEZONE + EXPORT (fila 2) ───── */
-
-        .alarm-section {
-            display: none;
-            flex-direction: row;
-            align-items: center;
-            justify-content: flex-start; 
-            gap: 11px;
-            padding: 5px 0;
-            border-radius: 8px;
-            margin-bottom: 40px;
-            width: 540px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* Botón de huso horario: mismo largo que Amount (200px) */
-        .timezone-wrapper {
-            position: relative;
-            width: 200px;
-            flex-shrink: 0;
-        }
-
-        .timezone-button {
-            background-color: var(--surface-color);
-            color: var(--primary-text);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            height: 50px;
-            padding: 0 14px;
-            font-size: 0.9em;
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            white-space: nowrap;
-            width: 100%;       
-            box-shadow: none;
-        }
-
-        .timezone-button:hover,
-        .timezone-button:active {
-            background-color: var(--surface-color);
-            box-shadow: none;
-            transform: none;
-        }
-
-        .timezone-button span.label {
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .timezone-button span.chevron {
-            font-size: 0.8em;
-            margin-left: 8px;
-            opacity: 0.8;
-        }
-
-        .timezone-menu {
-            position: absolute;
-            right: 0;
-            top: calc(100% + 6px);
-            width: 280px;
-            background-color: var(--surface-color);
-            border-radius: 10px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.45);
-            z-index: 120;
-            overflow-y: auto;
-            overflow-x: hidden;
-            max-height: 260px;
-        }
-
-        .timezone-menu.select-hide {
-            display: none;
-        }
-
-        .timezone-menu-header {
-            padding: 8px 14px;
-            font-size: 0.8em;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--secondary-text);
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .timezone-menu ul {
-            list-style: none;
-            margin: 0;
-            padding: 4px 0 6px 0;
-        }
-
-        .timezone-menu li {
-            display: flex;
-            align-items: center;
-            padding: 6px 14px;
-            font-size: 0.85em;
-            cursor: pointer;
-            transition: background-color 0.15s ease, color 0.15s ease;
-        }
-
-        .timezone-menu li span.tz-name {
-            flex: 1;
-        }
-
-        .timezone-menu li span.tz-offset {
-            margin-left: 12px;
-            font-variant-numeric: tabular-nums;
-            color: var(--secondary-text);
-            text-align: right;
-        }
-
-        .timezone-menu li:hover {
-            background-color: #2c2c2c;
-        }
-
-        .timezone-menu li.active {
-            background-color: rgba(255, 255, 255, 0.06);
-        }
-
-        /* WRAPPER para Slider + Botón (para agruparlos en móvil, invisible en desktop) */
-        .alarm-group-wrapper {
-            display: contents; /* En desktop no afecta el layout, los hijos son directos de alarm-section */
-        }
-
-        /* Slider campana en el centro */
-        .alarm-card {
-            background-color: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 5px 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            width: 240px;
-            flex-shrink: 0;
-            flex-grow: 0;
-            height: 50px;
-            box-sizing: border-box;
-        }
-
-        .slider-container.alarm {
-            padding: 0;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Export a la derecha */
-        .alarm-actions {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            flex-shrink: 0;
-        }
-
-        button {
-            background-color: var(--button-primary-bg); 
-            color: white; 
-            border: none;
-            border-radius: 8px; 
-            cursor: pointer; 
-            transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.1s ease;
-            height: 50px; 
-            padding: 0 15px; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            font-weight: 500;
-        }
-
-        button:not(:disabled):active {
-            transform: scale(0.97);
-        }
-
-        button:not(.reset-button, .btn-calendar, .timezone-button):not(:disabled):hover { 
-            background-color: var(--button-primary-bg-hover); 
-            box-shadow: 0 0 8px var(--button-primary-bg);
-        }
-
-        button:disabled {
-            background-color: var(--surface-color);
-            cursor: not-allowed;
-        }
-
-        button#generateButton:disabled {
-            background-color: #1d3c6e;
-        }
-
-        button:disabled .button-icon { 
-            fill: var(--secondary-text); 
-        }
-
-        button#generateButton:disabled .button-icon {
-            fill: #6c757d;
-        }
-
-        .button-icon { width: 24px; height: 24px; fill: white; }
-        .btn-icon-only { width: 50px; height: 50px; }
-
-        .btn-calendar { 
-            background-color: var(--button-calendar-bg); 
-            font-size: 14px;
-            color: white;
-            font-weight: bold;
-            padding: 0 15px; /* Reducido de 30px */
-            white-space: nowrap;
-            transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, text-shadow 0.2s ease-in-out;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-calendar:not(:disabled):hover, .btn-calendar.active { 
-            background-color: var(--button-calendar-bg-hover);
-            box-shadow: 0 0 6px var(--button-calendar-bg-hover);
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
-        }
-
-        .btn-calendar:not(:disabled):hover > span, .btn-calendar.active > span { 
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
-        }
-
-        /* AJUSTE PARA FORZAR ANCHO FIJO DE 50PX EN EL BOTÓN DE EXPORTAR */
-        .btn-icon-only.btn-calendar {
-            padding: 0; 
-            width: 50px; 
-            overflow: hidden;
-        }
-
-        /* Rango / sliders generales */
-
-        .phase-card {
-            background-color: var(--surface-color); 
-            border-radius: 12px; 
-            margin-bottom: 25px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); 
-            overflow: hidden;
-        }
-
-        .phase-table { width: 100%; border-collapse: collapse; }
-
-        .phase-table td { 
-            padding: 14px 18px; 
-            text-align: left; 
-            border-bottom: 1px solid var(--border-color); 
-            vertical-align: middle; 
-        }
-
-        .phase-table tr:last-child td { border-bottom: none; }
-        .phase-table tr:not(.highlight-row):nth-child(even) { background-color: var(--row-alt-color); }
-
-        .phase-header th {
-            color: white; 
-            text-align: center; 
-            font-size: 1.2em; 
-            font-weight: 700;
-            letter-spacing: 1px; 
-            padding: 12px 15px; 
-            background-color: var(--surface-color) !important;
-        }
-
-        .phase-1 th { background-color: var(--phase1-color) !important; }
-        .phase-2 th { background-color: var(--phase2-color) !important; }
-        .phase-3 th { background-color: var(--phase3-color) !important; }
-        .phase-4 th { background-color: var(--phase4-color) !important; }
-        .phase-5 th { background-color: var(--phase5-color) !important; }
-        .phase-6 th { background-color: var(--phase6-color) !important; }
-
-        .col-description { width: 65%; }
-        .col-time { width: 35%; text-align: right; white-space: nowrap; }
-
-        .notes { font-size: 0.9em; color: var(--secondary-text); display: block; margin-top: 4px; }
-        .parenthesis { font-size: 0.80em; }
-
-        .flex-container { 
-            display: flex; 
+            flex-direction: column; 
             justify-content: space-between; 
-            align-items: center; 
-            gap: 20px; 
         }
 
-        .text-content { 
-            display: block; 
-            margin-top: 5px; 
-            width: auto; 
-        }
-        
-        .slider-group-container {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 25px;
-            width: 150px;
-        }
-        
-        .slider-container, .range-wrapper {
-            position: relative;
-            flex-shrink: 0;
-            height: 18px;
-            display: flex;
-            align-items: center;
-        }
-
-        .slider-bubble {
-            position: absolute; 
-            width: auto; 
-            min-width: 38px;
-            height: auto;
-            padding: 4px 6px; 
-            border-radius: 4px; 
-            color: white; 
-            font-size: 0.85em; 
-            font-weight: bold; 
-            text-align: center;
-            transform: translate(-50%, -50%);
-            pointer-events: none; 
-            z-index: 10;
-            top: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .p1 .slider-bubble { background-color: var(--phase1-color); }
-        .p2 .slider-bubble { background-color: var(--phase2-color); }
-        .p3 .slider-bubble { background-color: var(--phase3-color); }
-        .p4 .slider-bubble { background-color: var(--phase4-color); }
-        .p5 .slider-bubble { background-color: var(--phase5-color); }
-        .p6 .slider-bubble { background-color: var(--phase6-color); }
-
-        input[type="range"] { 
-            -webkit-appearance: none; 
-            appearance: none; 
-            width: 150px; 
-            height: 8px; 
-            background: #444; 
-            border-radius: 5px; 
-            outline: none; 
-            position: relative; 
-            z-index: 5; 
-            margin: 0; 
-        }
-
-        input[type="range"]::-webkit-slider-thumb { 
-            -webkit-appearance: none; 
-            appearance: none; 
-            width: 38px;
-            height: 25px;
-            background: transparent;
-            border: 0;
-            cursor: pointer;
-            z-index: 6;
-        }
-
-        input[type="range"]::-moz-range-thumb { 
-            width: 38px; 
-            height: 25px; 
-            background: transparent; 
-            border: none; 
-            cursor: pointer; 
-            z-index: 6; 
-        }
-        
-        input[type="range"]#alarm_slider {
-            width: 214px;
-        }
-
-        input[type="range"]#alarm_slider::-webkit-slider-thumb { 
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 16 16"><path fill="%23ffc107" d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/></svg>') no-repeat center;
-            background-size: 20px 20px;
-        }
-
-        input[type="range"]#alarm_slider::-moz-range-thumb { 
-            width: 20px; 
-            height: 20px; 
-            border-radius: 50%; 
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 16 16"><path fill="%23ffc107" d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/></svg>') no-repeat center;
-            background-size: 20px 20px;
-        }
-
-        /* --- Estilos para Selectores Personalizados (Fases) --- */
-        .custom-select-container {
-            position: relative;
-            width: 140px;
-        }
-
-        .select-selected {
-            background-color: var(--dropdown-card-bg);
-            color: white;
-            padding: 6px 10px;
-            border: 1px solid transparent;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9em;
-            font-family: 'Inter', sans-serif;
-            font-weight: bold;
-            text-align: center;
-            transition: box-shadow 0.3s ease, border-color 0.3s ease;
-            position: relative;
-            user-select: none;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-        
-        .p2 .select-selected { border-color: var(--phase2-color); }
-        .p3 .select-selected { border-color: var(--phase3-color); }
-        .p4 .select-selected { border-color: var(--phase4-color); }
-        .p5 .select-selected { border-color: var(--phase5-color); }
-        
-        .p2 .select-selected.active { box-shadow: 0 2px 5px rgba(0,0,0,0.2), 0 0 8px var(--phase2-color); }
-        .p3 .select-selected.active { box-shadow: 0 2px 5px rgba(0,0,0,0.2), 0 0 8px var(--phase3-color); }
-        .p4 .select-selected.active { box-shadow: 0 2px 5px rgba(0,0,0,0.2), 0 0 8px var(--phase4-color); }
-        .p5 .select-selected.active { box-shadow: 0 2px 5px rgba(0,0,0,0.2), 0 0 8px var(--phase5-color); }
-        
-        .select-selected::after {
-            position: absolute;
-            content: "";
-            top: 50%;
-            right: 10px;
-            width: 0;
-            height: 0;
-            border: 5px solid transparent;
-            transform: translateY(-25%);
-            transition: transform 0.2s ease-in-out;
-        }
-
-        .select-selected.select-arrow-active::after {
-            transform: translateY(-75%) rotate(180deg);
-        }
-
-        .select-items {
-            position: absolute;
-            background-color: var(--surface-color);
-            top: calc(100% + 5px);
-            left: 0;
-            right: 0;
-            z-index: 99;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-        }
-
-        .select-hide { display: none; }
-
-        .select-items div {
-            color: white;
-            padding: 8px 16px;
-            cursor: pointer;
-            text-align: center;
-            font-weight: 500;
-            font-size: 0.9em;
-            transition: background-color 0.2s ease;
-        }
-        
-        .p3 .select-items div:hover { background-color: var(--phase3-color); }
-        .p4 .select-items div:hover { background-color: var(--phase4-color); }
-        .p5 .select-items div:hover { background-color: var(--phase5-color); }
-
-        .same-as-selected {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        /* Resaltado Fase 5 y 6 */
-        #phase-5-card .highlight-row td {
-            background-color: rgba(var(--phase5-rgb), 0.1) !important;
-        }
-        #phase-6-card .highlight-row td {
-            background-color: rgba(var(--phase6-rgb), 0.1) !important;
-        }
-        #phase-5-card .highlight-row:not(:last-child) td {
-            border-bottom-color: var(--phase5-darker);
-        }
-        #phase-6-card .highlight-row:not(:last-child) td {
-            border-bottom-color: var(--phase6-darker);
-        }
-
-        .calculated-value {
-            display: inline-block; 
-            border-radius: 6px; 
-            font-size: 0.9em;
-            font-weight: bold; 
-            color: white; 
-            padding: 2px 8px; 
-            min-width: 40px; 
-            width: auto;
-            text-align: center; 
-            line-height: 1.4;
-            box-sizing: content-box;
-            transition: box-shadow 0.3s ease, text-shadow 0.3s ease;
-        }
-
-        .calculated-value.p1 { background-color: var(--phase1-darker); }
-        .calculated-value.p1.active { box-shadow: 0 0 5px var(--phase1-color); text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); }
-        .calculated-value.p2 { background-color: var(--phase2-darker); }
-        .calculated-value.p2.active { box-shadow: 0 0 5px var(--phase2-color); text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); }
-        .calculated-value.p3 { background-color: var(--phase3-darker); }
-        .calculated-value.p3.active { box-shadow: 0 0 5px var(--phase3-color); text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); }
-        .calculated-value.p4 { background-color: var(--phase4-darker); }
-        .calculated-value.p4.active { box-shadow: 0 0 5px var(--phase4-color); text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); }
-        .calculated-value.p5 { background-color: var(--phase5-darker); }
-        .calculated-value.p5.active { box-shadow: 0 0 5px var(--phase5-color); text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); }
-        .calculated-value.p6 { background-color: var(--phase6-darker); }
-        .calculated-value.p6.active { box-shadow: 0 0 5px var(--phase6-color); text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); }
-
-        .percent-border {
-            position: relative;
-            display: inline-block;
-            padding: 2px 6px; 
-            border-radius: 6px; 
-            color: white; 
-            font-size: 0.85em;
-            font-weight: bold;
-            margin-left: 5px;
-            width: auto;
-            box-sizing: content-box;
-            background: none;
-            transition: text-shadow 0.3s ease, border 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .percent-border.p1 { border: 1px dashed var(--phase1-color); }
-        .percent-border.p1.active { text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); border: 1px solid var(--phase1-color); box-shadow: 0 0 5px var(--phase1-color); }
-        .percent-border.p2 { border: 1px dashed var(--phase2-color); }
-        .percent-border.p2.active { text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); border: 1px solid var(--phase2-color); box-shadow: 0 0 5px var(--phase2-color); }
-        .percent-border.p3 { border: 1px dashed var(--phase3-color); }
-        .percent-border.p3.active { text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); border: 1px solid var(--phase3-color); box-shadow: 0 0 5px var(--phase3-color); }
-        .percent-border.p4 { border: 1px dashed var(--phase4-color); }
-        .percent-border.p4.active { text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); border: 1px solid var(--phase4-color); box-shadow: 0 0 5px var(--phase4-color); }
-        .percent-border.p5 { border: 1px dashed var(--phase5-color); }
-        .percent-border.p5.active { text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); border: 1px solid var(--phase5-color); box-shadow: 0 0 5px var(--phase5-color); }
-        .percent-border.p6 { border: 1px dashed var(--phase6-color); }
-        .percent-border.p6.active { text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); border: 1px solid var(--phase6-color); box-shadow: 0 0 5px var(--phase6-color); }
-
-        .phase1-arrow { color: var(--phase1-color); font-size: 1.3em; transition: text-shadow 0.3s ease; }
-        .phase2-arrow { color: var(--phase2-color); font-size: 1.3em; transition: text-shadow 0.3s ease; }
-        .phase3-arrow { color: var(--phase3-color); font-size: 1.3em; transition: text-shadow 0.3s ease; }
-        .phase4-arrow { color: var(--phase4-color); font-size: 1.3em; transition: text-shadow 0.3s ease; }
-        .phase5-arrow { color: var(--phase5-color); font-size: 1.3em; transition: text-shadow 0.3s ease; }
-        .phase6-arrow { color: var(--phase6-color); font-size: 1.3em; transition: text-shadow 0.3s ease; }
-
-        .phase1-arrow.active { text-shadow: 0 0 10px var(--phase1-color), 0 0 15px var(--phase1-color), 0 0 20px rgba(255, 255, 255, 0.5); }
-        .phase2-arrow.active { text-shadow: 0 0 10px var(--phase2-color), 0 0 15px var(--phase2-color), 0 0 20px rgba(255, 255, 255, 0.5); }
-        .phase3-arrow.active { text-shadow: 0 0 10px var(--phase3-color), 0 0 15px var(--phase3-color), 0 0 20px rgba(255, 255, 255, 0.5); }
-        .phase4-arrow.active { text-shadow: 0 0 10px var(--phase4-color), 0 0 15px var(--phase4-color), 0 0 20px rgba(255, 255, 255, 0.5); }
-        .phase5-arrow.active { text-shadow: 0 0 10px var(--phase5-color), 0 0 15px var(--phase5-color), 0 0 20px rgba(255, 255, 255, 0.5); }
-        .phase6-arrow.active { text-shadow: 0 0 10px var(--phase6-color), 0 0 15px var(--phase6-color), 0 0 20px rgba(255, 255, 255, 0.5); }
-
-        /* --- CLASE PARA ELEMENTOS FANTASMA (Espaciadores) --- */
-        .mobile-spacer { 
-            display: none; 
-        }
-
-        
-       
-                /* --- ESTILOS MÓVILES FINAL (CORREGIDO DE VERDAD) --- */
-        @media (max-width: 600px) {
-            body { 
-                padding: 10px; 
-                padding-bottom: calc(10px + env(safe-area-inset-bottom)); 
-            }
-
-            /* 1. CONTENEDORES DE FILA */
-            /* CAMBIO CLAVE: Usamos 'fit-content' en lugar de '100%' */
-            /* Esto obliga al contenedor a medir exactamente 340px (280+10+50) */
-            /* Así la posición absoluta de la X siempre es relativa a este grupo compacto */
-            .input-wrapper, 
-            .timezone-wrapper,
-            .alarm-group-wrapper {
-                display: flex !important;
-                flex-direction: row !important;
-                justify-content: center !important;
-                align-items: center !important;
-                width: fit-content !important; /* <--- EL SECRETO */
-                margin-left: auto !important;  /* Para centrar el bloque fit-content */
-                margin-right: auto !important; /* Para centrar el bloque fit-content */
-                gap: 10px !important;
-                margin-bottom: 5px !important;
-                position: relative; /* Referencia segura */
-            }
-
-            /* 2. ELEMENTOS IZQUIERDOS (LOS GRANDES) */
-            input[type="text"]#totalAmount,
-            input[type="datetime-local"],
-            input.flatpickr-input,
-            .timezone-button,
-            .alarm-card {
-                width: 280px !important;
-                flex: 0 0 280px !important;
-                height: 50px !important;
-                margin: 0 !important;
-                box-sizing: border-box !important;
-            }
-
-            .input-wrapper.date input {
-                margin: 0 !important;
-                width: 280px !important;
-            }
-
-            /* 3. ELEMENTOS DERECHOS (LOS PEQUEÑOS) */
-            .btn-icon-only,
-            .mobile-spacer,
-            .alarm-actions {
-                width: 50px !important;
-                flex: 0 0 50px !important;
-                height: 50px !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                display: flex !important;
-                justify-content: center;
-                align-items: center;
-            }
-
-            .mobile-spacer {
-                visibility: hidden;
-            }
-
-            .alarm-actions .btn-icon-only {
-                width: 50px !important;
-            }
-
-            /* 4. POSICIÓN EXACTA DE LA "X" */
-            /* Ahora que el contenedor mide lo justo, la matemática no falla */
-            /* 50px (espaciador) + 10px (gap) + 5px (margen interno deseado) = 65px */
-            .reset-button {
-                right: 65px !important; 
-                top: 50% !important;
-                transform: translateY(-50%) !important;
-            }
-
-            /* 5. ESTRUCTURA GENERAL */
-            .input-section, 
-            .alarm-section { 
-                flex-direction: column !important; 
-                width: 100% !important;
-                gap: 15px;
-                align-items: center !important;
-            }
-
-            input[type="range"]#alarm_slider {
-                width: 100%;
-            }
+        /* 1. Ajuste del PANEL OSCURO */
+        #balance-group { 
+            /* Arriba/Abajo: 5px (+15 padding padre = 20px aire total) */
+            /* Izquierda: 5px (+15 margen separador = 20px aire total) -> IGUAL QUE DERECHA */
+            margin: 5px 0 5px 5px !important; 
             
-            .alarm-card {
-                padding: 0 10px;
-                display: flex;
-                align-items: center;
-            }
-
-            /* ESTILOS DE TABLA (Sin cambios) */
-            .phase-table td { 
-                display: block; width: 100%; box-sizing: border-box; 
-                padding: 10px 15px; border-bottom: none; text-align: left !important;
-            }
-            #phase-5-card .highlight-row:not(:last-child) td,
-            #phase-6-card .highlight-row:not(:last-child) td { border-bottom-color: transparent; }
-            #phase-5-card .highlight-row + tr > td:first-child { border-top: 1px solid var(--phase5-darker); }
-            #phase-6-card .highlight-row + tr > td:first-child { border-top: 1px solid var(--phase6-darker); }
-            .flex-container { flex-direction: row; align-items: center; }
-            .phase1-arrow, .phase2-arrow, .phase3-arrow, .phase4-arrow, .phase5-arrow, .phase6-arrow { font-size: 1.2em; }
+            display: block !important; 
+            flex: 1; 
+            height: auto !important;
         }
 
-    </style>
+        /* 2. Ajuste interno para la línea horizontal */
+        .fin-details-wrapper.balance-col { 
+            height: 115px !important; 
+            min-height: 115px !important; 
+            justify-content: center !important; 
+            gap: 15px !important; 
+            margin-bottom: 0px !important; 
+            padding-bottom: 10px !important; 
+        }
+
+        .fin-metrics-card > .fin-group:not(#balance-group) > .fin-item:last-child { margin-top: 0 !important; }
+        .fin-separator-h { margin-bottom: 15px !important; }
+        
+        #balance-group .fin-item { align-items: center !important; text-align: center !important; width: 100%; }
+        .balance-col .val-group { align-items: center !important; text-align: center !important; width: 100%; }
+        #pct_tx_cost { text-align: center !important; display: block; width: 100%; }
+        
+        .flex-container { justify-content: flex-start !important; gap: 0 !important; }
+        .text-content { flex: 0 0 60%; max-width: 60%; padding-right: 20px; box-sizing: border-box; }
+        .flex-container > :nth-child(2) { flex: 1; display: flex; justify-content: center !important; align-items: center; width: auto; }
+        .slider-group-container { align-items: center !important; width: 100% !important; }
+        .range-wrapper { width: 150px !important; margin: 0 auto; display: flex; justify-content: center; }
+    }
+
+    /* --- MEDIA QUERY MÓVIL --- */
+    @media (max-width: 600px) {
+        body { padding: 10px; padding-bottom: calc(10px + env(safe-area-inset-bottom)); }
+        
+        .input-wrapper, .timezone-wrapper, .alarm-group-wrapper { display: flex !important; width: 280px !important; justify-content: center !important; align-items: center !important; margin: 0 auto 5px auto !important; gap: 10px !important; }
+        input[type="text"]#totalAmount, .timezone-button, .network-button { width: 280px !important; flex: 0 0 280px !important; height: 50px !important; margin: 0 !important; }
+        input[type="datetime-local"], input.flatpickr-input, .alarm-card { width: 220px !important; flex: 0 0 220px !important; height: 50px !important; margin: 0 !important; }
+        .input-wrapper.date input { width: 220px !important; margin: 0 !important; }
+        .btn-icon-only, .alarm-actions { width: 50px !important; flex: 0 0 50px !important; height: 50px !important; margin: 0 !important; padding: 0 !important; display: flex !important; justify-content: center; align-items: center; }
+        .alarm-actions .btn-icon-only { width: 50px !important; }
+        .mobile-spacer { display: none !important; }
+        .reset-button { right: 10px !important; top: 50% !important; transform: translateY(-50%) !important; }
+        .input-section, .alarm-section { width: 100% !important; flex-direction: column !important; gap: 15px; align-items: center !important; }
+        .alarm-section { margin-bottom: 25px; }
+        .fin-control-bar { display: flex; width: 100%; justify-content: center; margin-bottom: 15px; }
+        .custom-select-container[style*="width: 200px"] { width: 280px !important; }
+
+        #financial-panel { flex-direction: column; align-items: center; width: 100%; max-width: 340px; margin: 0 auto 25px auto; }
+        .fin-metrics-card { flex-direction: column; width: 100%; box-sizing: border-box; gap: 0; padding: 15px; align-items: stretch; }
+        
+        .fin-details-wrapper:not(.balance-col) { height: auto !important; margin-bottom: 12px !important; }
+        .fin-details-wrapper:not(.balance-col) .fin-item.small { margin-bottom: 12px !important; display: flex !important; flex-direction: row !important; justify-content: space-between !important; align-items: center !important; }
+        .fin-item:not(.small) { display: flex !important; flex-direction: column !important; align-items: flex-start !important; width: 100% !important; margin-bottom: 0 !important; padding-top: 12px !important; }
+        .fin-item .fin-label { text-align: left !important; margin-bottom: 4px !important; width: 100%; display: block; }
+        .val-group { flex-direction: row !important; align-items: baseline !important; justify-content: flex-start !important; gap: 10px !important; width: 100%; }
+        .fin-separator-h { display: block !important; margin: 0 !important; opacity: 0.5 !important; height: 1px !important; }
+        .fin-group .fin-item:last-child { margin-bottom: 5px !important; }
+        
+        /* AJUSTE MÓVIL: SEPARADOR CENTRAL */
+        .fin-divider { 
+            width: 100%; height: 1px; opacity: 0.6 !important; background-color: #555 !important;
+            /* Arriba 15px, Abajo 15px -> IGUAL QUE EL PADDING DE LA TARJETA (15px) */
+            margin: 15px 0 15px 0 !important; 
+        }
+
+        /* AJUSTE MÓVIL: PANEL DE BALANCE */
+        #balance-group { 
+            margin-top: 0 !important; /* Pegado al margen del separador para sumar 15px exactos */
+            width: 100% !important; display: flex !important; flex-direction: column !important; align-items: center !important; text-align: center !important; 
+        }
+        
+        .fin-details-wrapper.balance-col { gap: 20px !important; margin-bottom: 0 !important; display: flex !important; flex-direction: column !important; height: auto !important; }
+        .balance-col .fin-item { margin-bottom: 0 !important; padding-top: 0 !important; align-items: center !important; width: 100% !important; }
+        .balance-col .fin-label, .balance-col .fin-title-unified, #balance-group .fin-label { text-align: center !important; width: 100% !important; display: block !important; }
+        .val-group.stack-mobile { flex-direction: column !important; align-items: center !important; justify-content: center !important; gap: 0 !important; }
+        .val-group.stack-mobile .fin-pct { margin-top: 2px !important; text-align: center !important; }
+        .fin-value.net { display: block !important; width: 100% !important; text-align: center !important; }
+        #fin_net { font-size: 2.4em !important; }
+        #fin_tx_cost { font-size: 1.35em !important; }
+        #pct_tx_cost { font-size: 1.15em !important; }
+        #fin_gross { font-size: 1.5em !important; } 
+        #balance-group .fin-separator-h { margin: 15px 0 15px 0 !important; opacity: 0.7 !important; background-color: rgba(255, 255, 255, 0.2) !important; }
+
+        .phase-table td, .phase-table th { display: block; width: 100%; box-sizing: border-box; }
+        .phase-table td { padding: 10px 15px; border-bottom: none; text-align: left !important; }
+        .phase-table th { width: 100% !important; display: block !important; }
+        #phase-5-card .highlight-row:not(:last-child) td, #phase-6-card .highlight-row:not(:last-child) td { border-bottom-color: transparent; }
+        #phase-5-card .highlight-row + tr > td:first-child { border-top: 1px solid var(--phase5-darker); }
+        #phase-6-card .highlight-row + tr > td:first-child { border-top: 1px solid var(--phase6-darker); }
+        .flex-container { flex-direction: row; align-items: center; }
+        .phase1-arrow, .phase2-arrow, .phase3-arrow, .phase4-arrow, .phase5-arrow, .phase6-arrow { font-size: 1.2em; }
+        
+        #satellite-bar { padding: 0 10px; height: 55px; } 
+        .sat-label { display: none; }
+        .sat-val-gold { font-size: 0.8em; }  
+        .sat-val-amber { font-size: 0.9em; } 
+        .sat-val-green { font-size: 1.05em; } 
+        #satNetworkBtn { padding: 4px 6px; font-size: 0.75em; min-width: 45px; }
+        .sat-stack.text-left { margin-right: auto; margin-left: 8px; }
+        .sat-stack.text-center { margin-right: 0 !important; padding-right: 0 !important; text-align: right; align-items: flex-end; }
+        .sat-net-total { flex-shrink: 0; margin: 0 !important; padding-left: 20px !important; margin-left: 5px !important; border-left: 1px solid rgba(255, 255, 255, 0.15) !important; }
+        
+        /* Ajuste para que la nueva swap-badge no rompa en movil */
+        @media (max-width: 600px) {
+            .swap-badge { display: table; margin-left: 0; margin-top: 2px; }
+        }
+    }
+</style>
 </head>
 <body>
     <div class="container">
-        <!-- Top row: Amount | Date | botón reloj -->
         <div class="input-section">
             <div class="input-wrapper">
                 <input type="text" id="totalAmount" placeholder="Amount" aria-label="Total amount">
                 <button class="reset-button" id="resetAmount" aria-label="Reset amount">×</button>
-                <!-- Espaciador Móvil -->
                 <div class="mobile-spacer"></div>
             </div>
             <div class="input-wrapper date">
@@ -827,82 +627,35 @@
             </div>
         </div>
 
-        <!-- Fila 2: Timezone (izq) | Slider campana (centro) | Export (der) -->
         <div class="alarm-section">
-            <!-- Botón de huso horario a la izquierda -->
             <div class="timezone-wrapper">
                 <button type="button" class="timezone-button" id="timezoneButton">
                     <span class="label">Local time</span>
                     <span class="chevron">▾</span>
                 </button>
-                <!-- Espaciador Móvil -->
                 <div class="mobile-spacer"></div>
                 
                 <div class="timezone-menu select-hide" id="timezoneMenu">
                     <div class="timezone-menu-header">Display schedule in</div>
                     <ul>
-                        <li data-tz="local" class="active">
-                            <span class="tz-name">Local (system)</span>
-                        </li>
-                        <li data-tz="America/Bogota">
-                            <span class="tz-name">America/Bogota</span>
-                        </li>
-                        <li data-tz="America/Mexico_City">
-                            <span class="tz-name">America/Mexico_City</span>
-                        </li>
-                        <li data-tz="America/New_York">
-                            <span class="tz-name">America/New_York</span>
-                        </li>
-                        <li data-tz="America/Chicago">
-                            <span class="tz-name">America/Chicago</span>
-                        </li>
-                        <li data-tz="America/Denver">
-                            <span class="tz-name">America/Denver</span>
-                        </li>
-                        <li data-tz="America/Los_Angeles">
-                            <span class="tz-name">America/Los_Angeles</span>
-                        </li>
-                        <li data-tz="America/Toronto">
-                            <span class="tz-name">America/Toronto</span>
-                        </li>
-                        <li data-tz="America/Vancouver">
-                            <span class="tz-name">America/Vancouver</span>
-                        </li>
-                        <li data-tz="Europe/London">
-                            <span class="tz-name">Europe/London</span>
-                        </li>
-                        <li data-tz="Europe/Berlin">
-                            <span class="tz-name">Europe/Berlin</span>
-                        </li>
-                        <li data-tz="Europe/Madrid">
-                            <span class="tz-name">Europe/Madrid</span>
-                        </li>
-                        <li data-tz="Europe/Paris">
-                            <span class="tz-name">Europe/Paris</span>
-                        </li>
-                        <li data-tz="Asia/Singapore">
-                            <span class="tz-name">Asia/Singapore</span>
-                        </li>
-                        <li data-tz="Asia/Tokyo">
-                            <span class="tz-name">Asia/Tokyo</span>
-                        </li>
-                        <li data-tz="UTC">
-                            <span class="tz-name">UTC</span>
-                        </li>
+                        <li data-tz="local" class="active"><span class="tz-name">Local (system)</span></li>
+                        <li data-tz="America/Bogota"><span class="tz-name">America/Bogota</span></li>
+                        <li data-tz="America/New_York"><span class="tz-name">America/New_York</span></li>
+                        <li data-tz="America/Los_Angeles"><span class="tz-name">America/Los_Angeles</span></li>
+                        <li data-tz="Europe/London"><span class="tz-name">Europe/London</span></li>
+                        <li data-tz="Europe/Madrid"><span class="tz-name">Europe/Madrid</span></li>
+                        <li data-tz="Asia/Tokyo"><span class="tz-name">Asia/Tokyo</span></li>
+                        <li data-tz="UTC"><span class="tz-name">UTC</span></li>
                     </ul>
                 </div>
             </div>
 
-            <!-- Wrapper para agrupar Slider y Botón en Móvil -->
             <div class="alarm-group-wrapper">
-                <!-- Slider campana en el centro -->
                 <div class="alarm-card">
                     <div class="slider-container alarm">
                         <input type="range" min="1" max="60" value="30" id="alarm_slider" aria-label="Alarm time in minutes">
                     </div>
                 </div>
-
-                <!-- Botón exportar a la derecha -->
                 <div class="alarm-actions">
                     <button class="btn-icon-only btn-calendar" id="exportButton" onclick="exportToOrg()" aria-label="Export to Orgzly">
                         <span>30 min</span>
@@ -911,115 +664,193 @@
             </div>
         </div>
 
+        <div id="financial-panel">
+    <div class="fin-control-bar">
+        <div class="custom-select-container" style="width: 200px; position:relative;">
+            <button type="button" class="network-button" id="networkButton">
+                <span class="label">Ethereum Mainnet</span>
+                <span class="chevron">▾</span>
+            </button>
+            <div class="network-menu select-hide" id="networkMenu">
+                <ul>
+                    <li data-net="ethereum" class="active"><span class="tz-name">Ethereum Mainnet</span><span class="checkmark">✓</span></li>
+                    <li data-net="arbitrum"><span class="tz-name">Arbitrum One</span><span class="checkmark">✓</span></li>
+                    <li data-net="polygon"><span class="tz-name">Polygon</span><span class="checkmark">✓</span></li>
+                    <li data-net="base"><span class="tz-name">Base</span><span class="checkmark">✓</span></li>
+                    <li data-net="optimism"><span class="tz-name">Optimism</span><span class="checkmark">✓</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="fin-metrics-card">
+        
+        <div class="fin-group detailed">
+            <div class="fin-details-wrapper">
+                <div class="fin-item small">
+                    <span class="fin-label-left">B1 &#8594; Railgun</span> <span class="fin-value cost-small" id="fin_gas_b1"></span>
+                </div>
+                <div class="fin-item small">
+                    <span class="fin-label-left">B2 &#8594; Zashi</span> <span class="fin-value cost-small" id="fin_gas_b2"></span>
+                </div>
+                <div class="fin-item small">
+                    <span class="fin-label-left">B3 &#8594; Savings<span class="fk-super">fk</span></span> <span class="fin-value cost-small" id="fin_gas_b3"></span>
+                </div>
+                <div class="fin-item small">
+                    <span class="fin-label-left">Savings<span class="fk-super">fk</span> &#8594; Cold Wallet</span> <span class="fin-value cost-small" id="fin_gas_cold"></span>
+                </div>
+            </div>
+            <div class="fin-separator-h"></div>
+            
+            <div class="fin-item">
+                <span class="fin-label">Total Gas</span>
+                <div class="val-group">
+                    <span class="fin-value cost" id="fin_total_gas">$0.00</span>
+                    <span class="fin-pct" id="pct_total_gas">(0.00%)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="fin-divider"></div>
+
+        <div class="fin-group detailed">
+            <div class="fin-details-wrapper fees-col"> 
+                <div class="fin-item small">
+                    <span class="fin-label-left">Railgun Shield</span> <span class="fin-value cost-small" id="fin_rg_shield"></span>
+                </div>
+                <div class="fin-item small">
+                    <span class="fin-label-left">Railgun Unshield</span> <span class="fin-value cost-small" id="fin_rg_unshield"></span>
+                </div>
+                <div class="fin-item small">
+                    <span class="fin-label-left">USDC &#8594; ZEC</span> <span class="fin-value cost-small" id="fin_usdc_zec"></span>
+                </div>
+                <div class="fin-item small">
+                    <span class="fin-label-left">ZEC &#8594; USDC</span> <span class="fin-value cost-small" id="fin_zec_usdc"></span>
+                </div>
+            </div>
+            <div class="fin-separator-h"></div>
+            
+            <div class="fin-item">
+                <span class="fin-label">Total Fees</span>
+                <div class="val-group">
+                    <span class="fin-value cost" id="fin_total_fees">$0.00</span>
+                    <span class="fin-pct" id="pct_total_fees">(0.00%)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="fin-divider"></div>
+
+        <div class="fin-group detailed" id="balance-group">
+    <div class="fin-details-wrapper balance-col">
+        
+        <div class="fin-item">
+            <span class="fin-label fin-title-unified">Gross Input</span>
+            <span class="fin-value cost-small" id="fin_gross" style="color: white; font-weight: 700;">$0.00</span>
+        </div>
+        
+        <div class="fin-item">
+            <span class="fin-label fin-title-unified">Total TX Cost</span>
+            <div class="val-group stack-mobile">
+                <span class="fin-value total-cost" id="fin_tx_cost" style="font-size: 1.5em; font-weight: 700; line-height: 1;">$0.00</span>
+                <span class="fin-pct" id="pct_tx_cost" style="margin-top: 2px; font-size: 0.7em;">(0.00%)</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="fin-separator-h"></div>
+
+    <div class="fin-item">
+        <span class="fin-label" style="color: white;">Net Total</span>
+        <span class="fin-value net" id="fin_net">$0.00</span>
+    </div>
+</div>
+    </div>
+</div>
+
         <div id="schedule-container"></div>
     </div>
 
-    <!-- Flatpickr JS -->
+
+    <div id="satellite-bar">
+    <div class="sat-container">
+        <div class="sat-col sat-net">
+            <button id="satNetworkBtn">ETH ▾</button>
+        </div>
+
+        <div class="sat-col sat-stack text-left">
+            <div class="sat-row">
+                <span class="sat-label">Gas</span> <span class="sat-val-gold" id="sat_gas">$0.00</span>
+            </div>
+            <div class="sat-row">
+                <span class="sat-label">Fees</span> <span class="sat-val-gold" id="sat_fees">$0.00</span>
+            </div>
+        </div>
+
+        <div class="sat-col sat-stack text-center">
+            <span class="sat-val-amber" id="sat_tx_cost">$0.00</span>
+            <span class="sat-pct" id="sat_tx_pct">(0.0%)</span>
+        </div>
+
+        <div class="sat-col sat-net-total">
+            <span class="sat-val-green" id="sat_net">$0.00</span>
+        </div>
+    </div>
+</div>
+
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
+        // ==========================================
+        // === 1. CONFIGURACIÓN Y ESTADO GLOBAL ===
+        // ==========================================
         let totalAmount = 0;
         let effectiveAmount = 0;
         let cachedTimestamps = null;
-
-        const amountInput = document.getElementById('totalAmount');
-        const dateInput = document.getElementById('receiptDate');
-        const generateButton = document.getElementById('generateButton');
-        const resetButton = document.getElementById('resetAmount');
-        const scheduleContainer = document.getElementById('schedule-container');
-        const alarmSection = document.querySelector('.alarm-section');
-        const alarmSlider = document.getElementById('alarm_slider');
-        const exportButton = document.getElementById('exportButton');
-        const timezoneButton = document.getElementById('timezoneButton');
-        const timezoneMenu = document.getElementById('timezoneMenu');
-
-        // "local" = huso del navegador; el resto son IANA
+        let currentNetwork = 'ethereum';
         let currentDisplayTimeZone = 'local';
 
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
-        }
+        // LISTA DE SERVICIOS NO-KYC
+        const SWAP_SERVICES = ['Trocador.app', 'SideShift.ai', 'StealthEX', 'Houdini Swap', 'SimpleSwap', 'FixedFloat'];
 
+        const NETWORK_DATA = {
+            ethereum: { name: 'Ethereum Mainnet', shortName: 'ETH', label: 'ETH on Mainnet', b1_cost: 15.00, b2_unit_cost: 5.00 },
+            arbitrum: { name: 'Arbitrum One', shortName: 'ARB', label: 'ETH on Arbitrum', b1_cost: 0.20, b2_unit_cost: 0.10 },
+            polygon: { name: 'Polygon', shortName: 'POL', label: 'POL on Polygon', b1_cost: 0.05, b2_unit_cost: 0.02 },
+            base: { name: 'Base', shortName: 'BASE', label: 'ETH on Base', b1_cost: 0.15, b2_unit_cost: 0.05 },
+            optimism: { name: 'Optimism', shortName: 'OP', label: 'ETH on Optimism', b1_cost: 0.20, b2_unit_cost: 0.10 }
+        };
+
+        const DOM = {
+            amountInput: document.getElementById('totalAmount'),
+            dateInput: document.getElementById('receiptDate'),
+            generateButton: document.getElementById('generateButton'),
+            resetButton: document.getElementById('resetAmount'),
+            scheduleContainer: document.getElementById('schedule-container'),
+            alarmSection: document.querySelector('.alarm-section'),
+            alarmSlider: document.getElementById('alarm_slider'),
+            exportButton: document.getElementById('exportButton'),
+            financialPanel: document.getElementById('financial-panel'),
+            networkButton: document.getElementById('networkButton'),
+            networkMenu: document.getElementById('networkMenu'),
+            timezoneButton: document.getElementById('timezoneButton'),
+            timezoneMenu: document.getElementById('timezoneMenu'),
+            satNetworkBtn: document.getElementById('satNetworkBtn'),
+            satelliteBar: document.getElementById('satellite-bar')
+        };
+
+        // ==========================================
+        // === 2. UTILIDADES (HELPERS) ===
+        // ==========================================
         function cryptoRandom() {
             const arr = new Uint32Array(1);
             window.crypto.getRandomValues(arr);
             return arr[0] / 0xFFFFFFFF;
         }
 
-        function validateInputs() {
-            const amountValue = amountInput.value.replace('$', '').replace(/,/g, '');
-            const amountValid = amountValue && parseFloat(amountValue) > 0;
-            const dateValid = dateInput.value;
-            generateButton.disabled = !(amountValid && dateValid);
-            resetButton.classList.toggle('visible', amountInput.value.length > 0);
-        }
-
-        amountInput.addEventListener('input', function(e) {
-            let value = e.target.value.replace(/[^0-9.$]/g, '');
-            if (value.startsWith('$')) {
-                value = '$' + value.replace(/\$/g, '');
-            }
-            e.target.value = value;
-            validateInputs();
-        });
-
-        amountInput.addEventListener('blur', function(e) {
-            let value = e.target.value.replace(/[^0-9.]/g, '');
-            let num = parseFloat(value);
-            if (!isNaN(num) && num >= 0) {
-                e.target.value = '$' + num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                totalAmount = num;
-            } else {
-                e.target.value = '';
-                totalAmount = 0;
-            }
-            validateInputs();
-        });
-
-        dateInput.addEventListener('input', function() {
-            cachedTimestamps = null;
-            validateInputs();
-        });
-
-        resetButton.addEventListener('click', () => {
-            amountInput.value = '';
-            totalAmount = 0;
-            effectiveAmount = 0;
-            cachedTimestamps = null;
-            resetButton.classList.remove('visible');
-            generateButton.disabled = true;
-            scheduleContainer.innerHTML = '';
-            alarmSection.style.display = 'none';
-            alarmSlider.value = 30;
-            updateAlarmText(alarmSlider);
-        });
-
-        function addRandomTime(baseDate, minHours = 0, maxHours = 0, minMinutes = 0, maxMinutes = 0) {
-            const randomHours = minHours + cryptoRandom() * (maxHours - minHours);
-            const randomMinutes = minMinutes + cryptoRandom() * (maxMinutes - minMinutes);
-            const delayInMs = (randomHours * 3600 + randomMinutes * 60) * 1000;
-            return new Date(baseDate.getTime() + delayInMs);
-        }
-
         function formatDateTime(date) {
-            const options = { 
-                weekday: 'short', 
-                month: 'short', 
-                day: 'numeric', 
-                hour: '2-digit', 
-                minute: '2-digit', 
-                hour12: true 
-            };
-            if (currentDisplayTimeZone !== 'local') {
-                options.timeZone = currentDisplayTimeZone;
-            }
+            if(!date) return '';
+            const options = { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true };
+            if (currentDisplayTimeZone !== 'local') { options.timeZone = currentDisplayTimeZone; }
             return new Intl.DateTimeFormat('en-US', options).format(date);
         }
 
@@ -1027,34 +858,77 @@
             return amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
 
-        function formatOrgDate(date, alarmMinutes) {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            const hours = String(date.getHours()).padStart(2, '0');
-            const minutes = String(date.getMinutes()).padStart(2, '0');
-            const dayName = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][date.getDay()];
-            return `<${year}-${month}-${day} ${dayName} ${hours}:${minutes} -${alarmMinutes}m>`;
-        }
-
-        function updateAlarmText(slider) {
-            if (exportButton) {
-                exportButton.querySelector('span').textContent = `${Math.round(slider.value)} min`;
+        function getJitteredSliderValue(sliderId) {
+            const slider = document.getElementById(sliderId);
+            if (!slider) return 0;
+            let sliderValue = parseFloat(slider.value);
+            const sliderMax = parseFloat(slider.max);
+            if (sliderValue > 0 && sliderValue < sliderMax) {
+                sliderValue += cryptoRandom();
+                sliderValue = Math.min(sliderValue, sliderMax);
             }
+            return sliderValue;
         }
 
-        function getScheduleTimestamps(baseDate) {
+        function generateRandomPercentages(remainderPercent, numOperations) {
+            if (numOperations <= 0 || remainderPercent <= 0) return Array(numOperations).fill(0);
+            if (numOperations === 1) return [parseFloat(remainderPercent.toFixed(2))];
+            let splits = [];
+            for (let i = 0; i < numOperations - 1; i++) splits.push(cryptoRandom() * remainderPercent);
+            splits.push(0, remainderPercent);
+            splits.sort((a, b) => a - b);
+            const percentages = [];
+            let currentSum = 0;
+            for (let i = 0; i < splits.length - 2; i++) {
+                let diff = parseFloat((splits[i + 1] - splits[i]).toFixed(2));
+                percentages.push(diff);
+                currentSum += diff;
+            }
+            percentages.push(parseFloat((remainderPercent - currentSum).toFixed(2)));
+            // Shuffle
+            for (let i = percentages.length - 1; i > 0; i--) {
+                const j = Math.floor(cryptoRandom() * (i + 1));
+                [percentages[i], percentages[j]] = [percentages[j], percentages[i]];
+            }
+            return percentages;
+        }
+
+        function getRandomServices(count) {
+            const services = [...SWAP_SERVICES];
+            for (let i = services.length - 1; i > 0; i--) {
+                const j = Math.floor(cryptoRandom() * (i + 1));
+                [services[i], services[j]] = [services[j], services[i]];
+            }
+            return services.slice(0, count);
+        }
+
+        // ==========================================
+        // === 3. GESTIÓN DE TIEMPO (DATA LAYER) ===
+        // ==========================================
+        function addRandomTime(baseDate, minHours = 0, maxHours = 0, minMinutes = 0, maxMinutes = 0) {
+            const randomHours = minHours + cryptoRandom() * (maxHours - minHours);
+            const randomMinutes = minMinutes + cryptoRandom() * (maxMinutes - minMinutes);
+            const delayInMs = (randomHours * 3600 + randomMinutes * 60) * 1000;
+            return new Date(baseDate.getTime() + delayInMs);
+        }
+
+        function subtractRandomTime(baseDate, minHours, maxHours) {
+            const randomHours = minHours + cryptoRandom() * (maxHours - minHours);
+            const delayInMs = (randomHours * 3600) * 1000;
+            return new Date(baseDate.getTime() - delayInMs);
+        }
+
+        function getScheduleTimestamps(baseDate, settings) {
             if (cachedTimestamps) return cachedTimestamps;
 
             let timestamps = {};
             let usedTimes = new Set();
 
-            function ensureUniqueTime(base, minHours, maxHours, minMinutes, maxMinutes) {
-                let newTime;
-                let timeString;
+            function ensureUniqueTime(base, minH, maxH, minM, maxM) {
+                let newTime, timeString;
                 do {
-                    newTime = addRandomTime(base, minHours, maxHours, minMinutes, maxMinutes);
-                    timeString = newTime.toISOString().slice(0, 16); 
+                    newTime = addRandomTime(base, minH, maxH, minM, maxM);
+                    timeString = newTime.toISOString().slice(0, 16);
                     if (!usedTimes.has(timeString)) {
                         usedTimes.add(timeString);
                         break;
@@ -1064,46 +938,39 @@
                 return newTime;
             }
 
-            timestamps.baseDate = baseDate;
+            // OpSec: Retroactive & Independent
+            timestamps.p1_receipt = baseDate;
             usedTimes.add(baseDate.toISOString().slice(0, 16));
-            timestamps.p1_shield = ensureUniqueTime(baseDate, 6, 12, 0, 0);
 
-            const numUnshields = parseInt(document.getElementById('num_unshield_select')?.value || 2);
-            let lastTime = baseDate;
-            timestamps.p3_unshield = Array.from({ length: numUnshields }, (_, i) => {
-                if (i === 0) {
-                    lastTime = ensureUniqueTime(baseDate, 18, 24, 0, 0);
-                } else {
-                    lastTime = ensureUniqueTime(lastTime, 0, 0, 10, 20);
-                }
+            // FIX: Tiempos independientes para cada wallet en Phase 0 (2 a 24h antes)
+            timestamps.p0_b1 = subtractRandomTime(baseDate, 2, 24);
+            timestamps.p0_b2 = subtractRandomTime(baseDate, 2, 24);
+            timestamps.p0_b3 = subtractRandomTime(baseDate, 2, 24);
+
+            timestamps.p1_shield = ensureUniqueTime(timestamps.p1_receipt, 0, 1, 30, 59);
+
+            let lastTime = timestamps.p1_shield;
+            timestamps.p3_unshield = Array.from({ length: settings.numUnshields }, (_, i) => {
+                if (i === 0) lastTime = ensureUniqueTime(lastTime, 6, 12, 0, 0);
+                else lastTime = ensureUniqueTime(lastTime, 0, 0, 10, 20);
                 return lastTime;
             });
             
-            // Pausa Larga 1 (8-36 horas)
             lastTime = ensureUniqueTime(lastTime, 8, 36, 0, 0);
-
-            // Ráfaga rápida (Fases 4 y 5)
-            const numIntents = parseInt(document.getElementById('num_intent_select')?.value || 2);
-            timestamps.p4_intent = Array.from({ length: numIntents }, () => {
+            timestamps.p4_intent = Array.from({ length: settings.numIntents }, () => {
                 lastTime = ensureUniqueTime(lastTime, 0, 0, 3, 8);
                 return lastTime;
             });
 
             timestamps.p5_payy = ensureUniqueTime(lastTime, 0, 0, 3, 8);
             lastTime = timestamps.p5_payy;
-
-            const numCrosspays = parseInt(document.getElementById('num_crosspay_select')?.value || 3);
-            timestamps.p5_crosspay = Array.from({ length: numCrosspays }, () => {
+            timestamps.p5_crosspay = Array.from({ length: settings.numCrosspays }, () => {
                 lastTime = ensureUniqueTime(lastTime, 0, 0, 3, 8);
                 return lastTime;
             });
 
-            // Pausa Larga 2 (12-48 horas)
             lastTime = ensureUniqueTime(lastTime, 12, 48, 0, 0);
-
-            // Fase final (Consolidación y Cold)
-            timestamps.p6_consol = [];
-            timestamps.p6_consol[0] = lastTime;
+            timestamps.p6_consol = [lastTime];
             timestamps.p6_consol[1] = ensureUniqueTime(timestamps.p6_consol[0], 0, 0, 10, 20);
             
             timestamps.p6_cold = [];
@@ -1111,922 +978,650 @@
             timestamps.p6_cold[1] = ensureUniqueTime(timestamps.p6_cold[0], 0, 0, 10, 20);
             
             cachedTimestamps = timestamps;
+            timestamps.services = getRandomServices(3); 
             return timestamps;
         }
 
-        function generateRandomPercentages(remainderPercent, numOperations) {
-            if (numOperations <= 0 || remainderPercent <= 0) {
-                return Array(numOperations).fill(0);
-            }
-            if (numOperations === 1) {
-                return [parseFloat(remainderPercent.toFixed(2))];
-            }
-            let splits = [];
-            for (let i = 0; i < numOperations - 1; i++) {
-                splits.push(cryptoRandom() * remainderPercent);
-            }
-            splits.push(0, remainderPercent);
-            splits.sort((a, b) => a - b);
-            const percentages = [];
-            let currentSum = 0;
-            for (let i = 0; i < splits.length - 2; i++) {
-                let diff = splits[i + 1] - splits[i];
-                let roundedDiff = parseFloat(diff.toFixed(2));
-                percentages.push(roundedDiff);
-                currentSum += roundedDiff;
-            }
-            const lastPercentage = remainderPercent - currentSum;
-            percentages.push(parseFloat(lastPercentage.toFixed(2)));
-            for (let i = percentages.length - 1; i > 0; i--) {
-                const j = Math.floor(cryptoRandom() * (i + 1));
-                [percentages[i], percentages[j]] = [percentages[j], percentages[i]];
-            }
-            return percentages;
-        }
+        // ==========================================
+        // === 4. CONSTRUCTORES HTML (UI LAYER) ===
+        // ==========================================
         
-        function manageState(action = 'save') {
-            const elementsToTrack = [
-                'non_distributed_slider', 'unshield_slider', 'intent_slider', 'payy_slider', 'consolidation_slider', 'cold_slider',
-                'num_unshield_select', 'num_intent_select', 'num_crosspay_select'
-            ];
-            const defaults = {
-                'non_distributed_slider': 5, 'unshield_slider': 30, 'intent_slider': 30, 'payy_slider': 10, 'consolidation_slider': 50, 'cold_slider': 50,
-                'num_unshield_select': 2, 'num_intent_select': 2, 'num_crosspay_select': 3
-            };
-
-            if (action === 'save') {
-                const state = {};
-                elementsToTrack.forEach(id => {
-                    const el = document.getElementById(id);
-                    state[id] = el ? el.value : defaults[id];
-                });
-                return state;
-            } else if (action === 'restore') {
-                const state = arguments[1]; 
-                if (!state) return;
-                elementsToTrack.forEach(id => {
-                    const el = document.getElementById(id);
-                    if (el && state[id]) {
-                        el.value = state[id];
-                    }
-                });
-            }
+        function buildRowHTML(contentLeft, timeId, isHighlight = false, rowClass = '', attrs = '') {
+            return `
+                <tr class="${isHighlight ? 'highlight-row' : ''} ${rowClass}" ${attrs}>
+                    <td>${contentLeft}</td>
+                    <td class="col-time" ${timeId ? `id="${timeId}"` : ''}></td>
+                </tr>`;
         }
 
-        function generateSchedule() {
+        function buildPhaseCardHTML(id, title, rowsHTML, colorClass) {
+            return `
+                <div class="phase-card" id="${id}-card">
+                    <table class="phase-table">
+                        <tbody>
+                            <tr class="phase-header ${id}"><th colspan="2">${title}</th></tr>
+                            ${rowsHTML}
+                        </tbody>
+                    </table>
+                </div>`;
+        }
+
+        function buildSliderHTML(id, pClass, min=0, max=100, val=30) {
+            return `
+                <div class="range-wrapper ${pClass}">
+                    <input type="range" min="${min}" max="${max}" value="${val}" id="${id}" class="${pClass}">
+                    <div class="slider-bubble"></div>
+                </div>`;
+        }
+
+        function buildSelectHTML(id, pClass, options) {
+            const optsHTML = options.map(o => `<option value="${o.val}">${o.text}</option>`).join('');
+            return `
+                <div class="custom-select-container ${pClass}">
+                    <select id="${id}" style="display:none;">${optsHTML}</select>
+                </div>`;
+        }
+
+        function buildFlexRowContent(title, amountId, note, controlsHTML = '', pClass = '') {
+            return `
+                <div class="flex-container">
+                    <div class="text-content">
+                        <strong>${title}</strong><br>
+                        <span class="calculated-value ${pClass}">$<span id="${amountId}">0.00</span></span>
+                        ${note ? `<span class="notes">${note}</span>` : ''}
+                    </div>
+                    ${controlsHTML ? `<div>${controlsHTML}</div>` : '<div style="flex:1;"></div>'}
+                </div>`;
+        }
+
+        function generateDynamicRows(type, count) {
+            let html = '';
+            for(let i=0; i<count; i++) {
+                let title, amountId, timeId, note, controls = '', pClass, phaseArrow;
+                const idx = i + 1;
+
+                if (type === 'unshield') {
+                    pClass = 'p3'; phaseArrow = 'phase3-arrow';
+                    amountId = `unshield${idx}_amount`; timeId = `unshield${idx}_time`;
+                    title = `Railgun <span class="${phaseArrow}">→</span> B2 [Unshield] <span class="parenthesis">(${idx}/${count})</span>${i>0 ? ` <span class="percent-border ${pClass}"><span id="unshield${idx}_percent">0.00</span>%</span>`:''}`;
+                    note = i===0?'First':i===count-1?'Final':'Intermediate' + ' withdrawal from pool.';
+                    if(i===0) {
+                        const select = buildSelectHTML('num_unshield_select', pClass, [{val:2,text:'2 operations'},{val:3,text:'3 operations'},{val:4,text:'4 operations'}]);
+                        const slider = buildSliderHTML('unshield_slider', pClass, 0, 100, 30);
+                        controls = `<div class="slider-group-container">${select}${slider}</div>`;
+                    }
+                } 
+                else if (type === 'intent') {
+                    pClass = 'p4'; phaseArrow = 'phase4-arrow';
+                    amountId = `intent${idx}_amount`; timeId = `intent${idx}_time`;
+                    title = `B2 <span class="${phaseArrow}">→</span> Zashi In <span class="parenthesis">(${idx}/${count})</span>${i>0 ? ` <span class="percent-border ${pClass}"><span id="intent${idx}_percent">0.00</span>%</span>`:''}`;
+                    note = 'USDC→ZEC conversion.';
+                    if(i===0) {
+                        const select = buildSelectHTML('num_intent_select', pClass, [{val:2,text:'2 operations'},{val:3,text:'3 operations'},{val:4,text:'4 operations'}]);
+                        const slider = buildSliderHTML('intent_slider', pClass, 0, 100, 30);
+                        controls = `<div class="slider-group-container">${select}${slider}</div>`;
+                    }
+                }
+                else if (type === 'crosspay') {
+                    pClass = 'p5'; phaseArrow = 'phase5-arrow';
+                    amountId = `savings${idx}_amount`; timeId = `savings${idx}_time`;
+                    title = `Zashi Out <span class="${phaseArrow}">→</span> B3 <span class="parenthesis">(${idx}/${count})</span> <span class="percent-border ${pClass}"><span id="savings${idx}_percent">0.00</span>%</span>`;
+                    note = 'Exit for Savings (ZEC→USDC).';
+                    if(i===0) {
+                         const select = buildSelectHTML('num_crosspay_select', pClass, [{val:3,text:'3 operations'},{val:4,text:'4 operations'},{val:5,text:'5 operations'}]);
+                         controls = `<div class="slider-group-container">${select}</div>`;
+                    }
+                }
+
+                const content = buildFlexRowContent(title, amountId, note, controls, pClass);
+                html += buildRowHTML(content, timeId, false, 'op-row', `data-group="${type}"`);
+            }
+            return html;
+        }
+
+        // ==========================================
+        // === 5. CORE CONTROLLER ===
+        // ==========================================
+        function generateSchedule(animate = true) {
             cachedTimestamps = null;
-
-            const amountElement = document.getElementById('totalAmount');
-            const inputElement = document.getElementById('receiptDate');
-
-            if (!inputElement.value || !amountElement.value || parseFloat(amountElement.value.replace(/[^0-9.]/g, '')) <= 0) {
-                scheduleContainer.innerHTML = `<p style="color: #d63384; text-align: center;">Please select a valid date, time, and positive amount.</p>`;
+            if (!DOM.dateInput.value || !DOM.amountInput.value || parseFloat(DOM.amountInput.value.replace(/[^0-9.]/g, '')) <= 0) {
+                DOM.scheduleContainer.innerHTML = `<p style="text-align: center; color: #E53935;">Invalid input.</p>`;
                 return;
             }
+
+            const savedState = manageState('save');
+            totalAmount = parseFloat(DOM.amountInput.value.replace(/[^0-9.]/g, ''));
+            DOM.alarmSection.style.display = 'flex';
+            DOM.financialPanel.style.display = window.innerWidth <= 600 ? 'flex' : 'block';
+
+            const settings = {
+                numUnshields: parseInt(savedState.num_unshield_select || 2),
+                numIntents: parseInt(savedState.num_intent_select || 2),
+                numCrosspays: parseInt(savedState.num_crosspay_select || 3)
+            };
+            const timestamps = getScheduleTimestamps(new Date(DOM.dateInput.value), settings);
+
+            renderFullSchedule(savedState, timestamps.services);
             
-            const currentState = manageState('save'); 
-            
-            totalAmount = parseFloat(amountElement.value.replace(/[^0-9.]/g, ''));
-            alarmSection.style.display = 'flex';
-            
-            buildScheduleSkeleton(currentState); 
-            manageState('restore', currentState); 
-            
-            updateAllValues();
+            manageState('restore', savedState);
+            initDynamicSelects();
             attachAllListeners();
+            updateAllValues();
+
+            if (animate) triggerReflowEffect();
         }
 
-        function buildScheduleSkeleton(state = {}) {
-            const numUnshields = parseInt(state.num_unshield_select || 2);
-            const numIntents = parseInt(state.num_intent_select || 2);
-            const numCrosspays = parseInt(state.num_crosspay_select || 3);
+        function renderFullSchedule(state, services) {
+            const counts = {
+                unshield: parseInt(state.num_unshield_select || 2),
+                intent: parseInt(state.num_intent_select || 2),
+                crosspay: parseInt(state.num_crosspay_select || 3)
+            };
+
+            let html = '';
+
+            // Phase 0 (Each with unique ID for Time)
+            const p0Content = `
+                <tr><td class="col-description"><strong>B1 <span class="phase0-arrow">→</span> Railgun</strong><br><span id="p0_gas_b1" class="gas-badge b1">...</span> <span class="swap-badge">Via: ${services[0]}</span><span class="notes">Gas for shielding.</span></td><td class="col-time" id="base_time"></td></tr>
+                <tr><td class="col-description"><strong>B2 <span class="phase0-arrow">→</span> Zashi</strong><br><span id="p0_gas_b2" class="gas-badge b2">...</span> <span class="swap-badge">Via: ${services[1]}</span><span class="notes">Gas for unshield/transfer.</span></td><td class="col-time" id="base_time_same"></td></tr>
+                <tr><td class="col-description"><strong>B3 <span class="phase0-arrow">→</span> Savings<span class="fk-super">fk</span></strong><br><span id="p0_gas_b3" class="gas-badge b3">...</span> <span class="swap-badge">Via: ${services[2]}</span><span class="notes">Gas for consolidation.</span></td><td class="col-time" id="base_time_same_2"></td></tr>`;
+            html += buildPhaseCardHTML('phase-0', 'Phase 0 – Logistic Prep', p0Content);
+
+            // Phase 1
+            const p1Content = `
+                <tr><td class="col-description"><strong>Funds received in B1</strong><br><span class="calculated-value p1">$<span id="base_amount">0.00</span></span><span class="notes">Compliance Firewall.</span></td><td class="col-time" id="p1_start_time"></td></tr>
+                <tr><td class="col-description"><strong>B1 <span class="phase1-arrow">→</span> Railgun [Shield]</strong><br><span class="calculated-value p1">$<span id="shield_amount">0.00</span></span><span class="notes">Move to privacy pool.</span></td><td class="col-time" id="shield_time"></td></tr>`;
+            html += buildPhaseCardHTML('phase-1', 'Phase 1 – Secure Accumulation', p1Content);
+
+            // Phase 2
+            const p2Control = `<div class="range-wrapper p2"><input type="range" min="1" max="10" value="5" id="non_distributed_slider" class="p2"><div class="slider-bubble"></div></div>`;
+            const p2Row1 = buildFlexRowContent('Retained in Railgun', 'non_distributed_amount', 'Leave 1-10% for privacy.', p2Control, 'p2');
+            const p2Content = buildRowHTML(p2Row1, '') + `<tr><td class="col-description"><strong>Distributable Funds</strong><br><span class="calculated-value p2">$<span id="distributable_amount">0.00</span></span></td><td class="col-time"></td></tr>`;
+            html += buildPhaseCardHTML('phase-2', 'Phase 2 - Staging & Allocation', p2Content);
+
+            // Phase 3, 4, 5 (Dynamic)
+            html += buildPhaseCardHTML('phase-3', 'Phase 3 – Unshielding', generateDynamicRows('unshield', counts.unshield));
+            html += buildPhaseCardHTML('phase-4', 'Phase 4 – Conversion', generateDynamicRows('intent', counts.intent));
             
-            let unshieldRows = '';
-            for (let i = 0; i < numUnshields; i++) {
-                const isFirst = i === 0;
-                unshieldRows += `
-                    <tr data-group="unshield" class="op-row">
-                        <td>
-                            <div class="flex-container">
-                                <div class="text-content">
-                                    <strong>Railgun <span class="phase3-arrow">→</span> B2 [Unshield] <span class="parenthesis">(${i+1}/${numUnshields})</span>
-                                    ${!isFirst ? ` <span class="percent-border p3"><span id="unshield${i+1}_percent">0.00</span>%</span>` : ''}
-                                    </strong><br>
-                                    <span class="calculated-value p3">$<span id="unshield${i+1}_amount">0.00</span></span>
-                                    <span class="notes">${i === 0 ? 'First' : i === numUnshields - 1 ? 'Final' : 'Intermediate'} withdrawal from pool.</span>
-                                </div>
-                                ${isFirst ? `<div class="slider-group-container">
-                                    <div class="custom-select-container p3">
-                                        <select id="num_unshield_select" style="display: none;">
-                                            <option value="2">2 operations</option>
-                                            <option value="3">3 operations</option>
-                                            <option value="4">4 operations</option>
-                                        </select>
-                                    </div>
-                                    <div class="range-wrapper p3">
-                                        <input type="range" min="0" max="100" value="30" id="unshield_slider" class="p3">
-                                        <div class="slider-bubble"></div>
-                                    </div>
-                                </div>` : ''}
-                            </div>
-                        </td>
-                        <td class="col-time" id="unshield${i+1}_time"></td>
-                    </tr>`;
-            }
+            const payyControl = buildSliderHTML('payy_slider', 'p5', 0, 100, 10);
+            const payyRow = buildRowHTML(buildFlexRowContent('Zashi Out <span class="phase5-arrow">→</span> Spending<span class="fk-super">fk</span>', 'payy_amount', 'Priority exit for Spending.', payyControl, 'p5'), 'payy_time', true, 'op-row', 'data-group="crosspay"');
+            html += buildPhaseCardHTML('phase-5', 'Phase 5 – Private Exits', payyRow + generateDynamicRows('crosspay', counts.crosspay));
 
-            let intentRows = '';
-            for (let i = 0; i < numIntents; i++) {
-                const isFirst = i === 0;
-                intentRows += `
-                    <tr data-group="intent" class="op-row">
-                        <td>
-                            <div class="flex-container">
-                                <div class="text-content">
-                                    <strong>B2 <span class="phase4-arrow">→</span> Zashi In <span class="parenthesis">(${i+1}/${numIntents})</span>
-                                    ${!isFirst ? ` <span class="percent-border p4"><span id="intent${i+1}_percent">0.00</span>%</span>` : ''}
-                                    </strong><br>
-                                    <span class="calculated-value p4">$<span id="intent${i+1}_amount">0.00</span></span>
-                                    <span class="notes">${i === 0 ? 'First' : i === numIntents - 1 ? 'Final' : 'Intermediate'} USDC→ZEC conversion.</span>
-                                </div>
-                                ${isFirst ? `<div class="slider-group-container">
-                                    <div class="custom-select-container p4">
-                                        <select id="num_intent_select" style="display: none;">
-                                            <option value="2">2 operations</option>
-                                            <option value="3">3 operations</option>
-                                            <option value="4">4 operations</option>
-                                        </select>
-                                    </div>
-                                    <div class="range-wrapper p4">
-                                        <input type="range" min="0" max="100" value="30" id="intent_slider" class="p4">
-                                        <div class="slider-bubble"></div>
-                                    </div>
-                                </div>` : ''}
-                            </div>
-                        </td>
-                        <td class="col-time" id="intent${i+1}_time"></td>
-                    </tr>`;
-            }
+            // Phase 6
+            const consolControl = buildSliderHTML('consolidation_slider', 'p6', 0, 100, 50);
+            const consolRow1 = buildRowHTML(buildFlexRowContent('B3 <span class="phase6-arrow">→</span> Savings<span class="fk-super">fk</span> <span class="parenthesis">(1/2)</span>', 'consol1_amount', 'Move funds to Savings.', consolControl, 'p6'), 'consol1_time');
+            const consolRow2 = `<tr><td class="col-description"><strong>B3 <span class="phase6-arrow">→</span> Savings<span class="fk-super">fk</span> <span class="parenthesis">(2/2)</span> <span class="percent-border p6"><span id="consolidation2_percent">50.00</span>%</span></strong><br><span class="calculated-value p6">$<span id="consol2_amount">0.00</span></span><span class="notes">Second batch to Savings.</span></td><td class="col-time" id="consol2_time"></td></tr>`;
+            
+            const coldControl = buildSliderHTML('cold_slider', 'p6', 0, 100, 50);
+            const coldRow1 = buildRowHTML(buildFlexRowContent('Savings<span class="fk-super">fk</span> <span class="phase6-arrow">→</span> Cold Wallet <span class="parenthesis">(1/2)</span>', 'cold1_amount', 'First movement to cold storage.', coldControl, 'p6'), 'cold1_time', true);
+            const coldRow2 = `<tr class="highlight-row"><td class="col-description"><strong>Savings<span class="fk-super">fk</span> <span class="phase6-arrow">→</span> Cold Wallet <span class="parenthesis">(2/2)</span> <span class="percent-border p6"><span id="cold2_percent">50.00</span>%</span></strong><br><span class="calculated-value p6">$<span id="cold2_amount">0.00</span></span><span class="notes">Final movement to cold storage.</span></td><td class="col-time" id="cold2_time"></td></tr>`;
+            
+            html += buildPhaseCardHTML('phase-6', 'Phase 6 – Consolidation', consolRow1 + consolRow2 + coldRow1 + coldRow2);
 
-            let crosspayRows = `
-                <tr data-group="crosspay" class="op-row highlight-row">
-                    <td>
-                        <div class="flex-container">
-                            <div class="text-content">
-                                <strong>Zashi Out <span class="phase5-arrow">→</span> Milano</strong><br>
-                                <span class="calculated-value p5">$<span id="payy_amount">0.00</span></span>
-                                <span class="notes">Priority exit for Spending (ZEC→USDC).</span>
-                            </div>
-                            <div class="range-wrapper p5">
-                                <input type="range" min="0" max="100" value="10" id="payy_slider" class="p5">
-                                <div class="slider-bubble"></div>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="col-time" id="payy_time"></td>
-                </tr>`;
-            for (let i = 0; i < numCrosspays; i++) {
-                const isFirstCrosspay = i === 0;
-                crosspayRows += `
-                    <tr data-group="crosspay" class="op-row">
-                        <td>
-                            <div class="flex-container">
-                                <div class="text-content">
-                                    <strong>Zashi Out <span class="phase5-arrow">→</span> B3 <span class="parenthesis">(${i+1}/${numCrosspays})</span> 
-                                    <span class="percent-border p5"><span id="savings${i+1}_percent">0.00</span>%</span>
-                                    </strong><br>
-                                    <div class="text-content"><span class="calculated-value p5">$<span id="savings${i+1}_amount">0.00</span></span></div>
-                                    <span class="notes">${isFirstCrosspay ? 'First' : i === numCrosspays - 1 ? 'Final' : 'Intermediate'} exit for Savings (ZEC→USDC).</span>
-                                </div>
-                                ${isFirstCrosspay ? `<div class="custom-select-container p5">
-                                    <select id="num_crosspay_select" style="display: none;">
-                                        <option value="3">3 operations</option>
-                                        <option value="4">4 operations</option>
-                                        <option value="5">5 operations</option>
-                                    </select>
-                                </div>` : ''}
-                            </div>
-                        </td>
-                        <td class="col-time" id="savings${i+1}_time"></td>
-                    </tr>`;
-            }
-
-            scheduleContainer.innerHTML = `
-                <div class="phase-card" id="phase-1-card">
-                    <table class="phase-table"><tbody>
-                        <tr class="phase-header phase-1"><th colspan="2">Phase 1 – Secure Accumulation</th></tr>
-                        <tr>
-                            <td class="col-description">
-                                <strong>Funds received in B1</strong><br>
-                                <div class="text-content">
-                                    <span class="calculated-value p1">$<span id="base_amount">0.00</span></span>
-                                </div>
-                                <span class="notes">Starting point of the schedule.</span>
-                            </td>
-                            <td class="col-time" id="base_time"></td>
-                        </tr>
-                        <tr>
-                            <td class="col-description">
-                                <strong>B1 <span class="phase1-arrow">→</span> Railgun [Shield]</strong><br>
-                                <div class="text-content">
-                                    <span class="calculated-value p1">$<span id="shield_amount">0.00</span></span>
-                                </div>
-                                <span class="notes">Move funds to the privacy pool.</span>
-                            </td>
-                            <td class="col-time" id="shield_time"></td>
-                        </tr>
-                    </tbody></table>
-                </div>
-                <div class="phase-card" id="phase-2-card">
-                    <table class="phase-table"><tbody>
-                        <tr class="phase-header phase-2"><th colspan="2">Phase 2 - Staging & Allocation</th></tr>
-                        <tr>
-                            <td>
-                                <div class="flex-container">
-                                    <div class="text-content">
-                                        <strong>Funds retained in Railgun</strong><br>
-                                        <span class="calculated-value p2">$<span id="non_distributed_amount">0.00</span></span>
-                                        <span class="notes">Leave 1-10% in Railgun for privacy.</span>
-                                    </div>
-                                    <div class="range-wrapper p2">
-                                        <input type="range" min="1" max="10" value="5" id="non_distributed_slider" class="p2">
-                                        <div class="slider-bubble"></div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="col-time"></td>
-                        </tr>
-                        <tr>
-                            <td class="col-description">
-                                <strong>Distributable Funds</strong><br>
-                                <div class="text-content">
-                                    <span class="calculated-value p2">$<span id="distributable_amount">0.00</span></span>
-                                </div>
-                                <span class="notes">Base amount for next phases.</span>
-                            </td>
-                            <td class="col-time"></td>
-                        </tr>
-                    </tbody></table>
-                </div>
-                <div class="phase-card" id="phase-3-card">
-                    <table class="phase-table"><tbody>
-                        <tr class="phase-header phase-3"><th colspan="2">Phase 3 – Unshielding</th></tr>
-                        ${unshieldRows}
-                    </tbody></table>
-                </div>
-                <div class="phase-card" id="phase-4-card">
-                    <table class="phase-table"><tbody>
-                        <tr class="phase-header phase-4"><th colspan="2">Phase 4 – Conversion</th></tr>
-                        ${intentRows}
-                    </tbody></table>
-                </div>
-                <div class="phase-card" id="phase-5-card">
-                    <table class="phase-table"><tbody>
-                        <tr class="phase-header phase-5"><th colspan="2">Phase 5 – Private Exits</th></tr>
-                        ${crosspayRows}
-                    </tbody></table>
-                </div>
-                <div class="phase-card" id="phase-6-card">
-                    <table class="phase-table"><tbody>
-                        <tr class="phase-header phase-6"><th colspan="2">Phase 6 – Consolidation & Cold Storage</th></tr>
-                        <tr>
-                            <td>
-                                <div class="flex-container">
-                                    <div class="text-content">
-                                        <strong>B3 <span class="phase6-arrow">→</span> Barcelona <span class="parenthesis">(1/2)</span></strong><br>
-                                        <span class="calculated-value p6">$<span id="consol1_amount">0.00</span></span>
-                                        <span class="notes">Move funds from B3 to Savings Wallet.</span>
-                                    </div>
-                                    <div class="range-wrapper p6">
-                                        <input type="range" min="0" max="100" value="50" id="consolidation_slider" class="p6">
-                                        <div class="slider-bubble"></div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="col-time" id="consol1_time"></td>
-                        </tr>
-                        <tr>
-                            <td class="col-description">
-                                <strong>B3 <span class="phase6-arrow">→</span> Barcelona <span class="parenthesis">(2/2)</span> <span class="percent-border p6"><span id="consolidation2_percent">50.00</span>%</span></strong><br>
-                                <div class="text-content">
-                                    <span class="calculated-value p6">$<span id="consol2_amount">0.00</span></span>
-                                </div>
-                                <span class="notes">Second batch to Savings Wallet.</span>
-                            </td>
-                            <td class="col-time" id="consol2_time"></td>
-                        </tr>
-                        <tr class="highlight-row">
-                            <td>
-                                <div class="flex-container">
-                                    <div class="text-content">
-                                        <strong>Savings <span class="phase6-arrow">→</span> Cold Wallet <span class="parenthesis">(1/2)</span></strong><br>
-                                        <span class="calculated-value p6">$<span id="cold1_amount">0.00</span></span>
-                                        <span class="notes">First movement to cold storage.</span>
-                                    </div>
-                                    <div class="range-wrapper p6">
-                                        <input type="range" min="0" max="100" value="50" id="cold_slider" class="p6">
-                                        <div class="slider-bubble"></div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="col-time" id="cold1_time"></td>
-                        </tr>
-                        <tr class="highlight-row">
-                            <td class="col-description">
-                                <strong>Savings <span class="phase6-arrow">→</span> Cold Wallet <span class="parenthesis">(2/2)</span> <span class="percent-border p6"><span id="cold2_percent">50.00</span>%</span></strong><br>
-                                <div class="text-content">
-                                    <span class="calculated-value p6">$<span id="cold2_amount">0.00</span></span>
-                                </div>
-                                <span class="notes">Final movement to cold storage.</span>
-                            </td>
-                            <td class="col-time" id="cold2_time"></td>
-                        </tr>
-                    </tbody></table>
-                </div>
-            `;
-        }
-        
-        function getJitteredSliderValue(sliderId) {
-            let sliderValue = parseFloat(document.getElementById(sliderId).value);
-            const slider = document.getElementById(sliderId);
-            if (!slider) return 0;
-            const sliderMax = parseFloat(slider.max);
-
-            if (sliderValue > 0 && sliderValue < sliderMax) {
-                sliderValue += cryptoRandom();
-                sliderValue = Math.min(sliderValue, sliderMax);
-            }
-            return sliderValue;
+            DOM.scheduleContainer.innerHTML = html;
         }
 
-        function applyFormattedTimes(timestamps) {
-            document.getElementById('base_time').textContent = formatDateTime(timestamps.baseDate);
-            document.getElementById('shield_time').textContent = formatDateTime(timestamps.p1_shield);
-
-            timestamps.p3_unshield.forEach((time, i) => {
-                const el = document.getElementById(`unshield${i+1}_time`);
-                if (el) el.textContent = formatDateTime(time);
-            });
-            timestamps.p4_intent.forEach((time, i) => {
-                const el = document.getElementById(`intent${i+1}_time`);
-                if (el) el.textContent = formatDateTime(time);
-            });
-            document.getElementById('payy_time').textContent = formatDateTime(timestamps.p5_payy);
-            timestamps.p5_crosspay.forEach((time, i) => {
-                const el = document.getElementById(`savings${i+1}_time`);
-                if (el) el.textContent = formatDateTime(time);
-            });
-
-            document.getElementById('consol1_time').textContent = formatDateTime(timestamps.p6_consol[0]);
-            document.getElementById('consol2_time').textContent = formatDateTime(timestamps.p6_consol[1]);
-            document.getElementById('cold1_time').textContent = formatDateTime(timestamps.p6_cold[0]);
-            document.getElementById('cold2_time').textContent = formatDateTime(timestamps.p6_cold[1]);
+        // ==========================================
+        // === 6. LOGICA DE ACTUALIZACIÓN Y UI ===
+        // ==========================================
+        function manageState(action = 'save', data = null) {
+            const ids = ['non_distributed_slider', 'unshield_slider', 'intent_slider', 'payy_slider', 'consolidation_slider', 'cold_slider', 'num_unshield_select', 'num_intent_select', 'num_crosspay_select'];
+            const defaults = { 'non_distributed_slider': 5, 'unshield_slider': 30, 'intent_slider': 30, 'payy_slider': 10, 'consolidation_slider': 50, 'cold_slider': 50, 'num_unshield_select': 2, 'num_intent_select': 2, 'num_crosspay_select': 3 };
+            if (action === 'save') {
+                const state = {};
+                ids.forEach(id => { const el = document.getElementById(id); state[id] = el ? el.value : defaults[id]; });
+                return state;
+            } else { 
+                if (!data) return;
+                ids.forEach(id => { const el = document.getElementById(id); if (el && data[id]) el.value = data[id]; });
+            }
         }
 
         function updateAllValues() {
-            const timestamps = getScheduleTimestamps(new Date(dateInput.value));
-            applyFormattedTimes(timestamps);
+            const settings = {
+                numUnshields: parseInt(document.getElementById('num_unshield_select')?.value || 2),
+                numIntents: parseInt(document.getElementById('num_intent_select')?.value || 2),
+                numCrosspays: parseInt(document.getElementById('num_crosspay_select')?.value || 3)
+            };
+
+            const timestamps = getScheduleTimestamps(new Date(DOM.dateInput.value), settings);
+
+            const setText = (id, txt) => { const el = document.getElementById(id); if(el) el.textContent = txt; };
             
-            document.getElementById('base_amount').textContent = formatAmount(totalAmount);
-            document.getElementById('shield_amount').textContent = formatAmount(totalAmount);
+            // Phase 0: Prep (Pasado Independiente)
+            setText('base_time', formatDateTime(timestamps.p0_b1));
+            setText('base_time_same', formatDateTime(timestamps.p0_b2));
+            setText('base_time_same_2', formatDateTime(timestamps.p0_b3));
             
-            updatePhase2(); 
+            setText('p1_start_time', formatDateTime(timestamps.p1_receipt));
+            setText('shield_time', formatDateTime(timestamps.p1_shield));
+            
+            setText('payy_time', formatDateTime(timestamps.p5_payy));
+            setText('consol1_time', formatDateTime(timestamps.p6_consol[0]));
+            setText('consol2_time', formatDateTime(timestamps.p6_consol[1]));
+            setText('cold1_time', formatDateTime(timestamps.p6_cold[0]));
+            setText('cold2_time', formatDateTime(timestamps.p6_cold[1]));
+
+            timestamps.p3_unshield.forEach((t, i) => setText(`unshield${i+1}_time`, formatDateTime(t)));
+            timestamps.p4_intent.forEach((t, i) => setText(`intent${i+1}_time`, formatDateTime(t)));
+            timestamps.p5_crosspay.forEach((t, i) => setText(`savings${i+1}_time`, formatDateTime(t)));
+
+            setText('base_amount', formatAmount(totalAmount));
+            setText('shield_amount', formatAmount(totalAmount));
+
+            calculateFinancials();
+            updatePhase2();
         }
 
-        function updateAllTimesOnly() {
-            if (!dateInput.value || !cachedTimestamps) return;
-            applyFormattedTimes(cachedTimestamps);
-        }
-        
         function updatePhase2() {
             let nonDistributedPercent = getJitteredSliderValue('non_distributed_slider');
             effectiveAmount = totalAmount * (1 - nonDistributedPercent / 100);
-            document.getElementById('distributable_amount').textContent = formatAmount(effectiveAmount);
-            document.getElementById('non_distributed_amount').textContent = formatAmount(totalAmount * nonDistributedPercent / 100);
             
-            updatePhase3();
-            updatePhase4();
-            updatePhase5();
-            updatePhase6Consolidation();
-            updatePhase6Cold();
+            const setText = (id, txt) => { const el = document.getElementById(id); if(el) el.textContent = txt; };
+            setText('distributable_amount', formatAmount(effectiveAmount));
+            setText('non_distributed_amount', formatAmount(totalAmount * nonDistributedPercent / 100));
+            
+            updatePhase3(); updatePhase4(); updatePhase5(); updatePhase6Consolidation(); updatePhase6Cold();
         }
 
         function updatePhase3() {
-            const numUnshields = parseInt(document.getElementById('num_unshield_select').value);
-            let unshield1Percent = getJitteredSliderValue('unshield_slider');
-            const unshieldPercents = [unshield1Percent, ...generateRandomPercentages(100 - unshield1Percent, numUnshields - 1)];
-            for (let i = 0; i < numUnshields; i++) {
-                const amountEl = document.getElementById(`unshield${i+1}_amount`);
-                if(amountEl) amountEl.textContent = formatAmount(effectiveAmount * unshieldPercents[i] / 100);
-                if (i > 0) {
-                   const percentEl = document.getElementById(`unshield${i+1}_percent`);
-                   if(percentEl) percentEl.textContent = unshieldPercents[i].toFixed(2);
-                }
+            const num = parseInt(document.getElementById('num_unshield_select').value);
+            let p1 = getJitteredSliderValue('unshield_slider');
+            const percs = [p1, ...generateRandomPercentages(100 - p1, num - 1)];
+            for (let i=0; i<num; i++) {
+                const el = document.getElementById(`unshield${i+1}_amount`);
+                if(el) el.textContent = formatAmount(effectiveAmount * percs[i] / 100);
+                if(i>0) document.getElementById(`unshield${i+1}_percent`).textContent = percs[i].toFixed(2);
             }
         }
 
         function updatePhase4() {
-            const numIntents = parseInt(document.getElementById('num_intent_select').value);
-            let intent1Percent = getJitteredSliderValue('intent_slider');
-            const intentPercents = [intent1Percent, ...generateRandomPercentages(100 - intent1Percent, numIntents - 1)];
-            for (let i = 0; i < numIntents; i++) {
-                const amountEl = document.getElementById(`intent${i+1}_amount`);
-                if(amountEl) amountEl.textContent = formatAmount(effectiveAmount * intentPercents[i] / 100);
-                if (i > 0) {
-                    const percentEl = document.getElementById(`intent${i+1}_percent`);
-                    if(percentEl) percentEl.textContent = intentPercents[i].toFixed(2);
-                }
+            const num = parseInt(document.getElementById('num_intent_select').value);
+            let p1 = getJitteredSliderValue('intent_slider');
+            const percs = [p1, ...generateRandomPercentages(100 - p1, num - 1)];
+            for (let i=0; i<num; i++) {
+                const el = document.getElementById(`intent${i+1}_amount`);
+                if(el) el.textContent = formatAmount(effectiveAmount * percs[i] / 100);
+                if(i>0) document.getElementById(`intent${i+1}_percent`).textContent = percs[i].toFixed(2);
             }
+            calculateFinancials();
         }
-        
+
         function updatePhase5() {
-            const numCrosspays = parseInt(document.getElementById('num_crosspay_select').value);
-            let payyPercent = getJitteredSliderValue('payy_slider');
-            const crosspayPercents = generateRandomPercentages(100 - payyPercent, numCrosspays);
-            document.getElementById('payy_amount').textContent = formatAmount(effectiveAmount * payyPercent / 100);
-            for (let i = 0; i < numCrosspays; i++) {
-                const amountEl = document.getElementById(`savings${i+1}_amount`);
-                const percentEl = document.getElementById(`savings${i+1}_percent`);
-                if(amountEl) amountEl.textContent = formatAmount(effectiveAmount * crosspayPercents[i] / 100);
-                if(percentEl) percentEl.textContent = crosspayPercents[i].toFixed(2);
+            const num = parseInt(document.getElementById('num_crosspay_select').value);
+            let p1 = getJitteredSliderValue('payy_slider');
+            const percs = generateRandomPercentages(100 - p1, num);
+            document.getElementById('payy_amount').textContent = formatAmount(effectiveAmount * p1 / 100);
+            for (let i=0; i<num; i++) {
+                const el = document.getElementById(`savings${i+1}_amount`);
+                if(el) el.textContent = formatAmount(effectiveAmount * percs[i] / 100);
+                document.getElementById(`savings${i+1}_percent`).textContent = percs[i].toFixed(2);
             }
         }
 
         function updatePhase6Consolidation() {
-            let consol1Percent = getJitteredSliderValue('consolidation_slider');
-            document.getElementById('consol1_amount').textContent = formatAmount(effectiveAmount * consol1Percent / 100);
-            document.getElementById('consol2_amount').textContent = formatAmount(effectiveAmount * (100 - consol1Percent) / 100);
-            document.getElementById('consolidation2_percent').textContent = (100 - consol1Percent).toFixed(2);
+            let p1 = getJitteredSliderValue('consolidation_slider');
+            document.getElementById('consol1_amount').textContent = formatAmount(effectiveAmount * p1 / 100);
+            document.getElementById('consol2_amount').textContent = formatAmount(effectiveAmount * (100 - p1) / 100);
+            document.getElementById('consolidation2_percent').textContent = (100 - p1).toFixed(2);
         }
 
         function updatePhase6Cold() {
-            let cold1Percent = getJitteredSliderValue('cold_slider');
-            document.getElementById('cold1_amount').textContent = formatAmount(effectiveAmount * cold1Percent / 100);
-            document.getElementById('cold2_amount').textContent = formatAmount(effectiveAmount * (100 - cold1Percent) / 100);
-            document.getElementById('cold2_percent').textContent = (100 - cold1Percent).toFixed(2);
+            let p1 = getJitteredSliderValue('cold_slider');
+            document.getElementById('cold1_amount').textContent = formatAmount(effectiveAmount * p1 / 100);
+            document.getElementById('cold2_amount').textContent = formatAmount(effectiveAmount * (100 - p1) / 100);
+            document.getElementById('cold2_percent').textContent = (100 - p1).toFixed(2);
         }
 
-        function initializeCustomSelects() {
-            const containers = document.querySelectorAll('.custom-select-container');
+        function calculateFinancials() {
+            const numIntents = parseInt(document.getElementById('num_intent_select')?.value || 2);
+            const netData = NETWORK_DATA[currentNetwork];
+            
+            const gasB1 = netData.b1_cost;
+            const gasB2 = netData.b2_unit_cost * numIntents; 
+            const gasB3 = netData.b2_unit_cost * 2; 
+            const gasCold = netData.b2_unit_cost * 2; 
+            const totalGas = gasB1 + gasB2 + gasB3 + gasCold;
 
-            containers.forEach(container => {
-                const originalSelect = container.querySelector('select');
-                if (!originalSelect || container.querySelector('.select-selected')) return;
+            const fees = (totalAmount * 0.0025 * 2) + (totalAmount * 0.0075 * 2); 
+            const txCost = totalGas + fees;
+            const netTotal = totalAmount - txCost;
 
-                const selectedDiv = document.createElement('DIV');
-                selectedDiv.setAttribute('class', 'select-selected');
+            const setText = (id, txt) => document.getElementById(id).textContent = txt;
+            const pct = (val) => `(${(val/totalAmount*100).toFixed(2)}%)`;
+
+            setText('fin_gas_b1', `$${formatAmount(gasB1)}`);
+            setText('fin_gas_b2', `$${formatAmount(gasB2)}`);
+            setText('fin_gas_b3', `$${formatAmount(gasB3)}`);
+            setText('fin_gas_cold', `$${formatAmount(gasCold)}`);
+
+            setText('fin_rg_shield', `$${formatAmount(totalAmount * 0.0025)}`);
+            setText('fin_rg_unshield', `$${formatAmount(totalAmount * 0.0025)}`);
+            setText('fin_usdc_zec', `$${formatAmount(totalAmount * 0.0075)}`);
+            setText('fin_zec_usdc', `$${formatAmount(totalAmount * 0.0075)}`);
+
+            setText('fin_gross', `$${formatAmount(totalAmount)}`);
+            setText('fin_total_gas', `$${formatAmount(totalGas)}`);
+            setText('pct_total_gas', pct(totalGas));
+            setText('fin_total_fees', `$${formatAmount(fees)}`);
+            setText('pct_total_fees', pct(fees));
+            setText('fin_tx_cost', `$${formatAmount(txCost)}`);
+            setText('pct_tx_cost', pct(txCost));
+            setText('fin_net', `$${formatAmount(netTotal)}`);
+
+            const p0_b1 = document.getElementById('p0_gas_b1');
+            const p0_b2 = document.getElementById('p0_gas_b2');
+            const p0_b3 = document.getElementById('p0_gas_b3');
+            if (p0_b1) p0_b1.textContent = `$${gasB1.toFixed(2)} in ${netData.label}`;
+            if (p0_b2) p0_b2.textContent = `$${gasB2.toFixed(2)} in ${netData.label}`;
+            if (p0_b3) p0_b3.textContent = `$${gasB3.toFixed(2)} in ${netData.label}`;
+
+            const satNetBtn = document.getElementById('satNetworkBtn');
+            if(satNetBtn) satNetBtn.innerHTML = `${netData.shortName} <span style="font-size:0.8em">▾</span>`;
+            setText('sat_gas', `$${formatAmount(totalGas)}`);
+            setText('sat_fees', `$${formatAmount(fees)}`);
+            setText('sat_tx_cost', `$${formatAmount(txCost)}`);
+            setText('sat_tx_pct', pct(txCost));
+            setText('sat_net', `$${formatAmount(netTotal)}`);
+        }
+
+        // ==========================================
+        // === 7. EVENT LISTENERS & EFECTOS ===
+        // ==========================================
+        function attachAllListeners() {
+            document.querySelectorAll('input[type="range"]').forEach(slider => {
+                updateSliderBubble(slider);
                 
-                const phaseClass = Array.from(container.classList).find(c => c.startsWith('p'));
-                if (phaseClass) {
-                    selectedDiv.classList.add(phaseClass);
-                    const colorVar = getComputedStyle(document.documentElement).getPropertyValue(`--phase${phaseClass.substring(1)}-color`);
-                    selectedDiv.style.borderColor = colorVar;
-                }
+                slider.addEventListener('input', () => {
+                    if (slider.id === 'alarm_slider') { updateAlarmText(slider); return; }
+                    updateSliderBubble(slider);
+                    if(slider.id.includes('non')) updatePhase2();
+                    else if(slider.id.includes('unshield')) updatePhase3();
+                    else if(slider.id.includes('intent')) updatePhase4();
+                    else if(slider.id.includes('payy')) updatePhase5();
+                    else if(slider.id.includes('consol')) updatePhase6Consolidation();
+                    else if(slider.id.includes('cold')) updatePhase6Cold();
+                });
 
-                selectedDiv.innerHTML = originalSelect.options[originalSelect.selectedIndex].innerHTML;
-                container.appendChild(selectedDiv);
-
-                const optionsList = document.createElement('DIV');
-                optionsList.setAttribute('class', 'select-items select-hide');
-                if (phaseClass) optionsList.classList.add(phaseClass);
-                
-                Array.from(originalSelect.options).forEach((option, index) => {
-                    const optionDiv = document.createElement('DIV');
-                    optionDiv.innerHTML = option.innerHTML;
+                const toggleGlow = (active) => {
+                    let baseId = slider.id.replace('_slider', '');
+                    let selector = '';
                     
-                    if (index === originalSelect.selectedIndex) {
-                        optionDiv.classList.add("same-as-selected");
+                    if (baseId === 'alarm') {
+                        if(DOM.exportButton) DOM.exportButton.classList.toggle('active', active);
+                        return;
                     }
 
-                    optionDiv.addEventListener('click', function() {
-                        originalSelect.selectedIndex = index;
-                        selectedDiv.innerHTML = this.innerHTML;
-                        
-                        const siblings = this.parentNode.querySelectorAll('div');
-                        siblings.forEach(sib => sib.classList.remove("same-as-selected"));
-                        this.classList.add("same-as-selected");
-                        
-                        selectedDiv.click();
-                        generateSchedule(); 
-                    });
-                    optionsList.appendChild(optionDiv);
-                });
-                container.appendChild(optionsList);
+                    if(baseId === 'non_distributed') selector = '.phase-card .calculated-value, .phase-card .percent-border';
+                    else if(baseId === 'unshield') selector = '[data-group="unshield"] .calculated-value, [data-group="unshield"] .percent-border, [data-group="unshield"] .phase3-arrow';
+                    else if(baseId === 'intent') selector = '[data-group="intent"] .calculated-value, [data-group="intent"] .percent-border, [data-group="intent"] .phase4-arrow';
+                    else if(baseId === 'payy') selector = '[data-group="crosspay"] .calculated-value, [data-group="crosspay"] .percent-border, [data-group="crosspay"] .phase5-arrow';
+                    else if(baseId === 'consolidation' || baseId === 'cold') {
+                        const row = slider.closest('tr');
+                        if(row) {
+                            row.querySelectorAll('.calculated-value, .phase6-arrow').forEach(el => el.classList.toggle('active', active));
+                            if(row.nextElementSibling) row.nextElementSibling.querySelectorAll('.calculated-value, .percent-border, .phase6-arrow').forEach(el => el.classList.toggle('active', active));
+                        }
+                        return;
+                    }
+                    if(selector) document.querySelectorAll(selector).forEach(el => el.classList.toggle('active', active));
+                    
+                    const sel = slider.parentElement.previousElementSibling?.querySelector('.select-selected');
+                    if(sel) sel.classList.toggle('active', active);
+                };
 
+                slider.addEventListener('mousedown', () => toggleGlow(true));
+                slider.addEventListener('touchstart', () => toggleGlow(true), {passive: true});
+                slider.addEventListener('mouseup', () => toggleGlow(false));
+                slider.addEventListener('touchend', () => toggleGlow(false));
+                window.addEventListener('resize', () => updateSliderBubble(slider));
+            });
+        }
+
+        function updateSliderBubble(slider) {
+            const bubble = slider.nextElementSibling;
+            if (!bubble) return;
+            const val = parseFloat(slider.value);
+            bubble.textContent = `${val.toFixed(0)}%`;
+            const min = parseFloat(slider.min), max = parseFloat(slider.max);
+            const ratio = (val - min) / (max - min);
+            bubble.style.left = `${ratio * (slider.offsetWidth - 38) + 19}px`;
+        }
+
+        function updateAlarmText(slider) {
+            if (DOM.exportButton) DOM.exportButton.querySelector('span').textContent = `${Math.round(slider.value)} min`;
+        }
+
+        function triggerReflowEffect() {
+            const targets = document.querySelectorAll('.calculated-value, .select-selected, .gas-badge, [class*="-arrow"], .percent-border, .swap-badge');
+            targets.forEach(el => {
+                const anim = el.classList.contains('phase1-arrow') || el.classList.contains('percent-border') ? 'text-glow-pulse' : 'glow-pulse';
+                el.classList.remove(anim);
+                void el.offsetWidth;
+                el.classList.add(anim);
+                setTimeout(() => el.classList.remove(anim), 600);
+            });
+        }
+        
+        function flashGlow(ids) {
+            if(!Array.isArray(ids)) ids = [ids];
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if(el) {
+                    el.classList.remove('glow-pulse');
+                    void el.offsetWidth;
+                    el.classList.add('glow-pulse');
+                }
+            });
+        }
+
+        // ==========================================
+        // === 8. INICIALIZACIÓN DE COMPONENTES ===
+        // ==========================================
+        
+        function initDynamicSelects() {
+            document.querySelectorAll('.custom-select-container').forEach(container => {
+                if (container.querySelector('.select-selected')) return;
+                const select = container.querySelector('select'); 
+                if(!select) return;
+
+                const selectedDiv = document.createElement('DIV');
+                const pClass = (Array.from(container.classList).find(c=>c.startsWith('p'))||'');
+                selectedDiv.className = 'select-selected ' + pClass;
+                selectedDiv.innerHTML = select.options[select.selectedIndex].innerHTML;
+                
+                const style = getComputedStyle(document.body);
+                if(pClass === 'p3') selectedDiv.style.borderColor = style.getPropertyValue('--phase3-color');
+                if(pClass === 'p4') selectedDiv.style.borderColor = style.getPropertyValue('--phase4-color');
+                if(pClass === 'p5') selectedDiv.style.borderColor = style.getPropertyValue('--phase5-color');
+                
+                container.appendChild(selectedDiv);
+                
+                const itemsDiv = document.createElement('DIV');
+                itemsDiv.className = 'select-items select-hide ' + pClass;
+                
+                Array.from(select.options).forEach((opt, i) => {
+                    const item = document.createElement('DIV');
+                    item.innerHTML = opt.innerHTML;
+                    item.addEventListener('click', () => {
+                        select.selectedIndex = i;
+                        selectedDiv.innerHTML = opt.innerHTML;
+                        itemsDiv.querySelectorAll('div').forEach(d => d.classList.remove('same-as-selected'));
+                        item.classList.add('same-as-selected');
+                        itemsDiv.classList.add('select-hide');
+                        selectedDiv.classList.remove('select-arrow-active');
+                        generateSchedule(false);
+                    });
+                    itemsDiv.appendChild(item);
+                });
+                container.appendChild(itemsDiv);
+                
                 selectedDiv.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    closeAllSelect(this);
+                    e.stopPropagation(); closeAllSelect(this);
                     this.nextSibling.classList.toggle('select-hide');
                     this.classList.toggle('select-arrow-active');
                 });
             });
         }
 
-        function closeAllSelect(elmnt) {
-            const items = document.querySelectorAll(".select-items");
-            const selected = document.querySelectorAll(".select-selected");
-            
-            selected.forEach(sel => {
-                if (elmnt !== sel) {
-                    sel.classList.remove("select-arrow-active");
-                }
+        function closeAllSelect(elm) {
+            document.querySelectorAll('.select-items, .timezone-menu, .network-menu').forEach(x => {
+                if(elm && x.parentNode === elm.parentNode) return;
+                x.classList.add('select-hide');
             });
-
-            items.forEach(item => {
-                if (!elmnt || item !== elmnt.nextSibling) {
-                    item.classList.add("select-hide");
-                }
-            });
+            document.querySelectorAll('.select-selected').forEach(y => y.classList.remove('select-arrow-active'));
         }
 
-        document.addEventListener("click", () => {
-            closeAllSelect(null);
-            if (!timezoneMenu.classList.contains('select-hide')) {
-                timezoneMenu.classList.add('select-hide');
-            }
-        });
-
-        function attachAllListeners() {
-            document.querySelectorAll('input[type="range"]').forEach(slider => {
-                updateSliderBubble(slider);
-                
-                const toggleGlow = (isActive) => {
-                    const elementsToToggle = [];
-                    let baseId = slider.id.replace('_slider', '');
-                    
-                    switch(baseId) {
-                        case 'non_distributed':
-                            document
-                                .querySelectorAll('#phase-2-card, #phase-3-card, #phase-4-card, #phase-5-card, #phase-6-card')
-                                .forEach(card => {
-                                    elementsToToggle.push(...card.querySelectorAll('.calculated-value, .percent-border'));
-                                });
-                            break;
-                        case 'unshield':
-                            elementsToToggle.push(
-                                ...document.querySelectorAll(
-                                    '[data-group="unshield"] .calculated-value, ' +
-                                    '[data-group="unshield"] .percent-border, ' +
-                                    '[data-group="unshield"] .phase3-arrow'
-                                )
-                            );
-                            {
-                                const unshieldSelect = document.getElementById('num_unshield_select');
-                                if (unshieldSelect) {
-                                    const custom = unshieldSelect.parentNode.querySelector('.select-selected');
-                                    if (custom) elementsToToggle.push(custom);
-                                }
-                            }
-                            break;
-                        case 'intent':
-                            elementsToToggle.push(
-                                ...document.querySelectorAll(
-                                    '[data-group="intent"] .calculated-value, ' +
-                                    '[data-group="intent"] .percent-border, ' +
-                                    '[data-group="intent"] .phase4-arrow'
-                                )
-                            );
-                            {
-                                const intentSelect = document.getElementById('num_intent_select');
-                                if (intentSelect) {
-                                    const custom = intentSelect.parentNode.querySelector('.select-selected');
-                                    if (custom) elementsToToggle.push(custom);
-                                }
-                            }
-                            break;
-                        case 'payy':
-                            {
-                                const crosspayGroup = 'crosspay';
-                                elementsToToggle.push(
-                                    ...document.querySelectorAll(
-                                        `[data-group="${crosspayGroup}"] .calculated-value, ` +
-                                        `[data-group="${crosspayGroup}"] .percent-border, ` +
-                                        `[data-group="${crosspayGroup}"] .phase5-arrow`
-                                    )
-                                );
-                                const crosspaySelect = document.getElementById('num_crosspay_select');
-                                if (crosspaySelect) {
-                                    const custom = crosspaySelect.parentNode.querySelector('.select-selected');
-                                    if (custom) elementsToToggle.push(custom);
-                                }
-                            }
-                            break;
-                        case 'consolidation':
-                        case 'cold':
-                            {
-                                const parentRow = slider.closest('tr');
-                                if (parentRow) {
-                                    elementsToToggle.push(
-                                        ...parentRow.querySelectorAll('.calculated-value, .phase6-arrow')
-                                    );
-                                    if (parentRow.nextElementSibling) {
-                                        elementsToToggle.push(
-                                            ...parentRow.nextElementSibling.querySelectorAll(
-                                                '.calculated-value, .percent-border, .phase6-arrow'
-                                            )
-                                        );
-                                    }
-                                }
-                            }
-                            break;
-                        case 'alarm':
-                            exportButton.classList.toggle('active', isActive);
-                            return;
-                    }
-
-                    elementsToToggle.forEach(el => {
-                        if (el) el.classList.toggle('active', isActive);
-                    });
-                };
-                
-                slider.addEventListener('input', () => {
-                    if (slider.id === 'alarm_slider') {
-                        updateAlarmText(slider);
-                        return;
-                    }
-
-                    updateSliderBubble(slider);
-
-                    switch (slider.id) {
-                        case 'non_distributed_slider':
-                            updatePhase2();
-                            break;
-                        case 'unshield_slider':
-                            updatePhase3();
-                            break;
-                        case 'intent_slider':
-                            updatePhase4();
-                            break;
-                        case 'payy_slider':
-                            updatePhase5();
-                            break;
-                        case 'consolidation_slider':
-                            updatePhase6Consolidation();
-                            break;
-                        case 'cold_slider':
-                            updatePhase6Cold();
-                            break;
+        function initNetworkMenu() {
+            const toggleMenu = (e) => { 
+                e.stopPropagation(); 
+                closeAllSelect(DOM.networkButton);
+                DOM.networkMenu.style.position = ''; DOM.networkMenu.style.top = ''; DOM.networkMenu.style.left = '';
+                DOM.networkMenu.classList.toggle('select-hide'); 
+            };
+            DOM.networkButton.addEventListener('click', toggleMenu);
+            DOM.networkMenu.querySelectorAll('li').forEach(li => {
+                li.addEventListener('click', () => {
+                    currentNetwork = li.getAttribute('data-net');
+                    DOM.networkButton.querySelector('.label').textContent = li.querySelector('.tz-name').textContent;
+                    DOM.networkMenu.querySelectorAll('li').forEach(l => l.classList.remove('active'));
+                    li.classList.add('active');
+                    DOM.networkMenu.classList.add('select-hide');
+                    if(DOM.scheduleContainer.innerHTML.trim() !== '') {
+                        calculateFinancials();
+                        flashGlow(['p0_gas_b1', 'p0_gas_b2', 'p0_gas_b3']);
                     }
                 });
-
-                slider.addEventListener('mousedown', () => toggleGlow(true));
-                slider.addEventListener('touchstart', () => toggleGlow(true), {passive: true});
-                slider.addEventListener('mouseup', () => toggleGlow(false));
-                slider.addEventListener('touchend', () => toggleGlow(false));
-                
-                window.addEventListener('resize', () => updateSliderBubble(slider));
             });
-
-            initializeCustomSelects();
         }
+        
+        DOM.timezoneButton.addEventListener('click', (e) => { e.stopPropagation(); DOM.timezoneMenu.classList.toggle('select-hide'); });
+        DOM.timezoneMenu.querySelectorAll('li').forEach(li => {
+            li.addEventListener('click', () => {
+                currentDisplayTimeZone = li.getAttribute('data-tz');
+                DOM.timezoneButton.querySelector('.label').textContent = li.querySelector('.tz-name').textContent;
+                DOM.timezoneMenu.classList.add('select-hide');
+                if(DOM.scheduleContainer.innerHTML) updateAllValues();
+            });
+        });
 
-        function updateSliderBubble(slider) {
-            const bubble = slider.nextElementSibling;
-            if (!bubble || !bubble.classList.contains('slider-bubble')) return;
-            const currentValue = parseFloat(slider.value);
-            bubble.textContent = `${currentValue.toFixed(0)}%`;
-            const min = parseFloat(slider.min);
-            const max = parseFloat(slider.max);
-            const progress = (max - min > 0) ? (currentValue - min) / (max - min) : 0;
-            const sliderWidth = slider.offsetWidth;
-            const thumbWidth = slider.id === 'alarm_slider' ? 20 : 38;
-            
-            const bubbleOffset = progress * (sliderWidth - thumbWidth) + (thumbWidth / 2);
-
-            bubble.style.left = `${bubbleOffset}px`;
+        if (DOM.satNetworkBtn) {
+            DOM.satNetworkBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (DOM.networkMenu.classList.contains('select-hide')) {
+                    const rect = DOM.satNetworkBtn.getBoundingClientRect();
+                    DOM.networkMenu.classList.remove('select-hide');
+                    DOM.networkMenu.style.position = 'fixed';
+                    DOM.networkMenu.style.top = `${rect.bottom + 8}px`;
+                    DOM.networkMenu.style.left = `${rect.left}px`;
+                    DOM.networkMenu.style.width = 'auto';
+                    DOM.networkMenu.style.minWidth = '200px';
+                    DOM.networkMenu.style.zIndex = '10000';
+                } else {
+                    closeAllSelect(null);
+                    DOM.networkMenu.style.position = ''; DOM.networkMenu.style.top = ''; DOM.networkMenu.style.left = '';
+                }
+            });
         }
+        
+        document.addEventListener('click', () => {
+            closeAllSelect(null);
+            if(DOM.networkMenu) { DOM.networkMenu.style.position = ''; DOM.networkMenu.style.top = ''; DOM.networkMenu.style.left = ''; }
+        });
 
-        function getText(id) {
-            const el = document.getElementById(id);
-            return el ? el.textContent.trim() : null;
+        DOM.amountInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/[^0-9.$]/g, '');
+            if (value.startsWith('$')) value = '$' + value.replace(/\$/g, '');
+            e.target.value = value;
+            validateInputs();
+        });
+        DOM.amountInput.addEventListener('blur', function(e) {
+            let num = parseFloat(e.target.value.replace(/[^0-9.]/g, ''));
+            if (!isNaN(num) && num >= 0) { e.target.value = '$' + num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); totalAmount = num; } 
+            else { e.target.value = ''; totalAmount = 0; }
+            validateInputs();
+        });
+        DOM.dateInput.addEventListener('input', () => { cachedTimestamps = null; validateInputs(); });
+        
+        DOM.resetButton.addEventListener('click', () => {
+            DOM.amountInput.value = ''; totalAmount = 0; effectiveAmount = 0;
+            cachedTimestamps = null; DOM.resetButton.classList.remove('visible');
+            DOM.generateButton.disabled = true;
+            DOM.scheduleContainer.innerHTML = '';
+            DOM.alarmSection.style.display = 'none';
+            DOM.financialPanel.style.display = 'none';
+            DOM.alarmSlider.value = 30;
+            updateAlarmText(DOM.alarmSlider);
+        });
+
+        function validateInputs() {
+            const amountValid = DOM.amountInput.value && parseFloat(DOM.amountInput.value.replace(/[^0-9.]/g, '')) > 0;
+            DOM.generateButton.disabled = !(amountValid && DOM.dateInput.value);
+            DOM.resetButton.classList.toggle('visible', DOM.amountInput.value.length > 0);
         }
 
         function exportToOrg() {
-            const inputElement = document.getElementById('receiptDate');
-            if (!inputElement.value) { return; }
+            if (!DOM.dateInput.value) return;
+            const settings = {
+                numUnshields: parseInt(document.getElementById('num_unshield_select')?.value || 2),
+                numIntents: parseInt(document.getElementById('num_intent_select')?.value || 2),
+                numCrosspays: parseInt(document.getElementById('num_crosspay_select')?.value || 3)
+            };
+            const timestamps = getScheduleTimestamps(new Date(DOM.dateInput.value), settings);
+            const alarmMinutes = Math.round(parseFloat(DOM.alarmSlider.value));
+            const netData = NETWORK_DATA[currentNetwork];
+            const getAmt = (id) => document.getElementById(id)?.textContent.trim() || '0.00';
             
-            const baseDate = new Date(inputElement.value);
-            const timestamps = getScheduleTimestamps(baseDate);
-            const alarmMinutes = Math.round(parseFloat(document.getElementById('alarm_slider').value));
-
-            const events = [];
-
-            const getAmount = (id) => {
-                const txt = getText(id);
-                return txt ?? "0.00";
+            let orgString = '#+TITLE: Privacy Schedule v3.4\n\n';
+            const addEvent = (phase, title, date, amount, note) => {
+                if(!orgString.includes(`* ${phase}`)) orgString += `* ${phase}\n`;
+                orgString += `** TODO ${title}\n`;
+                if(date) orgString += `  SCHEDULED: ${formatOrgDate(date, alarmMinutes)}\n`;
+                orgString += `:PROPERTIES:\n:AMOUNT: ${amount}\n:END:\n${note}\n\n`;
             };
 
-            const getPercent = (id) => {
-                const txt = getText(id);
-                return txt ?? null;
-            };
+            addEvent('Phase 0 – Logistic Prep', `Gas Funding B1 (${netData.label}) [Via ${timestamps.services[0]}]`, timestamps.p0_b1, `$${netData.b1_cost.toFixed(2)}`, 'Shielding Gas (Pre-Funded)');
+            addEvent('Phase 0 – Logistic Prep', `Gas Funding B2 (${netData.label}) [Via ${timestamps.services[1]}]`, timestamps.p0_b2, `$${(netData.b2_unit_cost * settings.numIntents).toFixed(2)}`, 'Unshield/Swap Gas (Pre-Funded)');
+            addEvent('Phase 0 – Logistic Prep', `Gas Funding B3 (${netData.label}) [Via ${timestamps.services[2]}]`, timestamps.p0_b3, `$${(netData.b2_unit_cost * 2).toFixed(2)}`, 'Consolidation Gas (Pre-Funded)');
+            
+            addEvent('Phase 1 – Secure Accumulation', 'Funds in B1', timestamps.p1_receipt, '$' + getAmt('base_amount'), 'Funds Received (T=0)');
+            addEvent('Phase 1 – Secure Accumulation', 'B1 -> Railgun', timestamps.p1_shield, '$' + getAmt('shield_amount'), 'Shielding Move');
 
-            // Phase 1
-            events.push({
-                phase: 'Phase 1 – Secure Accumulation',
-                title: 'Funds received in B1',
-                date: timestamps.baseDate,
-                amount: getAmount('base_amount'),
-                percent: '100.00',
-                note: 'Starting point.'
-            });
+            timestamps.p3_unshield.forEach((t, i) => addEvent('Phase 3 – Unshielding', `Railgun -> B2 (${i+1})`, t, '$' + getAmt(`unshield${i+1}_amount`), 'Unshielding'));
+            timestamps.p4_intent.forEach((t, i) => addEvent('Phase 4 – Conversion', `B2 -> Zashi In (${i+1})`, t, '$' + getAmt(`intent${i+1}_amount`), 'Swap to ZEC'));
+            
+            addEvent('Phase 5 – Private Exits', 'Zashi Out -> Spending', timestamps.p5_payy, '$' + getAmt('payy_amount'), 'Spending exit');
+            timestamps.p5_crosspay.forEach((t, i) => addEvent('Phase 5 – Private Exits', `Zashi Out -> B3 (${i+1})`, t, '$' + getAmt(`savings${i+1}_amount`), 'Savings exit'));
 
-            events.push({
-                phase: 'Phase 1 – Secure Accumulation',
-                title: 'B1 → Railgun [Shield]',
-                date: timestamps.p1_shield,
-                amount: getAmount('shield_amount'),
-                percent: '100.00',
-                note: 'Move to privacy pool.'
-            });
+            addEvent('Phase 6 – Consolidation', 'B3 -> Savings (1/2)', timestamps.p6_consol[0], '$' + getAmt('consol1_amount'), 'Consolidation');
+            addEvent('Phase 6 – Consolidation', 'B3 -> Savings (2/2)', timestamps.p6_consol[1], '$' + getAmt('consol2_amount'), 'Consolidation');
+            addEvent('Phase 6 – Consolidation', 'Savings -> Cold (1/2)', timestamps.p6_cold[0], '$' + getAmt('cold1_amount'), 'Cold Storage');
+            addEvent('Phase 6 – Consolidation', 'Savings -> Cold (2/2)', timestamps.p6_cold[1], '$' + getAmt('cold2_amount'), 'Cold Storage');
 
-            // Phase 2
-            events.push({
-                phase: 'Phase 2 – Staging & Allocation',
-                title: 'Funds retained in Railgun',
-                date: null,
-                amount: getAmount('non_distributed_amount'),
-                percent: null,
-                note: 'Enhance privacy.'
-            });
-
-            // Phase 3 – Unshielding
-            const numUnshields = parseInt(document.getElementById('num_unshield_select').value, 10);
-            for (let i = 0; i < numUnshields; i++) {
-                const idx = i + 1;
-                events.push({
-                    phase: 'Phase 3 – Unshielding',
-                    title: `Railgun → B2 [Unshield] (${idx}/${numUnshields})`,
-                    date: timestamps.p3_unshield[i],
-                    amount: getAmount(`unshield${idx}_amount`),
-                    percent: getPercent(`unshield${idx}_percent`),
-                    note: 'Withdrawal from pool.'
-                });
-            }
-
-            // Phase 4 – Conversion
-            const numIntents = parseInt(document.getElementById('num_intent_select').value, 10);
-            for (let i = 0; i < numIntents; i++) {
-                const idx = i + 1;
-                events.push({
-                    phase: 'Phase 4 – Conversion',
-                    title: `B2 → Zashi In (${idx}/${numIntents})`,
-                    date: timestamps.p4_intent[i],
-                    amount: getAmount(`intent${idx}_amount`),
-                    percent: getPercent(`intent${idx}_percent`),
-                    note: 'USDC→ZEC conversion.'
-                });
-            }
-
-            // Phase 5 – Private Exits
-            events.push({
-                phase: 'Phase 5 – Private Exits',
-                title: 'Zashi Out → Milano',
-                date: timestamps.p5_payy,
-                amount: getAmount('payy_amount'),
-                percent: null,
-                note: 'Exit for Spending.'
-            });
-
-            const numCrosspays = parseInt(document.getElementById('num_crosspay_select').value, 10);
-            for (let i = 0; i < numCrosspays; i++) {
-                const idx = i + 1;
-                events.push({
-                    phase: 'Phase 5 – Private Exits',
-                    title: `Zashi Out → B3 (${idx}/${numCrosspays})`,
-                    date: timestamps.p5_crosspay[i],
-                    amount: getAmount(`savings${idx}_amount`),
-                    percent: getPercent(`savings${idx}_percent`),
-                    note: 'Exit for Savings.'
-                });
-            }
-
-            // Phase 6 – Consolidation & Cold Storage
-            events.push(
-                {
-                    phase: 'Phase 6 – Consolidation & Cold Storage',
-                    title: 'B3 → Barcelona (1/2)',
-                    date: timestamps.p6_consol[0],
-                    amount: getAmount('consol1_amount'),
-                    percent: null,
-                    note: 'Move to Savings Wallet.'
-                },
-                {
-                    phase: 'Phase 6 – Consolidation & Cold Storage',
-                    title: 'B3 → Barcelona (2/2)',
-                    date: timestamps.p6_consol[1],
-                    amount: getAmount('consol2_amount'),
-                    percent: getPercent('consolidation2_percent'),
-                    note: 'Second batch.'
-                },
-                {
-                    phase: 'Phase 6 – Consolidation & Cold Storage',
-                    title: 'Savings → Cold (1/2)',
-                    date: timestamps.p6_cold[0],
-                    amount: getAmount('cold1_amount'),
-                    percent: null,
-                    note: 'To cold storage.'
-                },
-                {
-                    phase: 'Phase 6 – Consolidation & Cold Storage',
-                    title: 'Savings → Cold (2/2)',
-                    date: timestamps.p6_cold[1],
-                    amount: getAmount('cold2_amount'),
-                    percent: getPercent('cold2_percent'),
-                    note: 'Final movement.'
-                }
-            );
-
-            let orgString = '#+TITLE: Privacy Schedule\n\n';
-            let currentPhase = '';
-            events.forEach(event => {
-                if (event.phase !== currentPhase) {
-                    currentPhase = event.phase;
-                    orgString += `* ${currentPhase}\n`;
-                }
-                orgString += `** TODO ${event.title}\n`;
-                if (event.date) {
-                    orgString += `  SCHEDULED: ${formatOrgDate(event.date, alarmMinutes)}\n`;
-                }
-                orgString += `:PROPERTIES:\n`;
-                orgString += `:AMOUNT: $${event.amount}\n`;
-                if (event.percent !== null) {
-                    orgString += `:PERCENT: ${event.percent}%\n`;
-                }
-                orgString += `:END:\n\n`;
-                if (event.note) {
-                    orgString += `${event.note}\n\n`;
-                }
-            });
-
-            const blob = new Blob([orgString], { type: 'text/plain;charset=utf-8' });
             const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
+            link.href = URL.createObjectURL(new Blob([orgString], { type: 'text/plain;charset=utf-8' }));
             link.setAttribute("download", "privacy_schedule.org");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            document.body.appendChild(link); link.click(); document.body.removeChild(link);
         }
 
-        function getTimezoneLabel(tz) {
-            if (tz === 'local') return 'Local time';
-            return `${tz} time`;
+        function formatOrgDate(date, alarmMinutes) {
+            const pad = n => String(n).padStart(2,'0');
+            const dayName = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][date.getDay()];
+            return `<${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())} ${dayName} ${pad(date.getHours())}:${pad(date.getMinutes())} -${alarmMinutes}m>`;
         }
 
-        function initializeTimezoneUI() {
-            if (!timezoneButton || !timezoneMenu) return;
-
-            timezoneButton.querySelector('.label').textContent = getTimezoneLabel('local');
-
-            timezoneButton.addEventListener('click', (e) => {
-                e.stopPropagation();
-                timezoneMenu.classList.toggle('select-hide');
-            });
-
-            timezoneMenu.querySelectorAll('li[data-tz]').forEach(item => {
-                item.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const tz = item.getAttribute('data-tz');
-                    currentDisplayTimeZone = tz;
-
-                    timezoneMenu.querySelectorAll('li[data-tz]').forEach(li => li.classList.remove('active'));
-                    item.classList.add('active');
-
-                    timezoneButton.querySelector('.label').textContent = getTimezoneLabel(tz);
-                    timezoneMenu.classList.add('select-hide');
-
-                    if (scheduleContainer.innerHTML.trim()) {
-                        updateAllTimesOnly();
-                    }
-                });
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            try {
-                if (typeof flatpickr !== 'undefined') {
-                    flatpickr("#receiptDate", {
-                        enableTime: true,
-                        dateFormat: "Y-m-d H:i",
-                        altInput: true,
-                        altFormat: "M j, Y h:i K",
-                        disableMobile: true, // IMPORTANTE: Usa el calendario estilizado en vez del nativo
-                        position: "below"    // IMPORTANTE: Fuerza que aparezca abajo
-                    });
-                } else {
-                    throw new Error("Flatpickr library not found.");
-                }
-            } catch (error) {
-                console.warn(error.message, "Falling back to native date/time picker. The UI may not look as intended, but functionality is preserved.");
-            }
-
-            initializeTimezoneUI();
+        document.addEventListener('DOMContentLoaded', () => {
+             flatpickr("#receiptDate", { enableTime: true, dateFormat: "Y-m-d H:i", altInput: true, altFormat: "M j, Y h:i K", disableMobile: true, position: "below" });
+             initNetworkMenu();
+             
+             if (DOM.financialPanel && DOM.satelliteBar) {
+                new IntersectionObserver((entries) => {
+                    entries.forEach(e => DOM.satelliteBar.classList.toggle('visible', !e.isIntersecting && window.scrollY > 100 && totalAmount > 0));
+                }, { threshold: 0.1 }).observe(DOM.financialPanel);
+             }
         });
-
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW reg failed:', err));
-            });
-        }
     </script>
+</body>
+</html>
 </body>
 </html>
