@@ -51,7 +51,9 @@
     /* ========================================= */
     /* === 1. ASIGNACIÓN ESTRICTA DE COLOR === */
     /* ========================================= */
+    /* FIX: Agregado .swap-badge para que herede el color del glow */
     .b1, .b2, .b3, .swap-badge { --glow-color: var(--phase0-color); }
+    
     .p1, .phase1-arrow { --glow-color: var(--phase1-color); }
     .p2, .phase2-arrow { --glow-color: var(--phase2-color); }
     .p3, .phase3-arrow { --glow-color: var(--phase3-color); }
@@ -177,11 +179,8 @@
         align-items: center; 
         justify-content: flex-end; 
         flex-shrink: 0; 
-        
-        /* --- CÓDIGO NUEVO PARA MOVERLO MANUALMENTE --- */
         position: relative; 
-        right: 1px; /* Aumenta este número para moverlo más a la IZQUIERDA */
-        /* --------------------------------------------- */
+        right: 1px; 
     }
 
     /* ───── FINANCIAL PANEL ───── */
@@ -319,7 +318,7 @@
         font-size: 0.9em; font-weight: 500; 
         color: rgba(255,255,255,0.9);
         background-color: var(--phase0-color);
-        filter: brightness(0.85); /* Slightly darker to distinguish from amount */
+        filter: brightness(0.85); 
         margin-left: 8px; margin-bottom: 4px;
         box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
@@ -497,10 +496,7 @@
 
         /* 1. Ajuste del PANEL OSCURO */
         #balance-group { 
-            /* Arriba/Abajo: 5px (+15 padding padre = 20px aire total) */
-            /* Izquierda: 5px (+15 margen separador = 20px aire total) -> IGUAL QUE DERECHA */
             margin: 5px 0 5px 5px !important; 
-            
             display: block !important; 
             flex: 1; 
             height: auto !important;
@@ -558,16 +554,13 @@
         .fin-separator-h { display: block !important; margin: 0 !important; opacity: 0.5 !important; height: 1px !important; }
         .fin-group .fin-item:last-child { margin-bottom: 5px !important; }
         
-        /* AJUSTE MÓVIL: SEPARADOR CENTRAL */
         .fin-divider { 
             width: 100%; height: 1px; opacity: 0.6 !important; background-color: #555 !important;
-            /* Arriba 15px, Abajo 15px -> IGUAL QUE EL PADDING DE LA TARJETA (15px) */
             margin: 15px 0 15px 0 !important; 
         }
 
-        /* AJUSTE MÓVIL: PANEL DE BALANCE */
         #balance-group { 
-            margin-top: 0 !important; /* Pegado al margen del separador para sumar 15px exactos */
+            margin-top: 0 !important; 
             width: 100% !important; display: flex !important; flex-direction: column !important; align-items: center !important; text-align: center !important; 
         }
         
@@ -602,9 +595,16 @@
         .sat-stack.text-center { margin-right: 0 !important; padding-right: 0 !important; text-align: right; align-items: flex-end; }
         .sat-net-total { flex-shrink: 0; margin: 0 !important; padding-left: 20px !important; margin-left: 5px !important; border-left: 1px solid rgba(255, 255, 255, 0.15) !important; }
         
-        /* Ajuste para que la nueva swap-badge no rompa en movil */
-        @media (max-width: 600px) {
-            .swap-badge { display: table; margin-left: 0; margin-top: 2px; }
+        /* === UNIFICACIÓN DE BADGES (GAS + SWAP) EN MÓVIL === */
+        .gas-badge, .swap-badge { 
+            display: block !important;
+            width: fit-content;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            margin-bottom: 6px !important;
+            margin-top: 0 !important;
+            padding: 6px 10px !important;
+            font-size: 0.9em;
         }
     }
 </style>
@@ -893,8 +893,10 @@
             return percentages;
         }
 
+        // --- Random Service Selection ---
         function getRandomServices(count) {
             const services = [...SWAP_SERVICES];
+            // Fisher-Yates shuffle
             for (let i = services.length - 1; i > 0; i--) {
                 const j = Math.floor(cryptoRandom() * (i + 1));
                 [services[i], services[j]] = [services[j], services[i]];
@@ -938,7 +940,7 @@
                 return newTime;
             }
 
-            // OpSec: Retroactive & Independent
+            // OpSec: Retroactive
             timestamps.p1_receipt = baseDate;
             usedTimes.add(baseDate.toISOString().slice(0, 16));
 
@@ -978,7 +980,10 @@
             timestamps.p6_cold[1] = ensureUniqueTime(timestamps.p6_cold[0], 0, 0, 10, 20);
             
             cachedTimestamps = timestamps;
+            
+            // Generate Random Services ONCE per schedule generation
             timestamps.services = getRandomServices(3); 
+            
             return timestamps;
         }
 
@@ -1094,6 +1099,7 @@
             DOM.alarmSection.style.display = 'flex';
             DOM.financialPanel.style.display = window.innerWidth <= 600 ? 'flex' : 'block';
 
+            // IMPORTANT: Get services during generation
             const settings = {
                 numUnshields: parseInt(savedState.num_unshield_select || 2),
                 numIntents: parseInt(savedState.num_intent_select || 2),
@@ -1120,7 +1126,7 @@
 
             let html = '';
 
-            // Phase 0 (Each with unique ID for Time)
+            // Phase 0 (Updated with Swap Badges)
             const p0Content = `
                 <tr><td class="col-description"><strong>B1 <span class="phase0-arrow">→</span> Railgun</strong><br><span id="p0_gas_b1" class="gas-badge b1">...</span> <span class="swap-badge">Via: ${services[0]}</span><span class="notes">Gas for shielding.</span></td><td class="col-time" id="base_time"></td></tr>
                 <tr><td class="col-description"><strong>B2 <span class="phase0-arrow">→</span> Zashi</strong><br><span id="p0_gas_b2" class="gas-badge b2">...</span> <span class="swap-badge">Via: ${services[1]}</span><span class="notes">Gas for unshield/transfer.</span></td><td class="col-time" id="base_time_same"></td></tr>
@@ -1355,7 +1361,10 @@
                     if(baseId === 'non_distributed') selector = '.phase-card .calculated-value, .phase-card .percent-border';
                     else if(baseId === 'unshield') selector = '[data-group="unshield"] .calculated-value, [data-group="unshield"] .percent-border, [data-group="unshield"] .phase3-arrow';
                     else if(baseId === 'intent') selector = '[data-group="intent"] .calculated-value, [data-group="intent"] .percent-border, [data-group="intent"] .phase4-arrow';
-                    else if(baseId === 'payy') selector = '[data-group="crosspay"] .calculated-value, [data-group="crosspay"] .percent-border, [data-group="crosspay"] .phase5-arrow';
+                    
+                    // FIX: Agregado .select-selected para que el botón de Ops se ilumine en Phase 5
+                    else if(baseId === 'payy') selector = '[data-group="crosspay"] .calculated-value, [data-group="crosspay"] .percent-border, [data-group="crosspay"] .phase5-arrow, [data-group="crosspay"] .select-selected';
+                    
                     else if(baseId === 'consolidation' || baseId === 'cold') {
                         const row = slider.closest('tr');
                         if(row) {
@@ -1621,7 +1630,5 @@
              }
         });
     </script>
-</body>
-</html>
 </body>
 </html>
